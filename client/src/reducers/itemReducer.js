@@ -1,5 +1,5 @@
 //import uuid from 'uuid';
-import {GET_ITEMS,ADD_ITEM, DELETE_ITEM, ITEMS_LOADING} from '../actions/types'
+import {GET_ITEMS,ADD_ITEM, DELETE_ITEM, ITEMS_LOADING, GET_AUDITS, ADD_AUDIT} from '../actions/types';
 //import { stat } from 'fs';
 
 const initialState = {
@@ -7,8 +7,6 @@ const initialState = {
     loading: false
        
 }
-
-
 export default function(state = initialState, action){
     switch(action.type){
         case GET_ITEMS:
@@ -32,6 +30,17 @@ export default function(state = initialState, action){
         return {
             ...state,
             loading: true
+        };
+        case GET_AUDITS:
+            return {
+                ...state,
+                items: action.payload,
+                loading: false
+            };
+        case ADD_AUDIT:
+        return {
+            ...state,
+            items: [action.payload, ...state.items]
         };
         default:
             return state;

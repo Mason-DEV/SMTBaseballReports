@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {
+ import {
     Collapse,
     Navbar,
     NavbarToggler,
@@ -7,11 +7,17 @@ import {
     Nav,
     NavItem,
     NavLink,
-    Container
- } from 'reactstrap';
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    Container } from 'reactstrap';
+
+import logo from '../assests/images/favicon.png';
 
 
- export default class AppNavbar extends Component{
+
+export default class AppNavbar extends Component{
         state = {
             isOpen: false
         }
@@ -25,24 +31,43 @@ import {
          render(){
              return(
                 <div>
-                <Navbar color="dark" dark expand="sm" className="mb-5">
-                   <Container>
-                       <NavbarBrand href="/">Shopping List</NavbarBrand>
-                       <NavbarToggler onClick={this.toggle}></NavbarToggler>
-                       <Collapse isOpen={this.state.isOpen} navbar>
-                           <Nav className="ml-auto" navbar>
-                               <NavItem>
-                                   <NavLink href="https://github.com/mason-dev">GitHub</NavLink>
-                               </NavItem>
-                           </Nav>
-                       </Collapse>
+                    <Navbar color="light" dark expand="sm" className="mb-5">
+                        <NavbarBrand href="/"><img src={logo}  /></NavbarBrand>
+                        <NavbarBrand href="/" img src={logo}>SMT Baseball Reports Dashboard</NavbarBrand>
 
-                   </Container>
-                </Navbar>
-            </div>
-             );
-            
-         }
-    }
+                        <NavbarToggler onClick={this.toggle} />
+                        <Collapse isOpen={this.state.isOpen} navbar>
+                        <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <NavLink href="/components/">API Information</NavLink>
+                            </NavItem>
+                            <UncontrolledDropdown nav inNavbar color="dark">
+                                <DropdownToggle nav caret>
+                                Account
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                <DropdownItem>
+                                    Settings
+                                </DropdownItem>
+                                <DropdownItem>
+                                    Users
+                                </DropdownItem>
+                                <DropdownItem>
+                                    Misc Things
+                                </DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem>
+                                    Logout
+                                </DropdownItem>
+                                </DropdownMenu>
+                        </UncontrolledDropdown>
+                        </Nav>
+                    </Collapse>
+                    </Navbar>
+                </div>
+                );
+                
+            }
+        }
 
 
