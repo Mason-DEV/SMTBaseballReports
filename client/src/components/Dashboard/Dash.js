@@ -1,23 +1,41 @@
-import React, {Component} from 'react';
-import AppNavBar from '../../components/AppNavbar';
-//import ShoppingList from './components/ShoppingList';
-//import ItemModal from './components/ItemModal';
-import { Container } from 'reactstrap';
+import React, { Component } from "react";
+import AppNavBar from "../../components/AppNavbar";
+import {
+	Card,
+	CardGroup,
+	Container,
+	CardImg,
+	CardText,
+	CardBody,
+	CardTitle,
+	CardSubtitle,
+	Button,
+	Row,
+	Col
+} from "reactstrap";
+import { Pane, Text, Table } from "evergreen-ui";
 
-import { Provider } from 'react-redux';
-import store from '../../store';
-
-//import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../assests/css/bootstrap.min.css'
-import '../../App.css';
+import AppNavbar from "../../components/AppNavbar";
 
 export default class Dash extends Component {
-  render() {
-    return (
-        <React.Fragment>
-            <AppNavBar></AppNavBar>
-            <div>Home Page</div>
-        </React.Fragment>
-    );
-  }
+	render() {
+		return (
+			<React.Fragment>
+				<AppNavBar></AppNavBar>
+				{/* <Container>
+					<Row>
+						<Pane background="base">
+							<Text>Audit Leaderboard</Text>
+							<Pane padding={24} marginBottom={16}>
+								<Table.Head>
+									<Table.TextHeaderCell>Age</Table.TextHeaderCell>
+									<Table.TextHeaderCell>Email</Table.TextHeaderCell>
+								</Table.Head>
+							</Pane>
+						</Pane>
+					</Row>
+				</Container> */}
+			</React.Fragment>
+		);
+	}
 }

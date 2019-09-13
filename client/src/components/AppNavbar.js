@@ -31,11 +31,11 @@ export default class AppNavbar extends Component {
 		return (
 			<div>
 				<Navbar
-					color="primary"
+					divider = '3'
 					dark
 					expand="sm"
 					className="mb-5"
-					style={{ color: "white" }}
+					style={{ backgroundColor: "#222B45" }}
 				>
 					<NavbarBrand href="/">
 						<img src={logo} />
