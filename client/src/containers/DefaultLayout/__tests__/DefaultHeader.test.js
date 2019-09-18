@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import { MemoryRouter } from 'react-router-dom';
+import DefaultHeader from '../DefaultHeader';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
+  ReactDOM.render(<MemoryRouter><DefaultHeader /></MemoryRouter>, div);
   ReactDOM.unmountComponentAtNode(div);
 });

@@ -1,16 +1,22 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import Dashboard from './Dashboard/Dash';
-import FFxAuditReport from './FFxAudit/FFxAuditReports';
+import React, { Component } from 'react';
+import { HashRouter, Switch, Route } from 'react-router-dom';
+
+import './App.scss';
 
 
-const Main = () => (
-  <main>
-    <Switch>
-      <Route exact path='/' component={Dashboard} />
-      <Route exact path='/AuditReportPage' component={FFxAuditReport} />
-    </Switch>
-  </main>
-)
+//import Dashboard from './Dashboard/Dash';
+// Containers
+
+
+
+// const Main = () => (
+//   <main>
+//     <h1>hello</h1>
+//     <Switch>
+//       <Route exact path='/' component={Dashboard} />
+//       <Route exact path='/AuditReportPage' component={FFxAuditReport} />
+//     </Switch>
+//   </main>
+// )
 
 export default Main;

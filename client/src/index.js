@@ -9,17 +9,14 @@
 // // unregister() to register() below. Note this comes with some pitfalls.
 // // Learn more about service workers: https://bit.ly/CRA-PWA
 // serviceWorker.unregister();
-
+import 'react-app-polyfill/ie9'; // For IE 9-11 support
+import 'react-app-polyfill/stable';
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 
-ReactDOM.render(
-	<BrowserRouter>
-		<App />
-	</BrowserRouter>,
-	document.getElementById("root")
+ReactDOM.render(<App />,	document.getElementById("root")
 );
 registerServiceWorker();
