@@ -1,5 +1,5 @@
 import React, { Component, lazy, Suspense } from "react";
-import { Bar, Line } from "react-chartjs-2";
+import { Bar, Line, Pie } from "react-chartjs-2";
 import {
 	Badge,
 	Button,
@@ -72,6 +72,39 @@ const cardChartOpts4 = {
 		]
 	}
 };
+const cardChartOpts1 = {
+  tooltips: {
+    enabled: false,
+    //custom: CustomTooltips
+  },
+  maintainAspectRatio: false,
+  legend: {
+    display: false,
+  },
+  scales: {
+    xAxes: [
+      {
+        gridLines: {
+          color: 'transparent',
+          zeroLineColor: 'transparent',
+        },
+        ticks: {
+          fontSize: 2,
+          fontColor: 'transparent',
+        },
+
+      }],
+    yAxes: [
+      {
+        display: false,
+        ticks: {
+          display: false,
+          min: cardChartData4.datasets.data[0],
+          max: cardChartData4.datasets.data[15],
+        },
+      }],
+  }
+};
 
 const avgAuditFakeData = {
 	Month: {
@@ -120,10 +153,8 @@ class Dashboard extends Component {
 		this.setState({
 			radioSelected: radioSelected
 		});
-	}
-	changeValue(e) {
-		this.setState({ dropDownValue: e.currentTarget.textContent });
-	}
+  }
+  
 	changeValueAvgAudit(e) {
 		this.setState({ avgAuditdropDownValue: e.currentTarget.textContent });
 	}
@@ -135,6 +166,7 @@ class Dashboard extends Component {
 		return (
 			<div className="animated fadeIn">
 				<Row>
+          {/* Card 1 - Average Audits */}
 					<Col xs="12" sm="6" lg="3">
 						<Card className="text-white bg-success border-secondary">
 							<CardHeader>
@@ -176,11 +208,12 @@ class Dashboard extends Component {
 									className="text-value"
 									style={{ fontSize: "30px" }}
 								>
+                  1234
 									{/* This is how we change data based on state. This should probably be done different.
                    Will this work on report submit? Or will we have to refresh */}
-									{this.state.avgAuditdropDownValue == "Day"
+									{/* {this.state.avgAuditdropDownValue == "Day"
 										? JSON.stringify(avgAuditFakeData.Day.data)
-										: JSON.stringify(avgAuditFakeData.Month.data)}
+										: JSON.stringify(avgAuditFakeData.Month.data)} */}
 								</div>
 							</CardBody>
 							<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
@@ -192,6 +225,7 @@ class Dashboard extends Component {
 							</div>
 						</Card>
 					</Col>
+          {/* Card 2 - Total Audits */}
 					<Col xs="12" sm="6" lg="3">
 						<Card className="text-white bg-primary border-secondary">
 							<CardHeader>
@@ -229,11 +263,7 @@ class Dashboard extends Component {
 									className="text-value"
 									style={{ fontSize: "30px" }}
 								>
-									{/* This is how we change data based on state. This should probably be done different.
-                   Will this work on report submit? Or will we have to refresh */}
-									{this.state.totalAuditdropDownValue == "Month"
-										? JSON.stringify(avgAuditFakeData.Day.data)
-										: JSON.stringify(avgAuditFakeData.Month.data)}
+                  1234
 								</div>
 							</CardBody>
 							<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
@@ -245,6 +275,33 @@ class Dashboard extends Component {
 							</div>
 						</Card>
 					</Col>
+          
+          {/* Card 3 - Average Operator Resolve */}
+					<Col xs="12" sm="6" lg="3">
+						<Card className="text-white bg-danger border-secondary">
+							<CardHeader>
+								Average Operator Resolve Percentage 
+							</CardHeader>
+							<CardBody className="pb-0">
+								<div
+									id="totalAuditDataDiv"
+									className="text-value"
+									style={{ fontSize: "30px" }}
+								>
+                  80%
+								</div>
+							</CardBody>
+							<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
+								<Line
+									data={cardChartData4}
+									options={cardChartOpts1}
+									height={70}
+								/>
+							</div>
+						</Card>
+					</Col>
+
+
 				</Row>
 			</div>
 		);
