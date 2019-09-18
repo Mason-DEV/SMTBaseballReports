@@ -9,3 +9,7 @@
 @import '~simple-line-icons/css/simple-line-icons.css';
 // Import Main styles for this application
 @import './scss/style.scss';
+
+.without::-webkit-datetime-edit-ampm-field {
+  display: none;
+}

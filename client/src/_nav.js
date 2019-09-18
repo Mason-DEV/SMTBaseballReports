@@ -17,7 +17,7 @@ export default {
 		},
     {
       name: "FFx Audit Report",
-      url: "/theme/typography",
+      url: "/ffxauditreport",
       icon: "icon-note"
     },
 		{
