@@ -74,12 +74,12 @@ class FFxAuditReport extends Component {
 		return (
 			<div className="animated fadeIn">
 				<br />
-				<Card>
+				<Card className="card-accent-success">
 					<CardHeader>
 						<strong>FIELDf/x Audit Report</strong>
 					</CardHeader>
 					<CardBody>
-						<Form>
+						<Form action="" method="post">
 							<Row>
 								<Col>
 									<FormGroup>
