@@ -23,6 +23,8 @@ import {
 //import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from "@coreui/coreui/dist/js/coreui-utilities";
 
+import spinner from "../../assests/images/smtSpinner.gif";
+
 //const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 
 const brandPrimary = getStyle("--primary");
@@ -84,10 +86,6 @@ const avgAuditFakeData = {
 	}
 };
 
-function test(params) {
-	console.log(params);
-}
-
 class Dashboard extends Component {
 	constructor(props) {
 		super(props);
@@ -101,6 +99,8 @@ class Dashboard extends Component {
 
 		//States
 		this.state = {
+			isLoading: true,
+			data: {},
 			dropdownOpen: false,
 			radioSelected: 2,
 			avgAuditdropDownValue: "Day",
@@ -109,9 +109,22 @@ class Dashboard extends Component {
 		};
 	}
 
+	// Fetch audit data on first mount
+	componentDidMount() {
+		this.getAuditData();
+
+  }  
+	// Retrieves the data of from the Express api
+	getAuditData = () => {
+    fetch("/api/audits")
+    .then(res => res.json())
+    .then(data => this.setState({ data }))
+		//Data is loaded, so change from loading state
+    .then(isLoading => this.setState({isLoading: false}));
+	};
+
 	getData() {
 		this.setState({ avgAuditData: avgAuditFakeData });
-		console.log(this.state);
 	}
 
 	toggle() {
@@ -137,8 +150,24 @@ class Dashboard extends Component {
 	}
 
 	render() {
+		//Logs our current state, should have data here to start putting stuff
+		//TODO: DO we want the server to handle the logic or frontend?
+		//Front end could grab all we need, then we have a function here that grabs each thing and sets it to a new state
+		//Back end could have an API call for each thing we want (getAverageAudit) then setStreamWriter dataWriter = new StreamWriter(new FileStream(writeFile, FileMode.Open, FileAccess.Write));s it to states
+		// if(this.state.data[0]){
+		//   var gameID = this.state.data[0].nothing;
+		// }
+
+		if (this.state.isLoading) {
+
+			 return  <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{height: "100%"}}/>
+		}
+    else{
+
+      console.log(this.state.data);
+    
 		return (
-			<div className="animated fadeIn">
+      <div className="animated fadeIn">
 				{/* Cards ROW 1 */}
 				<Row>
 					{/* Card 1 - Average Audits */}
@@ -417,7 +446,7 @@ class Dashboard extends Component {
 												<div className="callout callout-danger">
 													<small className="text-muted">Data Metric</small>
 													<br />
-													<strong className="h4">1234</strong>
+													<strong className="h4">{}</strong>
 													<div className="chart-wrapper"></div>
 												</div>
 											</Col>
@@ -488,7 +517,6 @@ class Dashboard extends Component {
 											<th className="text-center">Games Operated</th>
 											<th className="text-center">Average Resolve %</th>
 											<th className="text-center">Average Game Audit Time</th>
-											
 										</tr>
 									</thead>
 									<tbody>
@@ -498,15 +526,18 @@ class Dashboard extends Component {
 											</td>
 											<td className="text-center">40</td>
 											<td className="text-center">100%</td>
-											<td className="text-center" style={{color: "green"}}>0 Hours</td>
-											
+											<td className="text-center" style={{ color: "green" }}>
+												0 Hours
+											</td>
 										</tr>
 										<tr>
 											<td>
 												<div>Miles McKinnon</div>
 											</td>
 											<td className="text-center">26</td>
-											<td className="text-center" style={{color: "red"}}>30%</td>
+											<td className="text-center" style={{ color: "red" }}>
+												30%
+											</td>
 											<td className="text-center">3 Hours</td>
 										</tr>
 									</tbody>
@@ -516,111 +547,9 @@ class Dashboard extends Component {
 					</Col>
 				</Row>
 			</div>
-		);
+    );
+    }
 	}
 }
+
 export default Dashboard;
-
-{
-	/* <Col xs="12" sm="6" lg="3">
-						<Card className="text-white bg-primary">
-							<CardBody className="pb-0">
-								<ButtonGroup className="float-right">
-									<Dropdown
-										id="card2"
-										isOpen={this.state.card2}
-										toggle={() => {
-											this.setState({ card2: !this.state.card2 });
-										}}
-									>
-										<DropdownToggle className="p-0" color="transparent">
-											<i className="icon-settings"></i>
-										</DropdownToggle>
-										<DropdownMenu right>
-											<DropdownItem>Action</DropdownItem>
-											<DropdownItem>Another action</DropdownItem>
-											<DropdownItem>Something else here</DropdownItem>
-										</DropdownMenu>
-									</Dropdown>
-								</ButtonGroup>
-								<div className="text-value">325</div>
-								<div>Total Audits This Season</div>
-							</CardBody>
-							<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-								<Line
-									data={cardChartData1}
-									options={cardChartOpts1}
-									height={70}
-								/>
-							</div>
-						</Card>
-					</Col>
-
-					<Col xs="12" sm="6" lg="3">
-						<Card className="text-white bg-warning">
-							<CardBody className="pb-0">
-								<ButtonGroup className="float-right">
-									<Dropdown
-										id="card3"
-										isOpen={this.state.card3}
-										toggle={() => {
-											this.setState({ card3: !this.state.card3 });
-										}}
-									>
-										<DropdownToggle caret className="p-0" color="transparent">
-											<i className="icon-settings"></i>
-										</DropdownToggle>
-										<DropdownMenu right>
-											<DropdownItem>Action</DropdownItem>
-											<DropdownItem>Another action</DropdownItem>
-											<DropdownItem>Something else here</DropdownItem>
-										</DropdownMenu>
-									</Dropdown>
-								</ButtonGroup>
-								<div className="text-value">123</div>
-								<div>Total Pitches Added This Season</div>
-							</CardBody>
-							<div className="chart-wrapper" style={{ height: "70px" }}>
-								<Line
-									data={cardChartData3}
-									options={cardChartOpts3}
-									height={70}
-								/>
-							</div>
-						</Card>
-					</Col>
-
-					<Col xs="12" sm="6" lg="3">
-						<Card className="text-white bg-danger">
-							<CardBody className="pb-0">
-								<ButtonGroup className="float-right">
-									<ButtonDropdown
-										id="card4"
-										isOpen={this.state.card4}
-										toggle={() => {
-											this.setState({ card4: !this.state.card4 });
-										}}
-									>
-										<DropdownToggle caret className="p-0" color="transparent">
-											<i className="icon-settings"></i>
-										</DropdownToggle>
-										<DropdownMenu right>
-											<DropdownItem>Action</DropdownItem>
-											<DropdownItem>Another action</DropdownItem>
-											<DropdownItem>Something else here</DropdownItem>
-										</DropdownMenu>
-									</ButtonDropdown>
-								</ButtonGroup>
-								<div className="text-value">98%</div>
-								<div>Average Operator Resolve Percentage</div>
-							</CardBody>
-							<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-								<Bar
-									data={cardChartData4}
-									options={cardChartOpts4}
-									height={70}
-								/>
-                </div>
-                </Card>
-                </Col> */
-}

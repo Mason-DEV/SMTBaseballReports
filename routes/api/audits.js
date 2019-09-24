@@ -9,8 +9,9 @@ const Audit = require('../../models/Audit');
 // @access  Public
 router.get('/', (req, res) => {
     Audit.find()
-        .sort({date: -1})
+        //.sort({date: -1})
         .then(items => res.json(items))
+
 });
 
 // @route   POST api/audits
@@ -18,7 +19,7 @@ router.get('/', (req, res) => {
 // @access  Public
 router.post('/', (req, res) => {
     const newAudit = new Audit({
-        gameID: req.body.gameID
+       // gameID: req.body.gameID
     });
 
     newAudit.save().then(audit => res.json(audit));

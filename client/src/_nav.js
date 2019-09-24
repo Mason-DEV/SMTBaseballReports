@@ -40,7 +40,7 @@ export default {
 		},
 		{
 			name: "FFx Audit",
-			url: "/base",
+			url: "/ffxauditdata",
 			icon: "icon-globe"
 		},
 		{
