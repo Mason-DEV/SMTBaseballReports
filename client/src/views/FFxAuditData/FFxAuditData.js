@@ -1,56 +1,24 @@
-import React, { Component, lazy, Suspense } from "react";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import React, { Component} from "react";
+
 import {
-	Button,
-	Badge,
+
 	Card,
 	CardBody,
 	CardHeader,
-	Col,
-	Pagination,
-	PaginationItem,
-	PaginationLink,
-	Row,
-	Table,
-	Modal,
-	ModalBody,
-	ModalHeader,
-	ModalFooter
+
 } from "reactstrap";
 
-import { MDBCard, MDBCardBody, MDBCardHeader, MDBInput, MDBBtn, MDBTable, MDBTableBody, MDBTableHead, MDBDataTable  } from 'mdbreact';
+import { MDBDataTable  } from 'mdbreact';
 
 //import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { getStyle, hexToRgba } from "@coreui/coreui/dist/js/coreui-utilities";
 
-import lgLogo from "../../../src/assests/images/SMT_Report_Tag.jpg";
+// import lgLogo from "../../../src/assests/images/SMT_Report_Tag.jpg";
 import spinner from "../../assests/images/smtSpinner.gif";
 
 import ModalComponent from './Modals/ModalComponent'
 
 //const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 
-const brandPrimary = getStyle("--primary");
-const brandSuccess = getStyle("--success");
-const brandInfo = getStyle("--info");
-const brandWarning = getStyle("--warning");
-const brandDanger = getStyle("--danger");
-
-function test(params) {
-	console.log(params);
-}
-
-{
-	/* <th>GameString</th>
-<th>Operator</th>
-<th>Auditor</th>
-<th>GD Pitches</th>
-<th>FFx Pitches</th>
-<th>Missed Pitches</th>
-<th>Missed BIP</th>
-<th>Added Pitches</th>
-<th>Added PickOffs</th> */
-}
 
 const tableData = {
 	columns: [

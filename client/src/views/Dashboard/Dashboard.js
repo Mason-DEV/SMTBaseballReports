@@ -1,37 +1,30 @@
-import React, { Component, lazy, Suspense } from "react";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import React, { Component } from "react";
+import { Bar, Line } from "react-chartjs-2";
 import {
-	Badge,
-	Button,
+
 	ButtonDropdown,
 	ButtonGroup,
-	ButtonToolbar,
+
 	Card,
 	CardBody,
-	CardFooter,
+
 	CardHeader,
-	CardTitle,
+
 	Col,
-	Dropdown,
+
 	DropdownItem,
 	DropdownMenu,
 	DropdownToggle,
-	Progress,
+
 	Row,
 	Table
 } from "reactstrap";
 //import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { getStyle, hexToRgba } from "@coreui/coreui/dist/js/coreui-utilities";
 
 import spinner from "../../assests/images/smtSpinner.gif";
 
 //const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 
-const brandPrimary = getStyle("--primary");
-const brandSuccess = getStyle("--success");
-const brandInfo = getStyle("--info");
-const brandWarning = getStyle("--warning");
-const brandDanger = getStyle("--danger");
 
 // Card Chart 4 Data
 const cardChartData4 = {
@@ -178,7 +171,7 @@ class Dashboard extends Component {
 			
     });
     const sum = plays.reduce((partial_sum, a) => partial_sum + a,0);
-    console.log("sum",sum);
+   // console.log("sum",sum);
     return sum
   }
   //gets totalSync for all games
@@ -256,7 +249,7 @@ class Dashboard extends Component {
 				/>
 			);
 		} else {
-      console.log(this.state);
+     // console.log(this.state);
 			return (
 				<div className="animated fadeIn">
 					{/* Cards ROW 1 */}

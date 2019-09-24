@@ -1,47 +1,31 @@
-import React, { Component, lazy, Suspense } from "react";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import React, { Component,  } from "react";
 import {
 	Badge,
 	Button,
-	ButtonDropdown,
-	ButtonGroup,
-	ButtonToolbar,
+	
 	Card,
 	CardBody,
-	CardFooter,
+	
 	CardHeader,
-	CardTitle,
+	
 	Col,
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownToggle,
+	
 	Label,
 	Input,
 	Form,
 	FormGroup,
-	FormText,
+	
 	FormFeedback,
-	Progress,
+	
 	Row,
-	Table
+	
 } from "reactstrap";
 //import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { getStyle, hexToRgba } from "@coreui/coreui/dist/js/coreui-utilities";
 
 import lgLogo from '../../../src/assests/images/SMT_Report_Tag.jpg';
 
 //const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 
-const brandPrimary = getStyle("--primary");
-const brandSuccess = getStyle("--success");
-const brandInfo = getStyle("--info");
-const brandWarning = getStyle("--warning");
-const brandDanger = getStyle("--danger");
-
-function test(params) {
-	console.log(params);
-}
 
 class FFxAuditReport extends Component {
 	constructor(props) {

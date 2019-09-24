@@ -1,7 +1,7 @@
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
 
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form,	FormGroup,	FormText,	FormFeedback, Row, Col, Label, Badge, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form,	FormGroup,	Row, Col, Label, Input } from 'reactstrap';
 
 class ModalExample extends React.Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class ModalExample extends React.Component {
   }
 
   render() {
-    if(this.state.modalType == "View"){
+    if(this.state.modalType === "View"){
       return (
         <div style={{margin: 1, float: "left"}}>
           <Button  color={this.props.props.color} size="sm" onClick={this.toggle}>{this.props.props.name} </Button>
