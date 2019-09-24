@@ -25,6 +25,34 @@ router.post('/', (req, res) => {
     newAudit.save().then(audit => res.json(audit));
 });
 
+// @route   PUT api/audits
+// @desc    Update An Audit Data
+// @access  Public
+router.put('/:id', (req, res) => {
+    Audit.findById(req.params.id, function(err, audit) {
+        if (!audit)
+            res.status(404).send("Can not find this Audit in the DB");
+        else
+            audit.gamestring = req.body.gamestring;
+            audit.auditor = req.body.auditor;
+            audit.operator = req.body.operator;
+            audit.ffxPitches = req.body.ffxPitches;
+            audit.gdPitches = req.body.gdPitches;
+            audit.missedPitches = req.body.missedPitches;
+            audit.missedBIP = req.body.missedBIP;
+            audit.pitchesAdd = req.body.pitchesAdd;
+            audit.pickAdd = req.body.pickAdd;
+            audit.save().then(audit => {
+                res.json('Audit updated!');
+            })
+            .catch(err => {
+                res.status(400).send("Update not possible");
+            });
+    });
+      
+});
+
+
 // // @route   Delete api/items/:id
 // // @desc    Delete A Item
 // // @access  Public

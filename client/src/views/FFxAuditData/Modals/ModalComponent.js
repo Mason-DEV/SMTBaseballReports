@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form,	FormGroup,	Row, Col, Label, Input } from 'reactstrap';
 
+
 class ModalExample extends React.Component {
   constructor(props) {
     super(props);
@@ -24,13 +25,41 @@ class ModalExample extends React.Component {
   }
 
   updateElement() {
-    this.setState(prevState => ({
-      modal: !prevState.modal,
-      modalType: this.props.props.name 
-    }));
-    
-    console.log("Updating things")
+    const updateAudit  
+    this.updateAuditData(this.props.props.element._id);
+      this.setState(prevState => ({
+        modal: !prevState.modal,
+        modalType: this.props.props.name 
+      }));
   }
+
+
+// Retrieves the data of from the Express api
+updateAuditData = (id) => {
+  fetch('$/api/audits/:{"id"}', {
+        method: 'PUT',
+        body: 
+    }).then(response => response.json());
+};
+
+// function createNewProfile(profile) {
+//   const formData = new FormData();
+//   formData.append('first_name', profile.firstName);
+//   formData.append('last_name', profile.lastName);
+//   formData.append('email', profile.email);
+
+//   return fetch('http://example.com/api/v1/registration', {
+//       method: 'POST',
+//       body: formData
+//   }).then(response => response.json())
+// }
+
+// createNewProfile(profile)
+//  .then((json) => {
+//      // handle success
+//   })
+//  .catch(error => error);
+
 
   render() {
     if(this.state.modalType === "View"){
@@ -45,20 +74,20 @@ class ModalExample extends React.Component {
                   <Col>
                     <FormGroup>
                       <Label htmlFor="gameID">Gamestring</Label>
-                      <Input type="text" className="form-control-warning"	id="gameID" value={this.props.props.element.gamestring} disabled></Input>
+                      <Input type="text" className="form-control-warning"	id="gameID" defaultValue={this.props.props.element.gamestring} disabled></Input>
                       <Label htmlFor="operator">Operator</Label>
-                      <Input type="text" className="form-control-warning"	id="operator" value={this.props.props.element.operator} disabled></Input>
+                      <Input type="text" className="form-control-warning"	id="operator" defaultValue={this.props.props.element.operator} disabled></Input>
                       <Label htmlFor="auditor">Auditor</Label>
-                      <Input type="text" className="form-control-warning"	id="auditor" value={this.props.props.element.auditor} disabled></Input>
+                      <Input type="text" className="form-control-warning"	id="auditor" defaultValue={this.props.props.element.auditor} disabled></Input>
 
                     </FormGroup>
                   </Col>
                   <Col>
                     <FormGroup>
                       <Label htmlFor="gdPitches">GD Pitches</Label>
-                      <Input type="text" className="form-control-warning"	id="gdPitches" value={this.props.props.element.gdPitches} disabled></Input>
+                      <Input type="text" className="form-control-warning"	id="gdPitches" defaultValue={this.props.props.element.gdPitches} disabled></Input>
                       <Label htmlFor="ffxPitches">FFx Pitches</Label>
-                      <Input type="text" className="form-control-warning"	id="ffxPitches" value={this.props.props.element.ffxPitches} disabled></Input>
+                      <Input type="text" className="form-control-warning"	id="ffxPitches" defaultValue={this.props.props.element.ffxPitches} disabled></Input>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -84,20 +113,20 @@ class ModalExample extends React.Component {
                   <Col>
                     <FormGroup>
                       <Label htmlFor="gameID">Gamestring</Label>
-                      <Input type="text" className="form-control-warning"	id="gameID" value={this.props.props.element.gamestring}></Input>
+                      <Input type="text" className="form-control-warning"	id="gameID" defaultValue={this.props.props.element.gamestring}></Input>
                       <Label htmlFor="operator">Operator</Label>
-                      <Input type="text" className="form-control-warning"	id="operator" value={this.props.props.element.operator}></Input>
+                      <Input type="text" className="form-control-warning"	id="operator" defaultValue={this.props.props.element.operator}></Input>
                       <Label htmlFor="auditor">Auditor</Label>
-                      <Input type="text" className="form-control-warning"	id="auditor" value={this.props.props.element.auditor}></Input>
+                      <Input type="text" className="form-control-warning"	id="auditor" defaultValue={this.props.props.element.auditor}></Input>
 
                     </FormGroup>
                   </Col>
                   <Col>
                     <FormGroup>
                       <Label htmlFor="gdPitches">GD Pitches</Label>
-                      <Input type="text" className="form-control-warning"	id="gdPitches" value={this.props.props.element.gdPitches}></Input>
+                      <Input type="text" className="form-control-warning"	id="gdPitches" defaultValue={this.props.props.element.gdPitches}></Input>
                       <Label htmlFor="ffxPitches">FFx Pitches</Label>
-                      <Input type="text" className="form-control-warning"	id="ffxPitches" value={this.props.props.element.ffxPitches}></Input>
+                      <Input type="text" className="form-control-warning"	id="ffxPitches" defaultValue={this.props.props.element.ffxPitches}></Input>
                     </FormGroup>
                   </Col>
                 </Row>
