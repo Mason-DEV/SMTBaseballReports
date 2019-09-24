@@ -105,26 +105,45 @@ class Dashboard extends Component {
 			radioSelected: 2,
 			avgAuditdropDownValue: "Day",
 			totalAuditdropDownValue: "Season",
-			pitchesdropDownValue: "Season"
+      pitchesdropDownValue: "Season",
+      dashData: {
+          playsResolved: 0,
+          gdSync: 0,
+          missedPitches: 0,
+          missedBIP: 0, 
+          addedPitched: 0, 
+        }
 		};
 	}
 
 	// Fetch audit data on first mount
 	componentDidMount() {
-		this.getAuditData();
-
-  }  
+    this.getAuditData();
+	}
 	// Retrieves the data of from the Express api
 	getAuditData = () => {
-    fetch("/api/audits")
-    .then(res => res.json())
-    .then(data => this.setState({ data }))
-		//Data is loaded, so change from loading state
-    .then(isLoading => this.setState({isLoading: false}));
+		fetch("/api/audits")
+			.then(res => res.json())
+			.then(data => this.setState({ data }))
+			//Data is loaded, so change from loading state
+      .then(isLoading => this.setState({ isLoading: false }))
+      .then(playsResolved => this.setState({
+        dashData: {
+              ...this.state.dashData,
+              playsResolved: this.calcPlaysResolved(),
+              gdSync: this.calcGDSync(),
+              missedPitches: this.calcMissedPitches(),
+              missedBIP: this.calcMissedBIP(),
+              addedPitches: this.calcAddedPitches(),
+        }
+    }));
+
 	};
 
 	getData() {
-		this.setState({ avgAuditData: avgAuditFakeData });
+    this.setState({ avgAuditData: avgAuditFakeData, ...this.state.dashData, 
+                    playsResolved: this.calcPlaysResolved()
+                  });    
 	}
 
 	toggle() {
@@ -149,6 +168,73 @@ class Dashboard extends Component {
 		this.setState({ pitchesdropDownValue: e.currentTarget.textContent });
 	}
 
+  //Calulations for DataonDash
+  
+  //getsTotalFFxPlaysResolved
+	calcPlaysResolved() {
+		var plays=[];
+		this.state.data.forEach(element => {
+      plays.push(+element.ffxPitches)
+			
+    });
+    const sum = plays.reduce((partial_sum, a) => partial_sum + a,0);
+    console.log("sum",sum);
+    return sum
+  }
+  //gets totalSync for all games
+	calcGDSync() {
+		var rawData=[];
+		this.state.data.forEach(element => {
+      //console.log()
+      var perct = (+element.ffxPitches / +element.gdPitches).toFixed(2);
+      if(!isNaN(perct))
+
+      rawData.push(+perct)
+    });
+    const sum = rawData.reduce((partial_sum, a) => partial_sum + a,0);
+    const avg = ((sum / rawData.length) * 100).toFixed(2);
+    return avg;
+  }
+  //gets totalMissedPitches for all games
+	calcMissedPitches() {
+    var rawData=[];
+		this.state.data.forEach(element => {
+      var missed = +element.missedPitches
+      rawData.push(isNaN(missed) ? 0 : missed)
+      
+    });
+    const sum = rawData.reduce((partial_sum, a) => partial_sum + a,0);
+    return sum
+  }
+
+  //gets totalMissedBIP for all games
+	calcMissedBIP() {
+    var rawData=[];
+		this.state.data.forEach(element => {
+      var missed = +element.missedBIP
+      rawData.push(isNaN(missed) ? 0 : missed)
+
+    });
+    const sum = rawData.reduce((partial_sum, a) => partial_sum + a,0);
+
+    return sum
+  }
+
+  //gets totalAddedPitches for all games
+	calcAddedPitches() {
+    var rawData=[];
+		this.state.data.forEach(element => {
+      var added = +element.pitchesAdd
+      rawData.push(isNaN(added) ? 0 : added)
+
+    });
+    const sum = rawData.reduce((partial_sum, a) => partial_sum + a,0);
+
+    return sum
+  }
+
+
+
 	render() {
 		//Logs our current state, should have data here to start putting stuff
 		//TODO: DO we want the server to handle the logic or frontend?
@@ -159,396 +245,403 @@ class Dashboard extends Component {
 		// }
 
 		if (this.state.isLoading) {
-
-			 return  <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{height: "100%"}}/>
-		}
-    else{
-
-      console.log(this.state.data);
-    
-		return (
-      <div className="animated fadeIn">
-				{/* Cards ROW 1 */}
-				<Row>
-					{/* Card 1 - Average Audits */}
-					<Col xs="12" sm="6" lg="3">
-						<Card className="text-white bg-success border-secondary">
-							<CardHeader>
-								Average Audits {this.state.avgAuditdropDownValue}
-								<ButtonGroup className="float-right">
-									<ButtonDropdown
-										id="avgAuditCard"
-										isOpen={this.state.avgAuditCard}
-										toggle={() => {
-											this.setState({ avgAuditCard: !this.state.avgAuditCard });
-										}}
+			return (
+				<img
+					src={spinner}
+					height="150"
+					width="150"
+					alt="spinner"
+					align="center"
+					style={{ height: "100%" }}
+				/>
+			);
+		} else {
+      console.log(this.state);
+			return (
+				<div className="animated fadeIn">
+					{/* Cards ROW 1 */}
+					<Row>
+						{/* Card 1 - Average Audits */}
+						<Col xs="12" sm="6" lg="3">
+							<Card className="text-white bg-success border-secondary">
+								<CardHeader>
+									Average Audits {this.state.avgAuditdropDownValue}
+									<ButtonGroup className="float-right">
+										<ButtonDropdown
+											id="avgAuditCard"
+											isOpen={this.state.avgAuditCard}
+											toggle={() => {
+												this.setState({
+													avgAuditCard: !this.state.avgAuditCard
+												});
+											}}
+										>
+											<DropdownToggle caret className="p-0" color="transparent">
+												<i className="icon-settings"></i>{" "}
+											</DropdownToggle>
+											<DropdownMenu right>
+												<DropdownItem
+													id="test"
+													onClick={this.changeValueAvgAudit}
+												>
+													Month
+												</DropdownItem>
+												<DropdownItem
+													id="test"
+													onClick={this.changeValueAvgAudit}
+												>
+													Week
+												</DropdownItem>
+												<DropdownItem onClick={this.changeValueAvgAudit}>
+													Day
+												</DropdownItem>
+											</DropdownMenu>
+										</ButtonDropdown>
+									</ButtonGroup>
+								</CardHeader>
+								<CardBody className="pb-0">
+									<div
+										id="avgAuditDataDiv"
+										className="text-value"
+										style={{ fontSize: "30px" }}
 									>
-										<DropdownToggle caret className="p-0" color="transparent">
-											<i className="icon-settings"></i>{" "}
-										</DropdownToggle>
-										<DropdownMenu right>
-											<DropdownItem
-												id="test"
-												onClick={this.changeValueAvgAudit}
-											>
-												Month
-											</DropdownItem>
-											<DropdownItem
-												id="test"
-												onClick={this.changeValueAvgAudit}
-											>
-												Week
-											</DropdownItem>
-											<DropdownItem onClick={this.changeValueAvgAudit}>
-												Day
-											</DropdownItem>
-										</DropdownMenu>
-									</ButtonDropdown>
-								</ButtonGroup>
-							</CardHeader>
-							<CardBody className="pb-0">
-								<div
-									id="avgAuditDataDiv"
-									className="text-value"
-									style={{ fontSize: "30px" }}
-								>
-									1234
-									{/* This is how we change data based on state. This should probably be done different.
+										1234
+										{/* This is how we change data based on state. This should probably be done different.
                    Will this work on report submit? Or will we have to refresh */}
-									{/* {this.state.avgAuditdropDownValue == "Day"
+										{/* {this.state.avgAuditdropDownValue == "Day"
 										? JSON.stringify(avgAuditFakeData.Day.data)
 										: JSON.stringify(avgAuditFakeData.Month.data)} */}
+									</div>
+								</CardBody>
+								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
+									<Line
+										data={cardChartData4}
+										options={cardChartOpts4}
+										height={70}
+									/>
 								</div>
-							</CardBody>
-							<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-								<Line
-									data={cardChartData4}
-									options={cardChartOpts4}
-									height={70}
-								/>
-							</div>
-						</Card>
-					</Col>
-					{/* Card 2 - Total Audits */}
-					<Col xs="12" sm="6" lg="3">
-						<Card className="text-white bg-primary border-secondary">
-							<CardHeader>
-								Total Audits {this.state.totalAuditdropDownValue}
-								<ButtonGroup className="float-right">
-									<ButtonDropdown
-										id="totalAuditCard"
-										isOpen={this.state.totalAuditCard}
-										toggle={() => {
-											this.setState({
-												totalAuditCard: !this.state.totalAuditCard
-											});
-										}}
+							</Card>
+						</Col>
+						{/* Card 2 - Total Audits */}
+						<Col xs="12" sm="6" lg="3">
+							<Card className="text-white bg-primary border-secondary">
+								<CardHeader>
+									Total Audits {this.state.totalAuditdropDownValue}
+									<ButtonGroup className="float-right">
+										<ButtonDropdown
+											id="totalAuditCard"
+											isOpen={this.state.totalAuditCard}
+											toggle={() => {
+												this.setState({
+													totalAuditCard: !this.state.totalAuditCard
+												});
+											}}
+										>
+											<DropdownToggle caret className="p-0" color="transparent">
+												<i className="icon-settings"></i>{" "}
+											</DropdownToggle>
+											<DropdownMenu right>
+												<DropdownItem onClick={this.changeValueTotalAudit}>
+													Season
+												</DropdownItem>
+												<DropdownItem onClick={this.changeValueTotalAudit}>
+													Week
+												</DropdownItem>
+												<DropdownItem onClick={this.changeValueTotalAudit}>
+													Month
+												</DropdownItem>
+											</DropdownMenu>
+										</ButtonDropdown>
+									</ButtonGroup>
+								</CardHeader>
+								<CardBody className="pb-0">
+									<div
+										id="totalAuditDataDiv"
+										className="text-value"
+										style={{ fontSize: "30px" }}
 									>
-										<DropdownToggle caret className="p-0" color="transparent">
-											<i className="icon-settings"></i>{" "}
-										</DropdownToggle>
-										<DropdownMenu right>
-											<DropdownItem onClick={this.changeValueTotalAudit}>
-												Season
-											</DropdownItem>
-											<DropdownItem onClick={this.changeValueTotalAudit}>
-												Week
-											</DropdownItem>
-											<DropdownItem onClick={this.changeValueTotalAudit}>
-												Month
-											</DropdownItem>
-										</DropdownMenu>
-									</ButtonDropdown>
-								</ButtonGroup>
-							</CardHeader>
-							<CardBody className="pb-0">
-								<div
-									id="totalAuditDataDiv"
-									className="text-value"
-									style={{ fontSize: "30px" }}
-								>
-									1234
+										1234
+									</div>
+								</CardBody>
+								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
+									<Bar
+										data={cardChartData4}
+										options={cardChartOpts4}
+										height={70}
+									/>
 								</div>
-							</CardBody>
-							<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-								<Bar
-									data={cardChartData4}
-									options={cardChartOpts4}
-									height={70}
-								/>
-							</div>
-						</Card>
-					</Col>
+							</Card>
+						</Col>
 
-					{/* Card 3 - Average Operator Resolve */}
-					<Col xs="12" sm="6" lg="3">
-						<Card className="text-white bg-danger border-secondary">
-							<CardHeader>Average Op Resolve Percentage</CardHeader>
-							<CardBody className="pb-0">
-								<div
-									id="totalAuditDataDiv"
-									className="text-value"
-									style={{ fontSize: "30px" }}
-								>
-									80%
-								</div>
-							</CardBody>
-							<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-								<Line
-									data={cardChartData4}
-									options={cardChartOpts4}
-									height={70}
-								/>
-							</div>
-						</Card>
-					</Col>
-
-					{/* Card 4 - Pitches Added */}
-					<Col xs="12" sm="6" lg="3">
-						<Card className="text-white bg-info border-secondary">
-							<CardHeader>
-								Total Pitches Added {this.state.pitchesdropDownValue}
-								<ButtonGroup className="float-right">
-									<ButtonDropdown
-										id="totalPitchesCard"
-										isOpen={this.state.totalPitchesCard}
-										toggle={() => {
-											this.setState({
-												totalPitchesCard: !this.state.totalPitchesCard
-											});
-										}}
+						{/* Card 3 - Average Operator Resolve */}
+						<Col xs="12" sm="6" lg="3">
+							<Card className="text-white bg-danger border-secondary">
+								<CardHeader>Average Op Resolve Percentage</CardHeader>
+								<CardBody className="pb-0">
+									<div
+										id="totalAuditDataDiv"
+										className="text-value"
+										style={{ fontSize: "30px" }}
 									>
-										<DropdownToggle caret className="p-0" color="transparent">
-											<i className="icon-settings"></i>{" "}
-										</DropdownToggle>
-										<DropdownMenu right>
-											<DropdownItem onClick={this.changeValuePitches}>
-												Season
-											</DropdownItem>
-											<DropdownItem onClick={this.changeValuePitches}>
-												Week
-											</DropdownItem>
-											<DropdownItem onClick={this.changeValuePitches}>
-												Month
-											</DropdownItem>
-										</DropdownMenu>
-									</ButtonDropdown>
-								</ButtonGroup>
-							</CardHeader>
-							<CardBody className="pb-0">
-								<div
-									id="totalAuditDataDiv"
-									className="text-value"
-									style={{ fontSize: "30px" }}
-								>
-									1234
+										80%
+									</div>
+								</CardBody>
+								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
+									<Line
+										data={cardChartData4}
+										options={cardChartOpts4}
+										height={70}
+									/>
 								</div>
-							</CardBody>
-							<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-								<Bar
-									data={cardChartData4}
-									options={cardChartOpts4}
-									height={70}
-								/>
-							</div>
-						</Card>
-					</Col>
-				</Row>
+							</Card>
+						</Col>
 
-				{/* Row 2 - OP / Audit Performance */}
+						{/* Card 4 - Pitches Added */}
+						<Col xs="12" sm="6" lg="3">
+							<Card className="text-white bg-info border-secondary">
+								<CardHeader>
+									Total Pitches Added {this.state.pitchesdropDownValue}
+									<ButtonGroup className="float-right">
+										<ButtonDropdown
+											id="totalPitchesCard"
+											isOpen={this.state.totalPitchesCard}
+											toggle={() => {
+												this.setState({
+													totalPitchesCard: !this.state.totalPitchesCard
+												});
+											}}
+										>
+											<DropdownToggle caret className="p-0" color="transparent">
+												<i className="icon-settings"></i>{" "}
+											</DropdownToggle>
+											<DropdownMenu right>
+												<DropdownItem onClick={this.changeValuePitches}>
+													Season
+												</DropdownItem>
+												<DropdownItem onClick={this.changeValuePitches}>
+													Week
+												</DropdownItem>
+												<DropdownItem onClick={this.changeValuePitches}>
+													Month
+												</DropdownItem>
+											</DropdownMenu>
+										</ButtonDropdown>
+									</ButtonGroup>
+								</CardHeader>
+								<CardBody className="pb-0">
+									<div
+										id="totalAuditDataDiv"
+										className="text-value"
+										style={{ fontSize: "30px" }}
+									>
+										{this.state.dashData.addedPitches}
+									</div>
+								</CardBody>
+								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
+									<Bar
+										data={cardChartData4}
+										options={cardChartOpts4}
+										height={70}
+									/>
+								</div>
+							</Card>
+						</Col>
+					</Row>
 
-				<Row>
-					<Col>
-						<Card>
-							<CardHeader>Operator {" & "} Auditor Performance</CardHeader>
-							<CardBody>
-								{/* Row A - Performance Box */}
+					{/* Row 2 - OP / Audit Performance */}
 
-								<Row>
-									<Col xs="12" md="6" xl="6">
-										<Row>
-											<Col sm="6">
-												<div className="callout callout-success">
-													<small className="text-muted">
-														Current Turn Over Time
-													</small>
-													<br />
-													<strong className="h4">25 Hours</strong>
-													<div className="chart-wrapper"></div>
-												</div>
-											</Col>
-											<Col sm="6">
-												<div className="callout callout-primary">
-													<small className="text-muted">
-														Average Audit Time
-													</small>
-													<br />
-													<strong className="h4">3 Hours</strong>
-													<div className="chart-wrapper"></div>
-												</div>
-											</Col>
-										</Row>
-										<hr className="mt-0" />
-									</Col>
-									<Col xs="12" md="6" xl="6">
-										<Row>
-											<Col sm="6">
-												<div className="callout callout-danger">
-													<small className="text-muted">Plays Resolved</small>
-													<br />
-													<strong className="h4">2,500</strong>
-													<div className="chart-wrapper"></div>
-												</div>
-											</Col>
-											<Col sm="6">
-												<div className="callout callout-info">
-													<small className="text-muted">GD Sync</small>
-													<br />
-													<strong className="h4">96%</strong>
-													<div className="chart-wrapper"></div>
-												</div>
-											</Col>
-										</Row>
-										<hr className="mt-0" />
-									</Col>
-								</Row>
-								<br />
-								{/* Row B - Performance Box */}
-								<Row>
-									<Col xs="12" md="6" xl="6">
-										<Row>
-											<Col sm="6">
-												<div className="callout callout-success">
-													<small className="text-muted">
-														Missed Pitches due to Video Gaps
-													</small>
-													<br />
-													<strong className="h4">60</strong>
-													<div className="chart-wrapper"></div>
-												</div>
-											</Col>
-											<Col sm="6">
-												<div className="callout callout-primary">
-													<small className="text-muted">
-														Missed BIP due to Video Gaps
-													</small>
-													<br />
-													<strong className="h4">23</strong>
-													<div className="chart-wrapper"></div>
-												</div>
-											</Col>
-										</Row>
-										<hr className="mt-0" />
-									</Col>
-									<Col xs="12" md="6" xl="6">
-										<Row>
-											<Col sm="6">
-												<div className="callout callout-danger">
-													<small className="text-muted">Data Metric</small>
-													<br />
-													<strong className="h4">{}</strong>
-													<div className="chart-wrapper"></div>
-												</div>
-											</Col>
-											<Col sm="6">
-												<div className="callout callout-info">
-													<small className="text-muted">Data Metric</small>
-													<br />
-													<strong className="h4">12,345</strong>
-													<div className="chart-wrapper"></div>
-												</div>
-											</Col>
-										</Row>
-										<hr className="mt-0" />
-									</Col>
-								</Row>
-								<br />
+					<Row>
+						<Col>
+							<Card>
+								<CardHeader>Operator {" & "} Auditor Performance</CardHeader>
+								<CardBody>
+									{/* Row A - Performance Box */}
 
-								{/* Auditor Perfarmance Table */}
-								<Table
-									hover
-									responsive
-									className="table-outline mb-0 d-none d-sm-table"
-								>
-									<thead className="thead-light">
-										<tr>
-											<th>Auditor</th>
-											<th className="text-center">Games Audited</th>
-											<th className="text-center">Pitches Added</th>
-											<th className="text-center">Average Audit Time</th>
-											<th className="text-center">Activity</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>
-												<div>Peter Panassow</div>
-											</td>
-											<td className="text-center">25</td>
-											<td className="text-center">25</td>
-											<td className="text-center">2 Hours</td>
-											<td className="text-center">
-												<strong>3 Days Ago</strong>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<div>Mason Guy</div>
-											</td>
-											<td className="text-center">15</td>
-											<td className="text-center">6</td>
-											<td className="text-center">3 Hours</td>
-											<td className="text-center">
-												<strong>10 Days Ago</strong>
-											</td>
-										</tr>
-									</tbody>
-								</Table>
-								<br />
-								{/* Auditor Perfarmance Table */}
-								<Table
-									hover
-									responsive
-									className="table-outline mb-0 d-none d-sm-table"
-								>
-									<thead className="thead-light">
-										<tr>
-											<th>Operator</th>
-											<th className="text-center">Games Operated</th>
-											<th className="text-center">Average Resolve %</th>
-											<th className="text-center">Average Game Audit Time</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>
-												<div>Thomas Rice</div>
-											</td>
-											<td className="text-center">40</td>
-											<td className="text-center">100%</td>
-											<td className="text-center" style={{ color: "green" }}>
-												0 Hours
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<div>Miles McKinnon</div>
-											</td>
-											<td className="text-center">26</td>
-											<td className="text-center" style={{ color: "red" }}>
-												30%
-											</td>
-											<td className="text-center">3 Hours</td>
-										</tr>
-									</tbody>
-								</Table>
-							</CardBody>
-						</Card>
-					</Col>
-				</Row>
-			</div>
-    );
-    }
+									<Row>
+										<Col xs="12" md="6" xl="6">
+											<Row>
+												<Col sm="6">
+													<div className="callout callout-success">
+														<small className="text-muted">
+															Current Turn Over Time
+														</small>
+														<br />
+														<strong className="h4">25 Hours</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+												<Col sm="6">
+													<div className="callout callout-primary">
+														<small className="text-muted">
+															Average Audit Time
+														</small>
+														<br />
+														<strong className="h4">3 Hours</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+											</Row>
+											<hr className="mt-0" />
+										</Col>
+										<Col xs="12" md="6" xl="6">
+											<Row>
+												<Col sm="6">
+													<div className="callout callout-danger">
+														<small className="text-muted">Plays Resolved</small>
+														<br />
+														<strong className="h4">{this.state.dashData.playsResolved}</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+												<Col sm="6">
+													<div className="callout callout-info">
+														<small className="text-muted">GD Sync</small>
+														<br />
+														<strong className="h4">{this.state.dashData.gdSync} %</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+											</Row>
+											<hr className="mt-0" />
+										</Col>
+									</Row>
+									<br />
+									{/* Row B - Performance Box */}
+									<Row>
+										<Col xs="12" md="6" xl="6">
+											<Row>
+												<Col sm="6">
+													<div className="callout callout-success">
+														<small className="text-muted">
+															Missed Pitches due to Video Gaps
+														</small>
+														<br />
+														<strong className="h4">{this.state.dashData.missedPitches}</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+												<Col sm="6">
+													<div className="callout callout-primary">
+														<small className="text-muted">
+															Missed BIP due to Video Gaps
+														</small>
+														<br />
+														<strong className="h4">{this.state.dashData.missedBIP}</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+											</Row>
+											<hr className="mt-0" />
+										</Col>
+										<Col xs="12" md="6" xl="6">
+											<Row>
+												<Col sm="6">
+													<div className="callout callout-danger">
+														<small className="text-muted">Data Metric</small>
+														<br />
+														<strong className="h4">12,345</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+												<Col sm="6">
+													<div className="callout callout-info">
+														<small className="text-muted">Data Metric</small>
+														<br />
+														<strong className="h4">12,345</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+											</Row>
+											<hr className="mt-0" />
+										</Col>
+									</Row>
+									<br />
+
+									{/* Auditor Perfarmance Table */}
+									<Table
+										hover
+										responsive
+										className="table-outline mb-0 d-none d-sm-table"
+									>
+										<thead className="thead-light">
+											<tr>
+												<th>Auditor</th>
+												<th className="text-center">Games Audited</th>
+												<th className="text-center">Pitches Added</th>
+												<th className="text-center">Average Audit Time</th>
+												<th className="text-center">Activity</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<div>Peter Panassow</div>
+												</td>
+												<td className="text-center">25</td>
+												<td className="text-center">25</td>
+												<td className="text-center">2 Hours</td>
+												<td className="text-center">
+													<strong>3 Days Ago</strong>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div>Mason Guy</div>
+												</td>
+												<td className="text-center">15</td>
+												<td className="text-center">6</td>
+												<td className="text-center">3 Hours</td>
+												<td className="text-center">
+													<strong>10 Days Ago</strong>
+												</td>
+											</tr>
+										</tbody>
+									</Table>
+									<br />
+									{/* Auditor Perfarmance Table */}
+									<Table
+										hover
+										responsive
+										className="table-outline mb-0 d-none d-sm-table"
+									>
+										<thead className="thead-light">
+											<tr>
+												<th>Operator</th>
+												<th className="text-center">Games Operated</th>
+												<th className="text-center">Average Resolve %</th>
+												<th className="text-center">Average Game Audit Time</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<div>Thomas Rice</div>
+												</td>
+												<td className="text-center">40</td>
+												<td className="text-center">100%</td>
+												<td className="text-center" style={{ color: "green" }}>
+													0 Hours
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<div>Miles McKinnon</div>
+												</td>
+												<td className="text-center">26</td>
+												<td className="text-center" style={{ color: "red" }}>
+													30%
+												</td>
+												<td className="text-center">3 Hours</td>
+											</tr>
+										</tbody>
+									</Table>
+								</CardBody>
+							</Card>
+						</Col>
+					</Row>
+				</div>
+			);
+		}
 	}
 }
 

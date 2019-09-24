@@ -11,7 +11,11 @@ import {
 	PaginationItem,
 	PaginationLink,
 	Row,
-	Table
+	Table,
+	Modal,
+	ModalBody,
+	ModalHeader,
+	ModalFooter
 } from "reactstrap";
 
 import { MDBCard, MDBCardBody, MDBCardHeader, MDBInput, MDBBtn, MDBTable, MDBTableBody, MDBTableHead, MDBDataTable  } from 'mdbreact';
@@ -21,6 +25,8 @@ import { getStyle, hexToRgba } from "@coreui/coreui/dist/js/coreui-utilities";
 
 import lgLogo from "../../../src/assests/images/SMT_Report_Tag.jpg";
 import spinner from "../../assests/images/smtSpinner.gif";
+
+import ModalComponent from './Modals/ModalComponent'
 
 //const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 
@@ -51,7 +57,7 @@ const tableData = {
 		{
 			label: '',
 			field: 'edit',
-			sort: 'asc',
+			sort: 'asc'
 			
 		},
 		{
@@ -80,6 +86,7 @@ const tableData = {
 			field: "ffxpitches",
 			sort: "asc"
 		},
+		
 		{
 			label: "Missed Pitches",
 			field: "missedpitches",
@@ -107,6 +114,7 @@ const tableData = {
 class FFxAuditData extends Component {
 	constructor(props) {
 		super(props);
+		console.log(props)
 
 		//Binding states
 		this.toggle = this.toggle.bind(this);
@@ -120,6 +128,7 @@ class FFxAuditData extends Component {
 			radioSelected: 2,
 			isLoading: true,
 			data: {},
+			modalOpen: false
 		};
 	}
 
@@ -158,11 +167,25 @@ class FFxAuditData extends Component {
 			
 	};
 
+	_viewRecord(_id) {    
+		console.log("mongo _id", _id);
+		this.setState({modalOpen: true});	
+		console.log(this.state)
+    }
+	_editRecord(_id) {    
+		console.log("mongo _id", _id);
+    }
+
 	dataPopulate() {
 		//console.log("pop",this.state.data);
 		this.state.data.forEach(element => {
 			tableData.rows.push({
-						edit: <div><Button  color="success" size="sm">View</Button> <Button  color="danger" size="sm">Edit</Button> </div>,
+						edit: <div>
+									<ModalComponent props={{element, color:"success", name: "View"}}></ModalComponent>
+									<ModalComponent props={{element, color:"danger", name:"Edit"}}></ModalComponent>
+									
+									{/* <Button  color="danger" size="sm" onClick={() => {this._editRecord(element._id)}}>Edit</Button>  */}
+									</div>,
 						gamestring: element.gamestring,
 						operator: element.operator,
 						auditor: element.auditor,
@@ -183,8 +206,9 @@ class FFxAuditData extends Component {
 			this.dataPopulate();
 			return (
 				<div className="animated fadeIn">
+				
 					<br />
-	
+					
 					<Card className="card-accent-success">
 						<CardHeader>
 							<i className="icon-globe"></i> FieldFx Audit Reports Data Table
@@ -193,13 +217,13 @@ class FFxAuditData extends Component {
 
 							<MDBDataTable
 							style={{cursor: "pointer"}}
-							responsive
+							//responsive
 							hover
 							entries={20} 
 							displayEntries={false}
 							striped bordered small data={tableData}></MDBDataTable>
 						</CardBody>
-					</Card> */}
+					</Card>
 					
 				</div>
 			);
