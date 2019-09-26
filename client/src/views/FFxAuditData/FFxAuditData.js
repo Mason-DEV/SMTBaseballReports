@@ -1,14 +1,7 @@
 import React, { Component} from "react";
-
-import {
-
-	Card,
-	CardBody,
-	CardHeader,
-
-} from "reactstrap";
-
+import {Card,CardBody,CardHeader,} from "reactstrap";
 import { MDBDataTable  } from 'mdbreact';
+import axios from 'axios';
 
 //import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
@@ -18,7 +11,6 @@ import spinner from "../../assests/images/smtSpinner.gif";
 import ModalComponent from './Modals/ModalComponent'
 
 //const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
-
 
 const tableData = {
 	columns: [
@@ -95,8 +87,8 @@ class FFxAuditData extends Component {
 			dropdownOpen: false,
 			radioSelected: 2,
 			isLoading: true,
+			modalOpen: false,
 			data: {},
-			modalOpen: false
 		};
 	}
 
@@ -122,16 +114,15 @@ class FFxAuditData extends Component {
 
 	// Fetch audit data on first mount
 	componentDidMount() {
-		this.getAuditData();
-		
+		this.getAuditData();		
 	}
 	// Retrieves the data of from the Express api
 	getAuditData = () => {
-		fetch("/api/audits")
-			.then(res => res.json())
-			.then(data => this.setState({ data }))
+		axios.get('/api/audits')
+			.then(res => { this.setState({ data: res.data }); })
 			//Data is loaded, so change from loading state
-			.then(isLoading => this.setState({ isLoading: false }));
+			.then(isLoading => this.setState({ isLoading: false }))
+			.catch(function (error) {	  console.log(error);	});
 			
 	};
 
@@ -145,38 +136,33 @@ class FFxAuditData extends Component {
     }
 
 	dataPopulate() {
-		//console.log("pop",this.state.data);
+		console.log("pop",this.state.data);
 		this.state.data.forEach(element => {
 			tableData.rows.push({
-						edit: <div>
-									<ModalComponent props={{element, color:"success", name: "View"}}></ModalComponent>
-									<ModalComponent props={{element, color:"danger", name:"Edit"}}></ModalComponent>
-									
-									{/* <Button  color="danger" size="sm" onClick={() => {this._editRecord(element._id)}}>Edit</Button>  */}
-									</div>,
-						gamestring: element.gamestring,
-						operator: element.operator,
-						auditor: element.auditor,
-						gdpitches: element.gdPitches,
-						ffxpitches: element.ffxPitches,
-						missedpitches: element.missedPitches,
-						missedbip: element.missedBIP,
-						addedpitches: element.pitchesAdd,
-						addedpicks: element.pickAdd
-						})
+				edit: 	<div>
+							<ModalComponent data={{element, color:"success", name: "View"}}></ModalComponent>
+							<ModalComponent data={{element, color:"danger", name:"Edit"}}></ModalComponent>
+						</div>,
+				gamestring: element.gamestring,
+				operator: element.operator,
+				auditor: element.auditor,
+				gdpitches: element.gdPitches,
+				ffxpitches: element.ffxPitches,
+				missedpitches: element.missedPitches,
+				missedbip: element.missedBIP,
+				addedpitches: element.pitchesAdd,
+				addedpicks: element.pickAdd
+			})
 		});
-
 	}
-
+	
 	render() {
-		if (!this.state.isLoading) {
-
+		if (!this.state.isLoading) 
+		{
 			this.dataPopulate();
 			return (
 				<div className="animated fadeIn">
-				
 					<br />
-					
 					<Card className="card-accent-success">
 						<CardHeader>
 							<i className="icon-globe"></i> FieldFx Audit Reports Data Table
@@ -192,10 +178,10 @@ class FFxAuditData extends Component {
 							striped bordered small data={tableData}></MDBDataTable>
 						</CardBody>
 					</Card>
-					
 				</div>
-			);
-		} else {
+				);
+		} else 
+		{
 			return  <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{height: "100%"}}/>
 		}
 	}

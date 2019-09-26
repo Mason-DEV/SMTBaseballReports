@@ -1,24 +1,7 @@
 import React, { Component } from "react";
 import { Bar, Line } from "react-chartjs-2";
-import {
-
-	ButtonDropdown,
-	ButtonGroup,
-
-	Card,
-	CardBody,
-
-	CardHeader,
-
-	Col,
-
-	DropdownItem,
-	DropdownMenu,
-	DropdownToggle,
-
-	Row,
-	Table
-} from "reactstrap";
+import {ButtonDropdown,	ButtonGroup,Card,CardBody,CardHeader,Col,DropdownItem,DropdownMenu,	DropdownToggle,	Row,Table} from "reactstrap";
+import axios from 'axios';
 //import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
 import spinner from "../../assests/images/smtSpinner.gif";
@@ -70,14 +53,6 @@ const cardChartOpts4 = {
 	}
 };
 
-const avgAuditFakeData = {
-	Month: {
-		data: 95.22
-	},
-	Day: {
-		data: 3.54
-	}
-};
 
 class Dashboard extends Component {
 	constructor(props) {
@@ -104,39 +79,27 @@ class Dashboard extends Component {
           gdSync: 0,
           missedPitches: 0,
           missedBIP: 0, 
-          addedPitched: 0, 
+          addedPitches: 0, 
         }
 		};
 	}
 
 	// Fetch audit data on first mount
 	componentDidMount() {
-    this.getAuditData();
-	}
-	// Retrieves the data of from the Express api
-	getAuditData = () => {
-		fetch("/api/audits")
-			.then(res => res.json())
-			.then(data => this.setState({ data }))
-			//Data is loaded, so change from loading state
-      .then(isLoading => this.setState({ isLoading: false }))
-      .then(playsResolved => this.setState({
-        dashData: {
-              ...this.state.dashData,
-              playsResolved: this.calcPlaysResolved(),
-              gdSync: this.calcGDSync(),
-              missedPitches: this.calcMissedPitches(),
-              missedBIP: this.calcMissedBIP(),
-              addedPitches: this.calcAddedPitches(),
-        }
-    }));
-
-	};
-
-	getData() {
-    this.setState({ avgAuditData: avgAuditFakeData, ...this.state.dashData, 
-                    playsResolved: this.calcPlaysResolved()
-                  });    
+		axios.get('/api/audits')
+			.then(res => { this.setState({ data: res.data }); })
+			.then(isLoading =>{ this.setState({ isLoading: false }); })
+			.then(resDash =>{ this.setState({ dashData: {
+				...this.state.dashData,
+				playsResolved: this.calcPlaysResolved(),
+				gdSync: this.calcGDSync(),
+				missedPitches: this.calcMissedPitches(),
+				missedBIP: this.calcMissedBIP(),
+				addedPitches: this.calcAddedPitches(),
+				}}); })
+			.catch(function (error) {
+			console.log(error);
+			})
 	}
 
 	toggle() {
@@ -226,17 +189,8 @@ class Dashboard extends Component {
     return sum
   }
 
-
-
 	render() {
-		//Logs our current state, should have data here to start putting stuff
-		//TODO: DO we want the server to handle the logic or frontend?
-		//Front end could grab all we need, then we have a function here that grabs each thing and sets it to a new state
-		//Back end could have an API call for each thing we want (getAverageAudit) then setStreamWriter dataWriter = new StreamWriter(new FileStream(writeFile, FileMode.Open, FileAccess.Write));s it to states
-		// if(this.state.data[0]){
-		//   var gameID = this.state.data[0].nothing;
-		// }
-
+		//Loading State Show Spinner
 		if (this.state.isLoading) {
 			return (
 				<img
@@ -249,7 +203,8 @@ class Dashboard extends Component {
 				/>
 			);
 		} else {
-     // console.log(this.state);
+			//Not Loading show compenents
+     		console.log(this.state);
 			return (
 				<div className="animated fadeIn">
 					{/* Cards ROW 1 */}
@@ -298,12 +253,7 @@ class Dashboard extends Component {
 										className="text-value"
 										style={{ fontSize: "30px" }}
 									>
-										1234
-										{/* This is how we change data based on state. This should probably be done different.
-                   Will this work on report submit? Or will we have to refresh */}
-										{/* {this.state.avgAuditdropDownValue == "Day"
-										? JSON.stringify(avgAuditFakeData.Day.data)
-										: JSON.stringify(avgAuditFakeData.Month.data)} */}
+										1234									
 									</div>
 								</CardBody>
 								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
@@ -591,7 +541,7 @@ class Dashboard extends Component {
 										</tbody>
 									</Table>
 									<br />
-									{/* Auditor Perfarmance Table */}
+									{/* Operator Perfarmance Table */}
 									<Table
 										hover
 										responsive
