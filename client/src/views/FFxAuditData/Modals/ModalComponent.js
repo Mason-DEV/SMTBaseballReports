@@ -121,15 +121,17 @@ class ModalExample extends React.Component {
 			addedPicks: this.state.data.addedPicks,
 		};
     console.log("obj", auditObj);
-		// axios.put('/api/audits/update/'+auditObj._id, auditObj)
-		//   .then(res => console.log(res.data))
-		//   .catch(function (error) {
-		//     console.log(error);
-    //     })
-    
-    //Show a yay we updated! 
+		axios.put('/api/audits/update/'+auditObj._id, auditObj)
+		  .then(res => console.log(res.data))
+		  .catch(function (error) {
+		    console.log(error);
+        })
 
+        
+    //Show a yay we updated! 
+        
     //Now close 
+    this.toggle();
     //reset state so that when we are done, it resets to parms
     //this.setDataDefault();
 
