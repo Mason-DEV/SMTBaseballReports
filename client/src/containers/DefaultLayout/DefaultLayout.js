@@ -30,6 +30,7 @@ class DefaultLayout extends Component {
 	}
 
 	render() {
+		console.log("routes",routes);
 		return (
 			<div className="app">
 				<AppHeader fixed>

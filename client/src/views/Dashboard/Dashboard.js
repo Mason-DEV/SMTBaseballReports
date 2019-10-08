@@ -2,12 +2,8 @@ import React, { Component } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import {ButtonDropdown,	ButtonGroup,Card,CardBody,CardHeader,Col,DropdownItem,DropdownMenu,	DropdownToggle,	Row,Table} from "reactstrap";
 import axios from 'axios';
-//import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
 import spinner from "../../assests/images/smtSpinner.gif";
-
-//const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
-
 
 // Card Chart 4 Data
 const cardChartData4 = {

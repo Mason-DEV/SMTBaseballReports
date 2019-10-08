@@ -40,7 +40,7 @@ const FFxAuditData = React.lazy(() => import('./views/FFxAuditData'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
+  { path: '', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/ffxauditreport', name: 'FFxAuditReport', component: FFxAuditReport },
   { path: '/ffxauditdata', name: 'FFxAuditData', component: FFxAuditData },
