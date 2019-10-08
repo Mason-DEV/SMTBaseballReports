@@ -24,6 +24,8 @@ import React from 'react';
 // const Charts = React.lazy(() => import('./views/Charts'));
 const Dashboard = React.lazy(() => import('./views/Dashboard'));
 const FFxAuditReport = React.lazy(() => import('./views/FFxAuditReport'));
+const FFxTechReport = React.lazy(() => import('./views/FFxTechReport'));
+const PFxTechReport = React.lazy(() => import('./views/PFxTechReport'));
 const FFxAuditData = React.lazy(() => import('./views/FFxAuditData'));
 // const CoreUIIcons = React.lazy(() => import('./views/Icons/CoreUIIcons'));
 // const Flags = React.lazy(() => import('./views/Icons/Flags'));
@@ -43,6 +45,8 @@ const routes = [
   { path: '', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/ffxauditreport', name: 'FFxAuditReport', component: FFxAuditReport },
+  { path: '/ffxtechreport', name: 'FFxTechReport', component: FFxTechReport },
+  { path: '/pfxtechreport', name: 'PFxTechReport', component: PFxTechReport },
   { path: '/ffxauditdata', name: 'FFxAuditData', component: FFxAuditData },
   // { path: '/theme', exact: true, name: 'Theme', component: Colors },
   // { path: '/theme/colors', name: 'Colors', component: Colors },

@@ -20,47 +20,47 @@ export default {
       url: "/ffxauditreport",
       icon: "icon-note"
     },
-		{
-			name: "FFx Tech Report",
-			url: "/theme/colors",
-			icon: "icon-note"
-		},
-		{
-			name: "PFx Tech Report",
-			url: "/theme/typography",
-			icon: "icon-note"
-		},
-		{
-			title: true,
-			name: "Data",
-			wrapper: {
-				element: "",
-				attributes: {}
-			}
-		},
-		{
-			name: "FFx Audit",
-			url: "/ffxauditdata",
-			icon: "icon-globe"
-		},
-		{
-			name: "FFx Tech",
-			url: "/base",
-			icon: "icon-globe"
-		},
-		{
-			name: "PFx Tech",
-			url: "/base",
-			icon: "icon-globe"
-		},
-    
-		{
-			divider: true
-		},
-		{
-			title: true,
-			name: "Extras"
-		},
+	{
+		name: "FFx Tech Report",
+		url: "/ffxtechreport",
+		icon: "icon-note"
+	},
+	{
+		name: "PFx Tech Report",
+		url: "/pfxtechreport",
+		icon: "icon-note"
+	},
+	{
+		title: true,
+		name: "Data",
+		wrapper: {
+			element: "",
+			attributes: {}
+		}
+	},
+	{
+		name: "FFx Audit",
+		url: "/ffxauditdata",
+		icon: "icon-globe"
+	},
+	{
+		name: "FFx Tech",
+		url: "/base",
+		icon: "icon-globe"
+	},
+	{
+		name: "PFx Tech",
+		url: "/base",
+		icon: "icon-globe"
+	},
+
+	{
+		divider: true
+	},
+	{
+		title: true,
+		name: "Extras"
+	},
 		{
 			name: "Users",
 			url: "/pages",
