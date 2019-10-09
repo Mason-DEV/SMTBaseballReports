@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import lgLogo from '../../../src/assests/images/HeaderLogo.png';
-// import sygnet from '../../assets/img/brand/sygnet.svg'
+import smLogo from '../../../src/assests/images/HeaderLogoS.png';
 
 const propTypes = {
   children: PropTypes.node,
@@ -24,7 +24,8 @@ class DefaultHeader extends Component {
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
         <AppNavbarBrand
           full={{ src: lgLogo,  width: 89, height: 30, alt: 'SMT Logo' }}
-          minimized={{  src: lgLogo, width: 30, height: 30, alt: 'SMT Logo' }}
+          minimized={{  src: smLogo, width: 30, height: 30, alt: 'SMT Logo' }}
+          href={'/'}
           >
            
           </AppNavbarBrand>

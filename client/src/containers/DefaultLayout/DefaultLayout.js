@@ -4,6 +4,8 @@ import * as router from "react-router-dom";
 import { Container } from "reactstrap";
 
 import {
+	AppBreadcrumb,
+	AppFooter,
 	AppHeader,
 	AppSidebar,
 	AppSidebarForm,
@@ -16,7 +18,7 @@ import navigation from "../../_nav";
 // routes config
 import routes from "../../routes";
 
-//const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
+const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 
 class DefaultLayout extends Component {
@@ -30,7 +32,6 @@ class DefaultLayout extends Component {
 	}
 
 	render() {
-		console.log("routes",routes);
 		return (
 			<div className="app">
 				<AppHeader fixed>
@@ -51,29 +52,34 @@ class DefaultLayout extends Component {
 						</Suspense>
 						<AppSidebarMinimizer />
 					</AppSidebar>
-				<main className="main">
-					<Container fluid>
-              <Suspense fallback={this.loading()}>
-                <Switch>
-                  {routes.map((route, idx) => {
-					  return route.component ? (
-						  <Route
-						  key={idx}
-						  path={route.path}
-						  exact={route.exact}
-						  name={route.name}
-						  render={props => (
-							  <route.component {...props} />
-							  )} />
-							  ) : (null);
-							})}
-                  <Redirect from="/" to="/dashboard" />
-                </Switch>
-              </Suspense>
-            </Container>
-				</main>
+					<main className="main">
+					{/* <AppBreadcrumb appRoutes={routes} router={router}/> */}
+						<Container fluid style={{marginTop: "10px"}}>
+							<Suspense fallback={this.loading()}>
+								<Switch>
+									{routes.map((route, idx) => {
+										return route.component ? (
+											<Route
+												key={idx}
+												path={route.path}
+												exact={route.exact}
+												name={route.name}
+												render={props => <route.component {...props} />}
+											/>
+										) : null;
+									})}
+									<Redirect to="/404" />
+								</Switch>
+							</Suspense>
+						</Container>
+					</main>
+				</div>
+					<AppFooter>
+						<Suspense fallback={this.loading()}>
+							<DefaultFooter />
+						</Suspense>
+					</AppFooter>
 			</div>
-		</div>
 		);
 	}
 }

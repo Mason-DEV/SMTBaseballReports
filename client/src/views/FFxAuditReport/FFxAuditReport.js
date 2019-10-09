@@ -7,6 +7,7 @@ import {
 	CardBody,
 	
 	CardHeader,
+	CardFooter,
 	
 	Col,
 	
@@ -265,10 +266,7 @@ class FFxAuditReport extends Component {
 							</Row>
 							<Row>
 								<Col>
-									<FormGroup className="form-actions">
-										<Button type="submit" size="sm" color="success"><i className="fa fa-dot-circle-o"></i> Submit</Button>
-										<Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Reset</Button>
-									</FormGroup>
+									
 								
 								</Col>
 								<Col>
@@ -277,6 +275,16 @@ class FFxAuditReport extends Component {
 							</Row>
 						</Form>
 					</CardBody>
+					<CardFooter>
+						<FormGroup className="form-actions text-center">
+							<Button type="submit" size="lg" color="success">
+								<i className="fa fa-check"></i> Submit
+							</Button>
+							<Button  type="reset" size="lg" color="danger">
+								<i className="fa fa-ban"></i> Reset
+							</Button>
+						</FormGroup>
+					</CardFooter>
 				</Card>
 			</div>
 		);

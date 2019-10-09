@@ -63,7 +63,7 @@ export default {
 	},
 		{
 			name: "Users",
-			url: "/pages",
+			// url: "/pages",
 			icon: "icon-people",
 			children: [
 				{

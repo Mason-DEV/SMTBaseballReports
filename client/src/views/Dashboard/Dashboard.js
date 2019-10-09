@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Bar, Line } from "react-chartjs-2";
-import {ButtonDropdown,	ButtonGroup,Card,CardBody,CardHeader,Col,DropdownItem,DropdownMenu,	DropdownToggle,	Row,Table} from "reactstrap";
+import {Button, ButtonDropdown,	ButtonGroup,Card, Collapse,CardBody,CardHeader,Col,DropdownItem,DropdownMenu,	DropdownToggle,	Row, Table,} from "reactstrap";
 import axios from 'axios';
-
 import spinner from "../../assests/images/smtSpinner.gif";
 
 // Card Chart 4 Data
@@ -56,6 +55,7 @@ class Dashboard extends Component {
 
 		//Binding states
 		this.toggle = this.toggle.bind(this);
+		this.toggleAnnouc = this.toggleAnnouc.bind(this);
 		this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
 		this.changeValueAvgAudit = this.changeValueAvgAudit.bind(this);
 		this.changeValueTotalAudit = this.changeValueTotalAudit.bind(this);
@@ -63,8 +63,10 @@ class Dashboard extends Component {
 
 		//States
 		this.state = {
+			collapse: false,
 			isLoading: true,
 			data: {},
+			accordion: [true, false, false],
 			dropdownOpen: false,
 			radioSelected: 2,
 			avgAuditdropDownValue: "Day",
@@ -103,6 +105,9 @@ class Dashboard extends Component {
 			dropdownOpen: !this.state.dropdownOpen
 		});
 	}
+	toggleAnnouc() {
+		this.setState({ collapse: !this.state.collapse });
+	  }
 
 	onRadioBtnClick(radioSelected) {
 		this.setState({
@@ -202,7 +207,30 @@ class Dashboard extends Component {
 			//Not Loading show compenents
      		console.log(this.state);
 			return (
+				
 				<div className="animated fadeIn">
+					{/* Announcement ROW */}
+					<Row>
+						<Col>
+						<Card className="bg-secondary">
+								<CardHeader>
+								<i className="fa fa-bullhorn"></i>
+									<strong>Announcements</strong>
+								<div className="card-header-actions">
+									 {/*eslint-disable-next-line*/}
+								<a style={{cursor: 'pointer'}} className="card-header-action btn btn-minimize" data-target="#collapseExample" onClick={this.toggleAnnouc}><i className="icon-arrow-down"></i></a>
+								
+								</div>
+								</CardHeader>
+								<Collapse isOpen={this.state.collapse} id="collapseExample">
+								<CardBody>
+									12345
+								</CardBody>
+								</Collapse>
+							</Card>
+					
+						</Col>
+					</Row>
 					{/* Cards ROW 1 */}
 					<Row>
 						{/* Card 1 - Average Audits */}
@@ -249,7 +277,7 @@ class Dashboard extends Component {
 										className="text-value"
 										style={{ fontSize: "30px" }}
 									>
-										1234									
+										1234
 									</div>
 								</CardBody>
 								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
@@ -386,13 +414,29 @@ class Dashboard extends Component {
 							</Card>
 						</Col>
 					</Row>
+					
+					<Row>
+						<Col>
+							<Card>
+								<CardHeader>
+									<i className="fa fa-folder"></i>
+									<strong>PFx Stuff</strong>
+								</CardHeader>
+								<CardBody></CardBody>
+							</Card>
+						</Col>
+					</Row>
 
 					{/* Row 2 - OP / Audit Performance */}
 
 					<Row>
 						<Col>
 							<Card>
-								<CardHeader>Operator {" & "} Auditor Performance</CardHeader>
+								<CardHeader>
+									{" "}
+									<i className="fa fa-dashboard"> </i>
+									<strong>Operator {" & "} Auditor Performance</strong>
+								</CardHeader>
 								<CardBody>
 									{/* Row A - Performance Box */}
 
@@ -428,7 +472,9 @@ class Dashboard extends Component {
 													<div className="callout callout-danger">
 														<small className="text-muted">Plays Resolved</small>
 														<br />
-														<strong className="h4">{this.state.dashData.playsResolved}</strong>
+														<strong className="h4">
+															{this.state.dashData.playsResolved}
+														</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -436,7 +482,9 @@ class Dashboard extends Component {
 													<div className="callout callout-info">
 														<small className="text-muted">GD Sync</small>
 														<br />
-														<strong className="h4">{this.state.dashData.gdSync} %</strong>
+														<strong className="h4">
+															{this.state.dashData.gdSync} %
+														</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -455,7 +503,9 @@ class Dashboard extends Component {
 															Missed Pitches due to Video Gaps
 														</small>
 														<br />
-														<strong className="h4">{this.state.dashData.missedPitches}</strong>
+														<strong className="h4">
+															{this.state.dashData.missedPitches}
+														</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -465,7 +515,9 @@ class Dashboard extends Component {
 															Missed BIP due to Video Gaps
 														</small>
 														<br />
-														<strong className="h4">{this.state.dashData.missedBIP}</strong>
+														<strong className="h4">
+															{this.state.dashData.missedBIP}
+														</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -494,10 +546,9 @@ class Dashboard extends Component {
 											<hr className="mt-0" />
 										</Col>
 									</Row>
-									<br />
 
 									{/* Auditor Perfarmance Table */}
-									<Table
+									{/* <Table
 										hover
 										responsive
 										className="table-outline mb-0 d-none d-sm-table"
@@ -537,7 +588,7 @@ class Dashboard extends Component {
 										</tbody>
 									</Table>
 									<br />
-									{/* Operator Perfarmance Table */}
+									{/* Operator Perfarmance Table 
 									<Table
 										hover
 										responsive
@@ -573,7 +624,7 @@ class Dashboard extends Component {
 												<td className="text-center">3 Hours</td>
 											</tr>
 										</tbody>
-									</Table>
+									</Table> */}
 								</CardBody>
 							</Card>
 						</Col>
