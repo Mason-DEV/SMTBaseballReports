@@ -22,7 +22,6 @@ router.route('/').get(function (req, res) {
 //  Defined update route
 router.route('/update/:id').put(function (req, res) {
     let _id = req.params.id;
-    console.log(req.body);
     Audit.findById(_id, function(err, audit) {
         if (!audit)
             res.status(404).send("Can not find this Audit in the DB");

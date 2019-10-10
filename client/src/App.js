@@ -12,9 +12,9 @@ const DefaultLayout = React.lazy(() => import('./containers/DefaultLayout/Defaul
 
 
 // Pages
-// const Login = React.lazy(() => import('./views/Pages/Login'));
-// const Register = React.lazy(() => import('./views/Pages/Register'));
+const Login = React.lazy(() => import('./views/Login/Login'));
 const Page404 = React.lazy(() => import('./views/404/Page404'));
+// const Register = React.lazy(() => import('./views/Pages/Register'));
 // const Page500 = React.lazy(() => import('./views/Pages/Page500'));
 
 class App extends Component {
@@ -24,6 +24,7 @@ class App extends Component {
       <BrowserRouter>
           <React.Suspense fallback={loading()}>
             <Switch>
+              <Route path="/login" name="Login Page" render={props => <Login {...props}/>} /> 
               <Route path="/404" name="Page 404" render={props => <Page404 {...props}/>} />
               <Route path="/" name="Home" render={props => <DefaultLayout {...props}/>} />
             </Switch>
