@@ -26,18 +26,18 @@ router.route('/register').post(function (req, res) {
 
 //API for logging in a user
 // 
-router.post('/login', function(req, res) {
-    var user_name = req.body.username;
-    User.findOne({username: user_name}, function(err, user) {
-        if (!user.validPassword(req.body.password)) {
-            console.log("didnt match");
-            //password did not match
-        } else {
-            console.log("did match");
-            //password matched. proceed forward
-        }
-  });
-});
+// router.post('/login', function(req, res) {
+//     var user_name = req.body.username;
+//     User.findOne({username: user_name}, function(err, user) {
+//         if (!user.validPassword(req.body.password)) {
+//             console.log("didnt match");
+//             //password did not match
+//         } else {
+//             console.log("did match");
+//             //password matched. proceed forward
+//         }
+//   });
+// });
 
 
 

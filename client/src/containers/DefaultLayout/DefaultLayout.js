@@ -28,9 +28,9 @@ class DefaultLayout extends Component {
 
 	signOut(e) {
 		e.preventDefault();
+		localStorage.removeItem('smt-jwt');
 		this.props.history.push("/login");
 	}
-
 	render() {
 		return (
 			<div className="app">

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { HashRouter, Route, Switch } from 'react-router-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import '@coreui/coreui';
 // import { renderRoutes } from 'react-router-config';
@@ -9,6 +8,7 @@ const loading = () => <div className="animated fadeIn pt-3 text-center">Loading.
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./containers/DefaultLayout/DefaultLayout'));
+const AuthComponent = React.lazy(() => import('./components/AuthComponent'));
 
 
 // Pages
@@ -24,9 +24,12 @@ class App extends Component {
       <BrowserRouter>
           <React.Suspense fallback={loading()}>
             <Switch>
+              {/* <Route path='/Auth' render={props => <AuthComponent {...props}/>} />  */}
               <Route path="/login" name="Login Page" render={props => <Login {...props}/>} /> 
               <Route path="/404" name="Page 404" render={props => <Page404 {...props}/>} />
-              <Route path="/" name="Home" render={props => <DefaultLayout {...props}/>} />
+              <AuthComponent>
+                <Route path="/" name="Home" render={props => <DefaultLayout {...props}/>} />
+              </AuthComponent>
             </Switch>
           </React.Suspense>
             </BrowserRouter>
