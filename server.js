@@ -45,14 +45,15 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/getToken", function(req, res) {
-    console.log(req.body.username);
+    console.log("getToken",req.body.username);
 	UserModel.findOne({ username: req.body.username }, function(err, user) {
         if(!user){
             //User trys to log in with invalid username
-            return res.status(401).json({ message: "no user" });
+            return res.status(401).json({ message: "Invalid User"});
         }
 		if (!user.validPassword(req.body.password)) {
-			return res.status(401).json({ message: "passwords did not match" });
+			//User password was incorrect
+			return res.status(401).json({ message: "Invalid User"});
 		} else {
 			var payload = { id: user.id };
 			var token = jwt.sign(payload, opts.secretOrKey);
@@ -64,7 +65,7 @@ app.post("/getToken", function(req, res) {
 });
 
 app.get('/getUser', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.send(req.body.username);
+	res.send("Valid JWT");
   });
 
 
