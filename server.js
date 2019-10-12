@@ -57,7 +57,7 @@ app.post("/getToken", function(req, res) {
 		} else {
 			var payload = { id: user.id };
 			var token = jwt.sign(payload, opts.secretOrKey);
-			res.send(token);
+			res.send({token, payload});
 		}
 	}).catch(err => {
 		return res.status(401).send({ err: err });

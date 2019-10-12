@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 // import { getJwt } from "../../components/helpers/jwt";
 import { getkickBack } from "../../components/helpers/kickback";
+import { setWhoAmI } from "../../components/helpers/whoami";
 
 import {
 	Alert,
@@ -72,7 +73,10 @@ class Login extends Component {
 				password: this.state.password
 			})
 			.then(res => {
-				localStorage.setItem("smt-jwt", res.data);
+				// console.log(res.data.token);
+				localStorage.setItem("smt-jwt", res.data.token);
+				//Here we set a whoAmI helper
+				// setWhoAmI(res.data.)
 				this.props.history.push("/dashboard");
 			})
 			.catch(err => {
