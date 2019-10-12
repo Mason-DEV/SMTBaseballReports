@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { getJwt } from "./helpers/jwt";
+import { setKickBack } from "./helpers/kickback";
 import spinner from "../assests/images/smtSpinner.gif";
 
 
@@ -15,21 +16,25 @@ class AuthComponent extends Component {
 
 	componentDidMount() {
 		const jwt = getJwt();
+		//If we dont have a jwt at all, instantly just kick back
 		if (!jwt) {
+			setKickBack("No Token");
+			localStorage.removeItem('smt-jwt');
 			this.props.history.push("/Login");
-        }
+			return;
+			
+		}
+		//Check to make sure this JWT we have is valid
 		axios.get('/getUser', { headers: { Authorization: `Bearer ${jwt}`} })
-            .then(res =>
-            
-				this.setState({
-					user: res
-                })
-            )
+			.then(res =>{
+				this.setState({	user: res});
+			})
 			.catch(err => {
-                console.log("auth Error");
+				console.log("nopw this is")
+				setKickBack("No Token");
                 localStorage.removeItem('smt-jwt');
 				this.props.history.push("/Login");
-            });
+			});
 	}
 
 	render() {
