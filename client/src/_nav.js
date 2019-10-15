@@ -11,14 +11,17 @@ export default {
 			wrapper: {
 				// optional wrapper object
 				element: "", // required valid HTML5 element tag
-				attributes: {} // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+				attributes: {style: {background: 'red'}} // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
 			},
 			class: "" // optional class names space delimited list for title item ex: "text-center"
 		},
     {
       name: "FFx Audit Report",
       url: "/ffxauditreport",
-      icon: "icon-note"
+	  icon: "icon-note",
+	  attributes:{
+		  style:{background: 'black'}
+	  }
     },
 	{
 		name: "FFx Tech Report",
@@ -29,6 +32,7 @@ export default {
 		name: "PFx Tech Report",
 		url: "/pfxtechreport",
 		icon: "icon-note"
+		
 	},
 	{
 		title: true,

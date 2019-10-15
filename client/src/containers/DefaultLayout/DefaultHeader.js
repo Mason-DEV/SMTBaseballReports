@@ -39,7 +39,7 @@ class DefaultHeader extends Component {
 
         <Nav className="d-md-down-none" navbar>
           <NavItem className="px-3">
-            Baseball Reports Admin Dashboard
+            MiLB Reporting and Dashboard Site
           </NavItem>
         </Nav>
         <Nav className="ml-auto" navbar>

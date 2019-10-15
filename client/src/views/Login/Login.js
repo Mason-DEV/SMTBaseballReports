@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-// import { getJwt } from "../../components/helpers/jwt";
 import { getkickBack } from "../../components/helpers/kickback";
 
 import {
