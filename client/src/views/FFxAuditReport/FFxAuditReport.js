@@ -31,7 +31,7 @@ import lgLogo from '../../../src/assests/images/SMT_Report_Tag.jpg';
 class FFxAuditReport extends Component {
 	constructor(props) {
 		super(props);
-
+		
 		//Binding states
 		this.toggle = this.toggle.bind(this);
 		this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
@@ -56,6 +56,7 @@ class FFxAuditReport extends Component {
 	}
 
 	render() {
+		console.log("ffxaudit",this.props);
 		return (
 			<div className="animated fadeIn">
 				<br />

@@ -42,12 +42,12 @@ const FFxAuditData = React.lazy(() => import('./views/FFxAuditData'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/', exact: true, name: 'Home', component: Dashboard },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/ffxauditreport', name: 'FFxAuditReport', component: FFxAuditReport },
-  { path: '/ffxtechreport', name: 'FFxTechReport', component: FFxTechReport },
-  { path: '/pfxtechreport', name: 'PFxTechReport', component: PFxTechReport },
-  { path: '/ffxauditdata', name: 'FFxAuditData', component: FFxAuditData },
+  { path: '/', exact: true, name: 'Home',  auth: "",component: Dashboard },
+  { path: '/dashboard', name: 'Dashboard', auth: "",component: Dashboard },
+  { path: '/ffxauditreport', name: 'FFxAuditReport', auth: "",component: FFxAuditReport },
+  { path: '/ffxtechreport', name: 'FFxTechReport', auth: "",component: FFxTechReport },
+  { path: '/pfxtechreport', name: 'PFxTechReport', auth: "",component: PFxTechReport },
+  { path: '/ffxauditdata', name: 'FFxAuditData', auth: "required",component: FFxAuditData },
   // { path: '/theme', exact: true, name: 'Theme', component: Colors },
   // { path: '/theme/colors', name: 'Colors', component: Colors },
   // { path: '/theme/typography', name: 'Typography', component: Typography },

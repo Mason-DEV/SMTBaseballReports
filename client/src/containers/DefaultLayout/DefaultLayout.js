@@ -2,8 +2,9 @@ import React, { Component, Suspense } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import * as router from "react-router-dom";
 import { Container } from "reactstrap";
-import {getJwt} from "../../components/helpers/jwt"
+import { getJwt } from "../../components/helpers/jwt";
 import { withRouter } from "react-router-dom";
+import axios from 'axios';
 
 import {
 	AppBreadcrumb,
@@ -17,87 +18,139 @@ import {
 } from "@coreui/react";
 // sidebar nav config
 import navigation from "../../_nav";
+import navigationOP from "../../_navOP";
 // routes config
 import routes from "../../routes";
-const AuthComponent = React.lazy(() => import("../../components/AuthComponent"));
+const AuthComponent = React.lazy(() =>
+	import("../../components/AuthComponent")
+);
 
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 
 class DefaultLayout extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			name: ""
+		};
+
+
+		
+	}
+
 	loading = () => (
 		<div className="animated fadeIn pt-1 text-center">Loading...</div>
 	);
 
 	signOut(e) {
 		e.preventDefault();
-		localStorage.removeItem('smt-jwt');
+		localStorage.removeItem("smt-jwt");
 		this.props.history.push("/login");
 	}
-
-	// componentDidMount() {
-	// 	const jwt = getJwt();
-	// 	console.log("jwt",jwt);
-	// }
-
-	componentDidUpdate(){
-		//We changed pages here, need to make sure this is still a valid users and shouldnt be kicked out
+	componentDidMount() {
+		//Setting the state for the Prop we will set for whoIAm
+		let token = localStorage.getItem('smt-jwt');
+		axios.get("/getUser", { headers: { Authorization: `Bearer ${token}` } })
+			.then(res => {
+				this.setState({ name: res.data });
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
 
 	}
 
-
+	//We filter routes availible based on who is logged in
+	filterRoutes(array){
+		var arrayFilter = [];
+		array.reduce(function(filtered, option) {
+			if (option.auth !== "required") {
+				arrayFilter.push(option);
+			}
+		}, []);
+		return arrayFilter
+	}
 
 	render() {
+		if(this.state.name === ''){
+			return(<div></div>)
+		}
+		//This is where we do our check for which nav to show depending on user type
+		const nav = this.state.name == 'op' ? navigationOP : navigation;
 		return (
-			<div className="app">
-				<AppHeader fixed>
-					<Suspense fallback={this.loading()}>
-						<DefaultHeader onLogout={e => this.signOut(e)} />
-					</Suspense>
-				</AppHeader>
-				<div className="app-body">
-					<AppSidebar fixed display="lg">
-						<AppSidebarHeader />
-						<AppSidebarForm />
-						<Suspense>
-							<AppSidebarNav
-								navConfig={navigation}
-								{...this.props}
-								router={router}
-							/>
+				<div className="app">
+					<AppHeader fixed>
+						<Suspense fallback={this.loading()}>
+							<DefaultHeader onLogout={e => this.signOut(e)} />
 						</Suspense>
-						<AppSidebarMinimizer />
-					</AppSidebar>
-					<main className="main">
-						<Container fluid style={{marginTop: "10px"}}>
-							<Suspense fallback={this.loading()}>
-								<Switch>
-									{routes.map((route, idx) => {
-										return route.component ? (
+					</AppHeader>
+					<div className="app-body">
+						<AppSidebar fixed display="lg">
+							<AppSidebarHeader />
+							<AppSidebarForm />
+							<Suspense>
+								<AppSidebarNav 
+									navConfig={ nav}
+									{...this.props}
+									router={router}
+								/>
+							</Suspense>
+							<AppSidebarMinimizer />
+						</AppSidebar>
+						<main className="main">
+							<Container fluid style={{ marginTop: "10px" }}>
+								<Suspense fallback={this.loading()}>
+									<Switch>
+										{	
+											this.state.name === 'op' ? this.filterRoutes(routes).map((route, idx) => {
+											// console.log(routes)
+											return route.component ? (
 												<Route
 													key={idx}
 													path={route.path}
 													exact={route.exact}
-													name={route.name}
-													//Routes wrapped by AuthComponent so on page switch, we check JWT Auth
-													render={props =><AuthComponent> <route.component {...props} /></AuthComponent>}
+													name={route.name }
+													whoamI={""}
+													render={props => (
+														<AuthComponent>
+															<route.component whoAmI={this.state.name} {...props} />
+														</AuthComponent>
+													)}
 												/>
-										) : null;
-									})}
-									<Redirect to="/404" />
-								</Switch>
-							</Suspense>
-						</Container>
-					</main>
-				</div>
+											) : null;
+										}): routes.map((route, idx) => {
+											return route.component ? (
+												<Route
+													key={idx}
+													path={route.path}
+													exact={route.exact}
+													name={route.name }
+													whoamI={""}
+													render={props => (
+														<AuthComponent>
+															<route.component whoAmI={this.state.name} {...props} />
+														</AuthComponent>
+													)}
+												/>
+											) : null;
+										})
+									}
+										<Redirect to="/404" />
+									</Switch>
+								</Suspense>
+							</Container>
+						</main>
+					</div>
 					<AppFooter>
 						<Suspense fallback={this.loading()}>
 							<DefaultFooter />
 						</Suspense>
 					</AppFooter>
-			</div>
-		);
+				</div>
+			);
+		}
 	}
-}
+
 
 export default DefaultLayout;

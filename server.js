@@ -22,7 +22,8 @@ const UserModel = require("./models/User");
 
 const opts = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-	secretOrKey: secret
+	secretOrKey: secret,
+	belongsTo: ExtractJwt.fromHeader()
 };
 
 var strategy = new JwtStrategy(opts, function(jwt_payload, next) {
@@ -44,8 +45,8 @@ app.use(passport.initialize());
 app.use(cors());
 app.use(express.json());
 
+//Generates token for user
 app.post("/getToken", function(req, res) {
-    console.log("getToken",req.body.username);
 	UserModel.findOne({ username: req.body.username }, function(err, user) {
         if(!user){
             //User trys to log in with invalid username
@@ -55,7 +56,7 @@ app.post("/getToken", function(req, res) {
 			//User password was incorrect
 			return res.status(401).json({ message: "Invalid User"});
 		} else {
-			var payload = { id: user.id };
+			var payload = { id: user.username };
 			var token = jwt.sign(payload, opts.secretOrKey);
 			res.send({token, payload});
 		}
@@ -64,13 +65,16 @@ app.post("/getToken", function(req, res) {
 	});
 });
 
+//Returns the user who created this token
 app.get('/getUser', passport.authenticate('jwt', { session: false }), (req, res) => {
-	res.send("Valid JWT");
+	res.send(req.user._conditions.id);
   });
 
 
 app.get("/protected", passport.authenticate("jwt", { session: false }),
 	(req, res) => {
+		console.log(req.user._conditions.id)
+		// res.send(req);
 		res.send("Protected!");
 	}
 );

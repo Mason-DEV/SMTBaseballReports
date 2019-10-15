@@ -16,15 +16,6 @@ const defaultProps = {};
 class DefaultHeader extends Component {
   constructor(props){
     super(props)
-    
-    this.logOut = this.logOut.bind(this);
-  
-    
-    
-  }
-  
-  logOut(){
-    console.log("logging out");
   }
   
   

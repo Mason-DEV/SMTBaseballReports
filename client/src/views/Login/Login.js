@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 // import { getJwt } from "../../components/helpers/jwt";
 import { getkickBack } from "../../components/helpers/kickback";
-import { setWhoAmI } from "../../components/helpers/whoami";
 
 import {
 	Alert,
@@ -23,7 +22,6 @@ import logo from "../../assests/images/white_HeaderLogo.png";
 import axios from "axios";
 
 const getKick = () =>  getkickBack();
- 
 
 class Login extends Component {
 	constructor(props) {
@@ -73,17 +71,18 @@ class Login extends Component {
 				password: this.state.password
 			})
 			.then(res => {
-				// console.log(res.data.token);
+				// console.log(res.data.payload.id);
 				localStorage.setItem("smt-jwt", res.data.token);
 				//Here we set a whoAmI helper
-				// setWhoAmI(res.data.)
-				this.props.history.push("/dashboard");
+				this.props.history.push({ pathname:"/dashboard", data: res.data.payload.id});
 			})
 			.catch(err => {
 				//Caught error from the server saying this user doesnt exist & show error
-				let errMsg = err.response.data.message;
-				if (errMsg === "Invalid User") {
-					this.onShow("invalidUser");
+				if(err.response.data){
+					let errMsg = err.response.data.message;
+					if (errMsg === "Invalid User") {
+						this.onShow("invalidUser");
+					}
 				}
 				console.log(err.response);
 			});

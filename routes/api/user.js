@@ -24,6 +24,35 @@ router.route('/register').post(function (req, res) {
     //     });
 });
 
+//API for taking in a user id then the returning an userObject 
+
+router.route('/userByID').get(function (req, res) {
+    let _id = req.headers.user;
+    User.findById(_id, function(err, user) {
+            if (!user){
+                res.status(404).send("Can not find this User in the DB");
+            }
+            else
+            //Just returning username until more fields are added
+            res.status(200).send({"username": user.username});
+
+            })
+    });
+    //Mongo call for user OBject based on _ID
+
+
+   
+    // console.log(new_user);
+    //     new_user.save().then(new_user => {
+    //         res.sendStatus(200).send();
+    //         // res.json(req.body.pickAdd);
+    //     })
+    //     .catch(err => {
+    //         console.log(err);
+    //         res.status(400).send(err);
+    //     });
+
+
 //API for logging in a user
 // 
 // router.post('/login', function(req, res) {
