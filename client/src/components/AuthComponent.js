@@ -20,7 +20,8 @@ class AuthComponent extends Component {
 		if (!jwt) {
 			setKickBack("No Token");
 			localStorage.removeItem('smt-jwt');
-			this.props.history.push("/Login");
+			//kicks back to login, sets req to page the user was initially requesting
+			this.props.history.push({ pathname:"/Login", req: this.props.location.pathname });
 			return;
 			
 		}
@@ -30,10 +31,9 @@ class AuthComponent extends Component {
 				this.setState({	user: res});
 			})
 			.catch(err => {
-				console.log("nopw this is")
 				setKickBack("No Token");
                 localStorage.removeItem('smt-jwt');
-				this.props.history.push("/Login");
+				this.props.history.push({ pathname:"/Login", req: this.props.location.pathname });
 			});
 	}
 

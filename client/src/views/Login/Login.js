@@ -18,6 +18,9 @@ import {
 } from "reactstrap";
 import logo from "../../assests/images/white_HeaderLogo.png";
 import axios from "axios";
+import routesSupport from '../../routesSupport';
+import routesOP from "../../routesOP";
+import { getJwt } from "../../components/helpers/jwt";
 
 const getKick = () =>  getkickBack();
 
@@ -39,8 +42,11 @@ class Login extends Component {
 	}
 
 	componentDidMount() {
-		if (getKick() === "No Token") {
-			this.onShow("noToken");
+		const jwt = getJwt();
+		console.log(jwt);
+		if (jwt) {
+			this.props.history.push({ pathname: '/dashboard'});
+			return;
 		}
 	}
 
@@ -69,10 +75,20 @@ class Login extends Component {
 				password: this.state.password
 			})
 			.then(res => {
-				// console.log(res.data.payload.id);
+				//check if this path is valid for the user. This is to avoid directing to a 404
+				let path = this.props.location.req === undefined ? '/dashboard' : this.props.location.req;
+				let user = res.data.payload.id;
+				let routes = user === 'support' ? routesSupport : routesOP;
+				let contains = false;
+				for(let i = 0; i <routes.length; i++){
+					contains = routes[i].path.includes(path);
+					if(contains)
+					break;
+				}
+				//set jwt into local storage, check if req was valid route, otherwise send to dash
 				localStorage.setItem("smt-jwt", res.data.token);
-				//Here we set a whoAmI helper
-				this.props.history.push({ pathname:"/dashboard", data: res.data.payload.id});
+				contains ? this.props.history.push({ pathname: path, data: res.data.payload.id}) : 
+					this.props.history.push({ pathname: '/dashboard', data: res.data.payload.id});
 			})
 			.catch(err => {
 				//Caught error from the server saying this user doesnt exist & show error

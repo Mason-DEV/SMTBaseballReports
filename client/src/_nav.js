@@ -20,7 +20,7 @@ export default {
       url: "/ffxauditreport",
 	  icon: "icon-note",
 	  attributes:{
-		  style:{background: 'black'}
+		//   style:{background: 'black'}
 	  }
     },
 	{

@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const logger = require('../../config/logger');
+const uuid = require('uuid');
 
 //Audit Model
 const Audit = require('../../models/Audit');
@@ -8,12 +10,15 @@ const Audit = require('../../models/Audit');
 //Test new way to get
 // Defined get data(index or listing) route
 router.route('/').get(function (req, res) {
+    let id = uuid();
+    logger.info("Requesting Audits "+id);
     Audit.find(function(err, audit){
     if(err){
-      console.log(err);
+      logger.error("Error on / " +err.stack);
     }
     else {
       res.json(audit);
+      logger.info("Audits Returned "+id);
     }
   });
 });
@@ -22,12 +27,17 @@ router.route('/').get(function (req, res) {
 //  Defined update route
 router.route('/update/:id').put(function (req, res) {
     let _id = req.params.id;
-    console.log(_id);
     Audit.findById(_id, function(err, audit) {
-        if (!audit)
-            res.status(404).send("Can not find this Audit in the DB");
+      if (!audit){
+        logger.info("Could not find an audit with id " +_id);
+        res.status(404).send("Can not find this Audit in the DB");
+
+      }
+      else if(err){
+        logger.warn("Could not find an audit" +err.stack);
+        res.status(404).send("Can not find this Audit in the DB");
+      }
         else
-    
             audit.gamestring = req.body.gamestring;
             audit.auditor = req.body.auditor;
             audit.operator = req.body.operator;
@@ -38,17 +48,16 @@ router.route('/update/:id').put(function (req, res) {
             audit.pitchesAdd = req.body.pitchesAdd;
             audit.pickAdd = req.body.pickAdd;
             audit.save().then(audit => {
+                logger.error("Saving audit / " +audit);
                 res.sendStatus(200).send(req.body.pickAdd);
                 res.json(req.body.pickAdd);
             })
             .catch(err => {
-                console.log(err);
+                logger.error("Error on update "+err.stack)
                 res.status(400).send(err);
             });
         })
 });
-
-
 
 // // @route   GET api/audits
 // // @desc    Get all audits

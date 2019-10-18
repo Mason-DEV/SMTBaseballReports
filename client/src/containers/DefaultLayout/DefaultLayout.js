@@ -20,7 +20,9 @@ import {
 import navigation from "../../_nav";
 import navigationOP from "../../_navOP";
 // routes config
-import routes from "../../routes";
+// import routes from "../../routes";
+import routesOP from "../../routesOP";
+import routesSupport from "../../routesSupport";
 const AuthComponent = React.lazy(() =>
 	import("../../components/AuthComponent")
 );
@@ -103,8 +105,7 @@ class DefaultLayout extends Component {
 								<Suspense fallback={this.loading()}>
 									<Switch>
 										{	
-											this.state.name === 'op' ? this.filterRoutes(routes).map((route, idx) => {
-											// console.log(routes)
+											this.state.name === 'op' ? routesOP.map((route, idx) => {
 											return route.component ? (
 												<Route
 													key={idx}
@@ -119,7 +120,7 @@ class DefaultLayout extends Component {
 													)}
 												/>
 											) : null;
-										}): routes.map((route, idx) => {
+										}): routesSupport.map((route, idx) => {
 											return route.component ? (
 												<Route
 													key={idx}

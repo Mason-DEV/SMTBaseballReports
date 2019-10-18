@@ -19,6 +19,7 @@ import {
 } from "reactstrap";
 import axios from 'axios'
 import spinner from "../../assests/images/smtSpinner.gif";
+import logger from '../../components/helpers/logger';
 
 
 const propTypes = {
@@ -111,7 +112,7 @@ class CardsSupport extends Component {
     }
     // Fetch audit data on first mount
 	componentDidMount() {
-		console.log("here we can check user", this.props);
+		logger("warn", "Card support");
 		if (this.props.whoAmI == "op") {
 			this.setState({ isLoading: false });
 		} else {

@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
+//const logger = require('../config/logger');
 
 const userSchema = new Schema({
   username: String,

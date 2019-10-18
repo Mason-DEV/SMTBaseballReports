@@ -22,11 +22,12 @@ import React from 'react';
 // const ButtonGroups = React.lazy(() => import('./views/Buttons/ButtonGroups'));
 // const Buttons = React.lazy(() => import('./views/Buttons/Buttons'));
 // const Charts = React.lazy(() => import('./views/Charts'));
-const Dashboard = React.lazy(() => import('./views/Dashboard'));
-const FFxAuditReport = React.lazy(() => import('./views/FFxAuditReport'));
-const FFxTechReport = React.lazy(() => import('./views/FFxTechReport'));
-const PFxTechReport = React.lazy(() => import('./views/PFxTechReport'));
-const FFxAuditData = React.lazy(() => import('./views/FFxAuditData'));
+const Dashboard = React.lazy(() => import('./views/Dashboard/Dashboard'));
+const FFxAuditReport = React.lazy(() => import('./views/FFxAuditReport/FFxAuditReport'));
+const FFxTechReport = React.lazy(() => import('./views/FFxTechReport/FFxTechReport'));
+const PFxTechReport = React.lazy(() => import('./views/PFxTechReport/PFxTechReport'));
+const FFxAuditData = React.lazy(() => import('./views/FFxAuditData/FFxAuditData'));
+const Settings = React.lazy(() => import('./views/Settings/Settings'));
 // const CoreUIIcons = React.lazy(() => import('./views/Icons/CoreUIIcons'));
 // const Flags = React.lazy(() => import('./views/Icons/Flags'));
 // const FontAwesome = React.lazy(() => import('./views/Icons/FontAwesome'));
@@ -41,13 +42,14 @@ const FFxAuditData = React.lazy(() => import('./views/FFxAuditData'));
 // const User = React.lazy(() => import('./views/Users/User'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
-const routes = [
-  { path: '/', exact: true, name: 'Home',  auth: "",component: Dashboard },
-  { path: '/dashboard', name: 'Dashboard', auth: "",component: Dashboard },
-  { path: '/ffxauditreport', name: 'FFxAuditReport', auth: "",component: FFxAuditReport },
-  { path: '/ffxtechreport', name: 'FFxTechReport', auth: "",component: FFxTechReport },
-  { path: '/pfxtechreport', name: 'PFxTechReport', auth: "",component: PFxTechReport },
-  { path: '/ffxauditdata', name: 'FFxAuditData', auth: "required",component: FFxAuditData },
+const routesSupport = [
+  { path: '/', exact: true, name: 'Home',  component: Dashboard },
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+  { path: '/ffxauditreport', name: 'FFxAuditReport', component: FFxAuditReport },
+  { path: '/ffxtechreport', name: 'FFxTechReport', component: FFxTechReport },
+  { path: '/pfxtechreport', name: 'PFxTechReport', component: PFxTechReport },
+  { path: '/ffxauditdata', name: 'FFxAuditData', component: FFxAuditData },
+  { path: '/settings', name: 'Settings', component: Settings },
   // { path: '/theme', exact: true, name: 'Theme', component: Colors },
   // { path: '/theme/colors', name: 'Colors', component: Colors },
   // { path: '/theme/typography', name: 'Typography', component: Typography },
@@ -89,4 +91,4 @@ const routes = [
   // { path: '/users/:id', exact: true, name: 'User Details', component: User },
 ];
 
-export default routes;
+export default routesSupport;
