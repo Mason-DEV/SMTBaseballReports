@@ -36,9 +36,6 @@ class DefaultLayout extends Component {
 		this.state = {
 			name: ""
 		};
-
-
-		
 	}
 
 	loading = () => (
@@ -58,7 +55,7 @@ class DefaultLayout extends Component {
 				this.setState({ name: res.data });
 			})
 			.catch(function(error) {
-				console.log(error);
+				console.log("defaultLayout",error);
 			});
 
 	}
@@ -84,7 +81,7 @@ class DefaultLayout extends Component {
 				<div className="app">
 					<AppHeader fixed>
 						<Suspense fallback={this.loading()}>
-							<DefaultHeader onLogout={e => this.signOut(e)} />
+							<DefaultHeader onLogout={e => this.signOut(e)} whoAmI={this.state.name} />
 						</Suspense>
 					</AppHeader>
 					<div className="app-body">
@@ -112,7 +109,7 @@ class DefaultLayout extends Component {
 													path={route.path}
 													exact={route.exact}
 													name={route.name }
-													whoamI={""}
+													whoAmI={""}
 													render={props => (
 														<AuthComponent>
 															<route.component whoAmI={this.state.name} {...props} />

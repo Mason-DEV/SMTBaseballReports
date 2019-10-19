@@ -25,6 +25,7 @@ class Dashboard extends Component {
 
 	render() {
 		//Show OP or Support Cards
+		console.log(this.state);
 		return(
 		<div className="animated fadeIn">
 			{this.props.whoAmI === 'op' ? <CardsOP {...this.props}></CardsOP> : <CardsSupport {...this.props}></CardsSupport>}

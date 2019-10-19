@@ -21,8 +21,8 @@ import axios from "axios";
 import routesSupport from '../../routesSupport';
 import routesOP from "../../routesOP";
 import { getJwt } from "../../components/helpers/jwt";
+import logger from "../../components/helpers/logger";
 
-const getKick = () =>  getkickBack();
 
 class Login extends Component {
 	constructor(props) {
@@ -43,7 +43,6 @@ class Login extends Component {
 
 	componentDidMount() {
 		const jwt = getJwt();
-		console.log(jwt);
 		if (jwt) {
 			this.props.history.push({ pathname: '/dashboard'});
 			return;
@@ -98,7 +97,7 @@ class Login extends Component {
 						this.onShow("invalidUser");
 					}
 				}
-				console.log(err.response);
+				logger("warn", "Loggin WARN | "+ JSON.stringify(err.response));
 			});
 	}
 

@@ -77,7 +77,7 @@ export default {
 				},
 				{
 					name: "Support",
-					url: "/register",
+					url: "/support",
 					icon: "icon-user"
 				},
 				{

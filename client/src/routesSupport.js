@@ -28,6 +28,7 @@ const FFxTechReport = React.lazy(() => import('./views/FFxTechReport/FFxTechRepo
 const PFxTechReport = React.lazy(() => import('./views/PFxTechReport/PFxTechReport'));
 const FFxAuditData = React.lazy(() => import('./views/FFxAuditData/FFxAuditData'));
 const Settings = React.lazy(() => import('./views/Settings/Settings'));
+const Support = React.lazy(() => import('./views/Users/Support/Support'));
 // const CoreUIIcons = React.lazy(() => import('./views/Icons/CoreUIIcons'));
 // const Flags = React.lazy(() => import('./views/Icons/Flags'));
 // const FontAwesome = React.lazy(() => import('./views/Icons/FontAwesome'));
@@ -49,6 +50,7 @@ const routesSupport = [
   { path: '/ffxtechreport', name: 'FFxTechReport', component: FFxTechReport },
   { path: '/pfxtechreport', name: 'PFxTechReport', component: PFxTechReport },
   { path: '/ffxauditdata', name: 'FFxAuditData', component: FFxAuditData },
+  { path: '/support', name: 'Support', component: Support },
   { path: '/settings', name: 'Settings', component: Settings },
   // { path: '/theme', exact: true, name: 'Theme', component: Colors },
   // { path: '/theme/colors', name: 'Colors', component: Colors },

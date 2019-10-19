@@ -112,7 +112,7 @@ class CardsSupport extends Component {
     }
     // Fetch audit data on first mount
 	componentDidMount() {
-		logger("warn", "Card support");
+	
 		if (this.props.whoAmI == "op") {
 			this.setState({ isLoading: false });
 		} else {

@@ -11,14 +11,14 @@ const Audit = require('../../models/Audit');
 // Defined get data(index or listing) route
 router.route('/').get(function (req, res) {
     let id = uuid();
-    logger.info("Requesting Audits "+id);
+    logger.info(id +" === Requesting Audits");
     Audit.find(function(err, audit){
     if(err){
       logger.error("Error on / " +err.stack);
     }
     else {
       res.json(audit);
-      logger.info("Audits Returned "+id);
+      logger.info(id +" === Audits Returned");
     }
   });
 });
