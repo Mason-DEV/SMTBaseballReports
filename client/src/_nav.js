@@ -66,26 +66,9 @@ export default {
 		name: "Extras"
 	},
 		{
-			name: "Users",
-			// url: "/pages",
+			name: "Staff",
+			url: "/staff",
 			icon: "icon-people",
-			children: [
-				{
-					name: "Operators",
-					url: "/login",
-					icon: "icon-user"
-				},
-				{
-					name: "Support",
-					url: "/support",
-					icon: "icon-user"
-				},
-				{
-					name: "Auditors",
-					url: "/404",
-					icon: "icon-user"
-				}
-			]
 		},
 		{
 			name: "Daily Summaries",
