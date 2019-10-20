@@ -1,8 +1,6 @@
 //Staff schema
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// const bcrypt = require('bcrypt-nodejs');
-//const logger = require('../config/logger');
 
 const staffSchema = new Schema({
     name: String,
@@ -12,7 +10,11 @@ const staffSchema = new Schema({
       support: Boolean,
       auditor: Boolean
     }
-});
+},
+{
+  collection: 'staff'
+}
+);
 
 
 module.exports = mongoose.model('staff', staffSchema);

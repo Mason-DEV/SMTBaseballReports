@@ -8,7 +8,11 @@ const userSchema = new Schema({
   username: String,
   password: String,
   //TODO: Permission level
-});
+},
+{
+  collection: 'users'
+}
+);
 
 // hash the password
 userSchema.methods.generateHash = function(password) {

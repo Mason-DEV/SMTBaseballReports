@@ -11,6 +11,7 @@ const logger = require('./config/logger');
 const audits = require("./routes/api/audits");
 const User = require("./routes/api/user");
 const Logger = require("./routes/api/logger");
+const Staff = require("./routes/api/staff");
 //Models
 const UserModel = require("./models/User");
 
@@ -86,6 +87,7 @@ mongoose
 app.use("/api/audits", audits);
 app.use("/api/user", User);
 app.use("/api/", Logger);
+app.use("/api/staff/", Staff);
 
 
 //Server static assests if in prod

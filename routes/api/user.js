@@ -42,33 +42,4 @@ router.route('/userByID').get(function (req, res) {
             }})
     });
   
-
-    // console.log(new_user);
-    //     new_user.save().then(new_user => {
-    //         res.sendStatus(200).send();
-    //         // res.json(req.body.pickAdd);
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //         res.status(400).send(err);
-    //     });
-
-
-//API for logging in a user
-// 
-// router.post('/login', function(req, res) {
-//     var user_name = req.body.username;
-//     User.findOne({username: user_name}, function(err, user) {
-//         if (!user.validPassword(req.body.password)) {
-//             console.log("didnt match");
-//             //password did not match
-//         } else {
-//             console.log("did match");
-//             //password matched. proceed forward
-//         }
-//   });
-// });
-
-
-
 module.exports = router;
