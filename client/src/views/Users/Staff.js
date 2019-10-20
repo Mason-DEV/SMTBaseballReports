@@ -48,7 +48,6 @@ const staff = [
 		}
 	}
 ];
-const numbers = [1, 2, 3, 4, 5];
 class Staff extends Component {
 	constructor(props) {
 		super(props);
@@ -120,21 +119,32 @@ class Staff extends Component {
 		this.setState({ isEditing: true });
 		axios
 			.put("/api/staff/update/" + this.state.editData._id, this.state.editData)
-			.then(res => console.log(res.data))
 			.then(editing => {
-				this.setState({ isEditing: false, needToReload: true});
+				this.setState({ isEditing: false, needToReload: true });
 			})
+			// .then(reload =>{
+			// 	axios
+			// 	.get("/api/staff/")
+			// 	.then(res => {
+			// 		this.setState({ staffData: res.data });
+			// 	})
+			// 	//Data is loaded, so change from loading state
+			// 	.then(isLoading => this.setState({ needToReload: false }))
+			// 	.catch(function(error) {
+			// 		console.log(error);
+			// 	});
+
+			// })
 			.catch(error => {
 				this.setState({ isEditing: false });
 				console.log(error);
 			});
 		this.hideEdit();
-		
 	}
 	componentDidMount() {
 		//Axios api call to get all staffData
 		axios
-			.get("/api/staff/", { headers: { Authorization: `Bearer ${jwt}` } })
+			.get("/api/staff/")
 			.then(res => {
 				this.setState({ staffData: res.data });
 			})
@@ -145,18 +155,17 @@ class Staff extends Component {
 			});
 	}
 	componentDidUpdate() {
+		//Checking if we need to make an Axios api call to get all staffData
 		if (this.state.needToReload === true) {
 			axios
-				.get("/api/staff/", { headers: { Authorization: `Bearer ${jwt}` } })
+				.get("/api/staff/")
 				.then(res => {
 					this.setState({ staffData: res.data, needToReload: false });
 				})
-				//Data is loaded, so change from loading state
-				.then(isLoading => this.setState({ isLoading: false }))
 				.catch(function(error) {
 					console.log(error);
 				});
-				this.setState({needToReload: false });
+			this.setState({ needToReload: false });
 		}
 	}
 
@@ -185,7 +194,7 @@ class Staff extends Component {
 							</div>
 						</CardHeader>
 						<CardBody>
-							<Table  bordered striped responsive size="sm">
+							<Table bordered striped responsive size="sm">
 								<thead>
 									<tr>
 										<th width="120">Actions</th>
@@ -213,14 +222,14 @@ class Staff extends Component {
 												<td>{staff.name}</td>
 												<td>{staff.email}</td>
 												<td>
-													{staff.roles.support ? (
-														<Badge color="secondary">Support</Badge>
+													{staff.roles.auditor ? (
+														<Badge color="info">Auditor</Badge>
 													) : null}{" "}
 													{staff.roles.operator ? (
 														<Badge color="warning">Operator</Badge>
 													) : null}{" "}
-													{staff.roles.auditor ? (
-														<Badge color="info">Auditor</Badge>
+													{staff.roles.support ? (
+														<Badge color="secondary">Support</Badge>
 													) : null}
 												</td>
 											</tr>
@@ -300,8 +309,8 @@ class Staff extends Component {
 						</Modal>
 					</div>
 
-					{/* Edit Modal */}
 
+					{/* Edit Modal */}
 					<div>
 						{this.state.isEditing ? (
 							<Modal color="success" isOpen={this.state.editModal}>
