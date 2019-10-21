@@ -28,7 +28,7 @@ const FFxTechReport = React.lazy(() => import('./views/FFxTechReport/FFxTechRepo
 const PFxTechReport = React.lazy(() => import('./views/PFxTechReport/PFxTechReport'));
 const FFxAuditData = React.lazy(() => import('./views/FFxAuditData/FFxAuditData'));
 const Settings = React.lazy(() => import('./views/Settings/Settings'));
-const Staff = React.lazy(() => import('./views/Users/Staff'));
+const Staff = React.lazy(() => import('./views/Staff/Staff'));
 // const CoreUIIcons = React.lazy(() => import('./views/Icons/CoreUIIcons'));
 // const Flags = React.lazy(() => import('./views/Icons/Flags'));
 // const FontAwesome = React.lazy(() => import('./views/Icons/FontAwesome'));

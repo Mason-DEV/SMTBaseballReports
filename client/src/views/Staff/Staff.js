@@ -259,10 +259,10 @@ class Staff extends Component {
               <Table bordered striped responsive size="sm">
                 <thead>
                   <tr>
-                    <th width="120">Actions</th>
-                    <th width="300">Name</th>
-                    <th width="300">Email</th>
-                    <th width="150">Roles</th>
+                    <th width="">Actions</th>
+                    <th width="">Name</th>
+                    <th width="">Email</th>
+                    <th width="">Roles</th>
                   </tr>
                 </thead>
                 <tbody>
