@@ -1,20 +1,36 @@
 //Staff schema
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const staffSchema = new Schema({
-    name: String,
-    email: String,
+const staffSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true
+    },
     roles: {
-      operator: Boolean,
-      support: Boolean,
-      auditor: Boolean
+      operator: {
+        type: Boolean,
+        default: false
+      },
+      support: {
+        type: Boolean,
+        default: false
+        
+      },
+      auditor: {
+        type: Boolean,
+        default: false
+      }
     }
-},
-{
-  collection: 'staff'
-}
+  },
+  {
+    collection: "staff"
+  }
 );
 
-
-module.exports = mongoose.model('staff', staffSchema);
+module.exports = mongoose.model("staff", staffSchema);
