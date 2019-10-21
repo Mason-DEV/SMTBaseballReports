@@ -10,12 +10,12 @@ const Staff = require("../../models/Staff");
 const logger = require("../../config/logger");
 
 // @route   GET api/staff/
-// @desc    Get All Staff
+// @desc    Get All Staff returned in asc order by name
 // @access  Public
 router.route("/").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Staff");
-  Staff.find(function(err, staff) {
+  Staff.find({}).sort({ name: 'asc' }).exec(function(err, staff) { 
     if (err) {
       logger.error("Error on / " + err.stack);
     } else {
