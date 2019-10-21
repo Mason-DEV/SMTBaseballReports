@@ -34,7 +34,8 @@ class DefaultLayout extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			name: ""
+			name: "",
+			permission: ""
 		};
 	}
 
@@ -52,7 +53,7 @@ class DefaultLayout extends Component {
 		let token = localStorage.getItem('smt-jwt');
 		axios.get("/getUser", { headers: { Authorization: `Bearer ${token}` } })
 			.then(res => {
-				this.setState({ name: res.data });
+				this.setState({ name: res.data.id, permission: res.data.permission});
 			})
 			.catch(function(error) {
 				console.log("defaultLayout",error);
@@ -110,9 +111,10 @@ class DefaultLayout extends Component {
 													exact={route.exact}
 													name={route.name }
 													whoAmI={""}
+													permission={""}
 													render={props => (
 														<AuthComponent>
-															<route.component whoAmI={this.state.name} {...props} />
+															<route.component whoAmI={this.state.name} permission={this.state.permission} {...props} />
 														</AuthComponent>
 													)}
 												/>
@@ -125,9 +127,10 @@ class DefaultLayout extends Component {
 													exact={route.exact}
 													name={route.name }
 													whoamI={""}
+													permission={""}
 													render={props => (
 														<AuthComponent>
-															<route.component whoAmI={this.state.name} {...props} />
+															<route.component whoAmI={this.state.name}  permission={this.state.permission} {...props} />
 														</AuthComponent>
 													)}
 												/>

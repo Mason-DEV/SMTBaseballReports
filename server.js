@@ -12,6 +12,7 @@ const audits = require("./routes/api/audits");
 const User = require("./routes/api/user");
 const Logger = require("./routes/api/logger");
 const Staff = require("./routes/api/staff");
+const PFxTech = require("./routes/api/pfxTech");
 //Models
 const UserModel = require("./models/User");
 
@@ -28,7 +29,7 @@ const opts = {
 };
 
 var strategy = new JwtStrategy(opts, function(jwt_payload, next) {
-    var user = UserModel.findOne({ id: jwt_payload.id });
+    var user = UserModel.findOne({ id: jwt_payload.id, permission: jwt_payload.permission });
 	if (user) {
 		next(null, user);
 	} else {
@@ -59,7 +60,7 @@ app.post("/getToken", function(req, res) {
 			logger.warn("Invalid password attempt in /getToken");
 			return res.status(401).json({ message: "Invalid User"});
 		} else {
-			var payload = { id: user.username };
+			var payload = {id:user.username, permission: user.permission };
 			var token = jwt.sign(payload, opts.secretOrKey);
 			logger.info("Token generated " + JSON.stringify(payload) +" "+token);
 			res.send({token, payload});
@@ -71,7 +72,8 @@ app.post("/getToken", function(req, res) {
 
 //Authentication API returns the user who created the given token
 app.get('/getUser', passport.authenticate('jwt', { session: false }), (req, res) => {
-	res.send(req.user._conditions.id);
+	console.log(req.user);
+	res.send(req.user._conditions);
   });
 
 
@@ -87,7 +89,8 @@ mongoose
 app.use("/api/audits", audits);
 app.use("/api/user", User);
 app.use("/api/", Logger);
-app.use("/api/staff/", Staff);
+app.use("/api/staff", Staff);
+app.use("/api/pfxTech", PFxTech);
 
 
 //Server static assests if in prod

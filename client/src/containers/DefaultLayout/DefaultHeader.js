@@ -18,7 +18,8 @@ class DefaultHeader extends Component {
   constructor(props){
     super(props)
     this.state = {
-      name: this.props.whoAmI
+      name: this.props.whoAmI,
+      permission: this.props.permission
     }
     
   }

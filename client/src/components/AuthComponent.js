@@ -10,7 +10,8 @@ class AuthComponent extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			user: undefined
+			user: undefined,
+			permission: undefined
 		};
 	}
 
@@ -28,7 +29,7 @@ class AuthComponent extends Component {
 		//Check to make sure this JWT we have is valid
 		axios.get('/getUser', { headers: { Authorization: `Bearer ${jwt}`} })
 			.then(res =>{
-				this.setState({	user: res});
+				this.setState({	user: res.data.id, permission: res.data.permission});
 			})
 			.catch(err => {
 				setKickBack("No Token");

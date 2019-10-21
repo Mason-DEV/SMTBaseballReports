@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {Button,Input } from "reactstrap";
+import { Button, Input } from "reactstrap";
 
 const propTypes = {
 	children: PropTypes.node
@@ -8,6 +8,27 @@ const propTypes = {
 
 const defaultProps = {};
 
+const innings = [
+	"T1",
+	"B1",
+	"T2",
+	"B2",
+	"T3",
+	"B3",
+	"T4",
+	"B4",
+	"T5",
+	"B5",
+	"T6",
+	"B6",
+	"T7",
+	"B7",
+	"T8",
+	"B8",
+	"T9",
+	"B9",
+	"Extras"
+];
 class Table extends Component {
 	constructor(props) {
 		super(props);
@@ -16,7 +37,8 @@ class Table extends Component {
 
 		//States
 		this.state = {
-			rows: [{}]
+			rows: [{}],
+			data: {}
 		};
 	}
 	handleChange = idx => e => {
@@ -43,9 +65,31 @@ class Table extends Component {
 		rows.splice(idx, 1);
 		this.setState({ rows });
 	};
+
+	changeAB(e, key) {
+		// console.log(this.state.data[key]);
+		// let location = data[key].atBat;
+		// console.log("location",location)
+		this.setState({
+			data:{...this.state.data, [key]: { ...this.state.data[key] , atBat:e.target.value}}
+		})
+		// this.setState({
+		// 	data: { ...this.state.data, [key]{atBat}: { ...this.state.data.key, atBat: e.target.value } }
+		// });
+	}
+	changeReason(e, key) {
+		this.setState({
+			data: {...this.state.data,
+			[key]:{
+				...this.state.data.key, changeReason: e.target.value 
+			}}
+		});
+	}
+
 	render() {
 		// eslint-disable-next-line
 		const { children, ...attributes } = this.props;
+		console.log(this.state);
 
 		return (
 			<React.Fragment>
@@ -56,7 +100,9 @@ class Table extends Component {
 							<th className="text-center"> AB # </th>
 							<th className="text-center"> Change Made </th>
 							<th className="text-center">
-                                <Button type="button" onClick={this.handleAddRow}className="btn btn-success"><i className="fa fa-plus-circle"></i></Button>			
+								<Button type="button" className="btn btn-success" onClick={e => this.handleAddRow(e)}>
+									<i className="fa fa-plus-circle"></i>
+								</Button>
 							</th>
 						</tr>
 					</thead>
@@ -64,39 +110,43 @@ class Table extends Component {
 						{this.state.rows.map((item, idx) => (
 							<tr id="addr0" key={idx}>
 								<td>
-                                <Input type="select" name="inning" id="inning" value={this.state.rows[idx].name}onChange={this.handleChange(idx)} required>
-											<option>T1</option>
-											<option>B1</option>
-											<option>T2</option>
-											<option>B2</option>
-											<option>T3</option>
-											<option>B3</option>
-											<option>T4</option>
-											<option>B4</option>
-											<option>T5</option>
-											<option>B5</option>
-											<option>T6</option>
-											<option>B6</option>
-											<option>T7</option>
-											<option>B7</option>
-											<option>T8</option>
-											<option>B8</option>
-											<option>T9</option>
-											<option>B9</option>
-											<option>Extras</option>
-										</Input>
+									<Input type="select" name="inning" id="inning">
+										<option key="-1"></option>
+										{innings.map((inning, idx) => {
+											return (
+												<option key={idx} onSelect={e => this.change(e, idx)}>
+													{inning}
+												</option>
+											);
+										})}
+									</Input>
 								</td>
 								<td>
-                                <Input id="abNumber" type="test" name="abNumber"value={this.state.rows[idx].name}onChange={this.handleChange(idx)}className="form-control"></Input>
-								
+									<Input
+										key={idx}
+										id="atBat"
+										type="text"
+										name="atBat"
+										// value={this.state.rows[idx].name}
+										className="form-control"
+										onChange={e => this.changeAB(e, idx)}
+									></Input>
 								</td>
 								<td>
-                                <Input type="text" name="changeMade" id="changeMade" value={this.state.rows[idx].mobile} onChange={this.handleChange(idx)} className="form-control"></Input>
-								
+									<Input
+										key={idx}
+										type="text"
+										name="changeMade"
+										id="changeMade"
+										// value={this.state.rows[idx].mobile}
+										className="form-control"
+										onChange={e => this.changeReason(e, idx)}
+									></Input>
 								</td>
 								<td className="text-center">
-                                <Button type="button" onClick={this.handleRemoveSpecificRow(idx)} className="btn btn-danger"><i className="fa fa-trash"></i></Button>		
-									
+									<Button type="button" className="btn btn-danger">
+										<i className="fa fa-trash"></i>
+									</Button>
 								</td>
 							</tr>
 						))}
