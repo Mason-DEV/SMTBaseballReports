@@ -29,7 +29,7 @@ const PFxTechReport = React.lazy(() => import('./views/PFxTechReport/PFxTechRepo
 const FFxAuditData = React.lazy(() => import('./views/FFxAuditData/FFxAuditData'));
 const Settings = React.lazy(() => import('./views/Settings/Settings'));
 const Staff = React.lazy(() => import('./views/Staff/Staff'));
-const Venues = React.lazy(() => import('./views/Venues/Venues'));
+const Venue = React.lazy(() => import('./views/Venue/Venue'));
 // const CoreUIIcons = React.lazy(() => import('./views/Icons/CoreUIIcons'));
 // const Flags = React.lazy(() => import('./views/Icons/Flags'));
 // const FontAwesome = React.lazy(() => import('./views/Icons/FontAwesome'));
@@ -53,7 +53,7 @@ const routesSupport = [
   { path: '/ffxauditdata', name: 'FFxAuditData', component: FFxAuditData },
   { path: '/staff', name: 'Staff', component: Staff },
   { path: '/settings', name: 'Settings', component: Settings },
-  { path: '/venues', name: 'Venues', component: Venues },
+  { path: '/venue', name: 'Venue', component: Venue },
   // { path: '/theme', exact: true, name: 'Theme', component: Colors },
   // { path: '/theme/colors', name: 'Colors', component: Colors },
   // { path: '/theme/typography', name: 'Typography', component: Typography },

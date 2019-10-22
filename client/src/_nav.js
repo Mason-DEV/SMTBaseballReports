@@ -72,7 +72,7 @@ export default {
 		},
 		{
 			name: "Venues",
-			url: "/venues",
+			url: "/venue",
 			icon: "icon-location-pin",
 		},
 		{

@@ -12,6 +12,7 @@ const audits = require("./routes/api/audits");
 const User = require("./routes/api/user");
 const Logger = require("./routes/api/logger");
 const Staff = require("./routes/api/staff");
+const Venue = require("./routes/api/venue");
 const PFxTech = require("./routes/api/pfxTech");
 //Models
 const UserModel = require("./models/User");
@@ -89,6 +90,7 @@ app.use("/api/audits", audits);
 app.use("/api/user", User);
 app.use("/api/", Logger);
 app.use("/api/staff", Staff);
+app.use("/api/venue", Venue);
 app.use("/api/pfxTech", PFxTech);
 
 
