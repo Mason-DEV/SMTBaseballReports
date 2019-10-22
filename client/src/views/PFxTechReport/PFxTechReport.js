@@ -74,11 +74,10 @@ class PFxTechReport extends Component {
 
   componentDidMount() {
     Promise.all([
-      axios.get("/api/staff/")
-      // axios.get('https://api.github.com/users/antranilan/repos')
+      axios.get("/api/staff/operators")
     ])
       .then(([opResponse]) => {
-        const ops = opResponse.data.filter(obj => obj.roles.operator === true).map(obj => ({ name: obj.name }));
+        const ops = opResponse.data.map(obj => ({ name: obj.name }));
         this.setState({ operators: ops });
       })
       .then(isLoading => this.setState({ isLoading: false }));

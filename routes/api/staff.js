@@ -25,6 +25,55 @@ router.route("/").get(function(req, res) {
   });
 });
 
+// @route   GET api/staff/auditors
+// @desc    Get All auditors Staff name and email returned in asc order by name
+// @access  Public
+router.route("/auditors").get(function(req, res) {
+  let id = uuid();
+  logger.info(id + " === Requesting Staff");
+  Staff.find({'roles.auditor': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
+    if (err) {
+      logger.error("Error on / " + err.stack);
+    } else {
+      res.json(staff);
+      logger.info(id + " === Staff Returned");
+    }
+  });
+});
+
+// @route   GET api/staff/operators
+// @desc    Get All operators Staff name and email returned in asc order by name
+// @access  Public
+router.route("/operators").get(function(req, res) {
+  let id = uuid();
+  logger.info(id + " === Requesting Staff");
+  Staff.find({'roles.operator': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
+    if (err) {
+      logger.error("Error on / " + err.stack);
+    } else {
+      // const staffToSend = [staff];
+      res.json(staff);
+      logger.info(id + " === Staff Returned");
+    }
+  });
+});
+
+// @route   GET api/staff/support
+// @desc    Get All support Staff name and email returned in asc order by name
+// @access  Public
+router.route("/support").get(function(req, res) {
+  let id = uuid();
+  logger.info(id + " === Requesting Staff");
+  Staff.find({'roles.support': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
+    if (err) {
+      logger.error("Error on / " + err.stack);
+    } else {
+      res.json(staff);
+      logger.info(id + " === Staff Returned");
+    }
+  });
+});
+
 // @route   GET api/staff/staffByID
 // @desc    Get A Single Staff
 // @access  Public

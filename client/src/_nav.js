@@ -71,6 +71,11 @@ export default {
 			icon: "icon-people",
 		},
 		{
+			name: "Venues",
+			url: "/venues",
+			icon: "icon-location-pin",
+		},
+		{
 			name: "Daily Summaries",
 			url: "/404",
 			icon: "icon-list"
