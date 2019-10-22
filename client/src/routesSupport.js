@@ -26,6 +26,7 @@ const Dashboard = React.lazy(() => import('./views/Dashboard/Dashboard'));
 const FFxAuditReport = React.lazy(() => import('./views/FFxAuditReport/FFxAuditReport'));
 const FFxTechReport = React.lazy(() => import('./views/FFxTechReport/FFxTechReport'));
 const PFxTechReport = React.lazy(() => import('./views/PFxTechReport/PFxTechReport'));
+const PFxTechData = React.lazy(() => import('./views/PFxTechData/PFxTechData'));
 const FFxAuditData = React.lazy(() => import('./views/FFxAuditData/FFxAuditData'));
 const Settings = React.lazy(() => import('./views/Settings/Settings'));
 const Staff = React.lazy(() => import('./views/Staff/Staff'));
@@ -50,6 +51,7 @@ const routesSupport = [
   { path: '/ffxauditreport', name: 'FFxAuditReport', component: FFxAuditReport },
   { path: '/ffxtechreport', name: 'FFxTechReport', component: FFxTechReport },
   { path: '/pfxtechreport', name: 'PFxTechReport', component: PFxTechReport },
+  { path: '/pfxtechdata', name: 'PFxTechData', component: PFxTechData },
   { path: '/ffxauditdata', name: 'FFxAuditData', component: FFxAuditData },
   { path: '/staff', name: 'Staff', component: Staff },
   { path: '/settings', name: 'Settings', component: Settings },

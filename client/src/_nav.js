@@ -54,7 +54,7 @@ export default {
 	},
 	{
 		name: "PFx Tech",
-		url: "/base",
+		url: "/pfxtechdata",
 		icon: "icon-globe"
 	},
 

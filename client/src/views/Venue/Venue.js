@@ -219,7 +219,7 @@ class Venue extends Component {
 		} else {
 			return (
 				<React.Fragment>
-					<Card>
+					<Card className="card-accent-success">
 						<CardHeader tag="h5">
 							<i className="icon-location-pin"></i>Venue Management
 							<div className="card-header-actions">

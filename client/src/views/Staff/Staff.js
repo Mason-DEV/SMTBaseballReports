@@ -246,7 +246,7 @@ class Staff extends Component {
     } else {
       return (
         <React.Fragment>
-          <Card>
+         <Card className="card-accent-success">
             <CardHeader tag="h5">
               <i className="fa fa-group"></i>Staff Management
               <div className="card-header-actions">
