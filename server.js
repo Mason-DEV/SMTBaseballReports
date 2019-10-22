@@ -72,7 +72,6 @@ app.post("/getToken", function(req, res) {
 
 //Authentication API returns the user who created the given token
 app.get('/getUser', passport.authenticate('jwt', { session: false }), (req, res) => {
-	console.log(req.user);
 	res.send(req.user._conditions);
   });
 

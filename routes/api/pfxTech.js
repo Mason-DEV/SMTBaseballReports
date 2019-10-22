@@ -28,7 +28,6 @@ router.route("/").get(function(req, res) {
 // @desc    Get A Single Staff
 // @access  Public
 
-
 // @route   PUT api/staff/update/:id
 // @desc    Update A Staff
 // @access  Public
