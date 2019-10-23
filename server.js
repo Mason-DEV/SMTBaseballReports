@@ -4,6 +4,7 @@ const path = require("path");
 const cors = require("cors");
 //DB Config
 const db = require("./config/keys").mongoURI;
+const db_LOCAL = require("./config/keys").mongoURI_LOCAL;
 const secret = require("./config/keys").SECERT_OR_KEY;
 //Logger import
 const logger = require('./config/logger');
@@ -79,10 +80,17 @@ app.get('/getUser', passport.authenticate('jwt', { session: false }), (req, res)
 
 //Connection to MongoDB
 mongoose.Promise = global.Promise;
+if (process.env.NODE_ENV === "production") {
 mongoose
-	.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+	.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, autoReconnect: true})
 	.then(() => logger.info("MongoDB Connected...."))
-	.catch(err => logger.error("Error connecting to MongoDB " +err.stack));
+	.catch(err => logger.error("Error connecting to MongoDB " +err));
+}else{
+	mongoose
+	.connect(db_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true, autoReconnect: true})
+	.then(() => logger.info("MongoDB_LOCAL Connected...."))
+	.catch(err => logger.error("Error connecting to MongoDB_LOCAL " +err));
+}
 
 //Use Routes
 // app.use("/api/audits", passport.authenticate("jwt", { session: false }), audits);
