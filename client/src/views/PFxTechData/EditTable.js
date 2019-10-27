@@ -140,7 +140,13 @@ class EditTable extends Component {
 	};
 
 	setRowAmount() {
-		var rowsNeeded = Object.keys(this.props.correctionData[0]).length;
+		var rowsNeeded;
+		try {
+			rowsNeeded = Object.keys(this.props.correctionData[0]).length 
+		}
+		catch(error){
+			rowsNeeded = 1;
+		}
 		var newRows = [];
 		for (var i = 0; i < rowsNeeded; i++) {
 			newRows.push([i]);
