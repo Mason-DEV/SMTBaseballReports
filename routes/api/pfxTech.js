@@ -149,7 +149,22 @@ router.route("/create/").post(function(req, res) {
 });
 
 // @route   Delete api/pfxTech/delete/:id
-// @desc    Delete A Staff
+// @desc    Delete A PFxTech Report
 // @access  Public
+router.delete("/delete/", (req, res) => {
+	let uid = uuid();
+	PFxTech.findById(req.headers.id)
+	  .then(pfxTech => {
+		logger.info(uid + " Deleting pfxTech === " + pfxTech._id);
+		pfxTech.remove().then(() => {
+		  logger.info(uid + " Deleting pfxTech Complete");
+		  res.sendStatus(200);
+		});
+	  })
+	  .catch(err => {
+		logger.error(uid + " Error on delete " + err);
+		res.sendStatus(404);
+	  });
+  });
 
 module.exports = router;

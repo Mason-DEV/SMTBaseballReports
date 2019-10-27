@@ -42,9 +42,9 @@ class PFxTechData extends Component {
 		this.submitEdit = this.submitEdit.bind(this);
 		this.changeEditData = this.changeEditData.bind(this);
 
-		// this.showDelete = this.showDelete.bind(this);
-		// this.hideDelete = this.hideDelete.bind(this);
-		// this.submitDelete = this.submitDelete.bind(this);
+		this.showDelete = this.showDelete.bind(this);
+		this.hideDelete = this.hideDelete.bind(this);
+		this.submitDelete = this.submitDelete.bind(this);
 
 		this.state = {
 			isLoading: true,
@@ -136,6 +136,40 @@ class PFxTechData extends Component {
 	}
 	//#endregion Edit Functions
 
+	//#region Delete Functions
+	hideDelete() {
+		this.setState({
+			deleteModal: !this.state.deleteModal,
+			deleteData: {},
+			needToReload: false
+		});
+	}
+
+	showDelete(id, name) {
+		this.setState({
+			deleteModal: !this.state.deleteModal,
+			deleteData: { _id: id }
+		});
+		this.removeBlur();
+	}
+	submitDelete(e) {
+		e.preventDefault();
+		this.setState({ isDeleting: true });
+		axios
+			.delete("/api/PFxTech/delete/", {
+				headers: { ID: this.state.deleteData._id }
+			})
+			.then(deleteing => {
+				this.setState({ isDeleting: false, needToReload: true });
+			})
+			.catch(error => {
+				this.setState({ isDeleting: false });
+				console.log(error);
+			});
+		this.hideDelete();
+	}
+	//#endregion Delete Functions
+
 	toggle(tabPane, tab) {
 		const newArray = this.state.activeTab.slice();
 		newArray[tabPane] = tab;
@@ -151,8 +185,6 @@ class PFxTechData extends Component {
 		}
 		return date;
 	}
-
-	
 
 	tabPane() {
 		return (
@@ -177,7 +209,7 @@ class PFxTechData extends Component {
 											<Button onClick={e => this.showEdit(data._id)} color="warning" size="sm">
 												Edit
 											</Button>{" "}
-											<Button color="danger" size="sm">
+											<Button onClick={e => this.showDelete(data._id, data.name)} color="danger" size="sm">
 												Delete
 											</Button>
 										</td>
@@ -210,10 +242,10 @@ class PFxTechData extends Component {
 									return (
 										<tr key={i}>
 											<td>
-												<Button color="warning" size="sm">
+												<Button onClick={e => this.showEdit(data._id)} color="warning" size="sm">
 													Edit
 												</Button>{" "}
-												<Button color="danger" size="sm">
+												<Button onClick={e => this.showDelete(data._id)} color="danger" size="sm">
 													Delete
 												</Button>
 											</td>
@@ -255,20 +287,20 @@ class PFxTechData extends Component {
 	componentDidUpdate() {
 		//Checking if we need to make an Axios api call to get all venueData
 		if (this.state.needToReload === true) {
-		Promise.all([
-			axios.get("/api/PFxTech/"),
-			axios.get("/api/PFxTech/today"),
-			axios.get("/api/staff/operators"),
-			axios.get("/api/venue/pitchFx")
-		])
-			.then(([allResponse, todayResponse, opResponse, venueResponse]) => {
-				const all = allResponse.data;
-				const today = todayResponse.data;
-				const ops = opResponse.data.map(obj => ({ name: obj.name }));
-				const venues = venueResponse.data.map(obj => ({ name: obj.name }));
-				this.setState({ allGameData: all, todayGameData: today, operators: ops, venues });
-			})
-			.then(reloading => this.setState({ needToReload: false }));
+			Promise.all([
+				axios.get("/api/PFxTech/"),
+				axios.get("/api/PFxTech/today"),
+				axios.get("/api/staff/operators"),
+				axios.get("/api/venue/pitchFx")
+			])
+				.then(([allResponse, todayResponse, opResponse, venueResponse]) => {
+					const all = allResponse.data;
+					const today = todayResponse.data;
+					const ops = opResponse.data.map(obj => ({ name: obj.name }));
+					const venues = venueResponse.data.map(obj => ({ name: obj.name }));
+					this.setState({ allGameData: all, todayGameData: today, operators: ops, venues });
+				})
+				.then(reloading => this.setState({ needToReload: false }));
 		}
 	}
 
@@ -336,8 +368,8 @@ class PFxTechData extends Component {
 								</ModalBody>
 							</Modal>
 						) : (
-								// <Modal size="lg" style={{maxWidth: '1600px', width: '80%'}} color="success" isOpen={this.state.editModal}>
-								<Modal size="lg" color="success" isOpen={this.state.editModal}>
+							// <Modal size="lg" style={{maxWidth: '1600px', width: '80%'}} color="success" isOpen={this.state.editModal}>
+							<Modal size="lg" color="success" isOpen={this.state.editModal}>
 								<Form onSubmit={e => this.submitEdit(e)}>
 									<ModalHeader style={{ backgroundColor: "#ffc107", color: "Black" }} toggle={this.hideEdit}>
 										<i className="fa fa-pencil"></i> Edit PitchFx Report
@@ -466,6 +498,45 @@ class PFxTechData extends Component {
 											Update
 										</Button>
 										<Button color="secondary" onClick={this.hideEdit}>
+											Cancel
+										</Button>
+									</ModalFooter>
+								</Form>
+							</Modal>
+						)}
+					</div>
+
+					{/* Delete Modal */}
+					<div>
+						{this.state.isDeleting ? (
+							<Modal color="success" isOpen={this.state.deleteModal}>
+								<ModalHeader style={{ backgroundColor: "#f86c6b", color: "Black" }}>
+									<i className="fa fa-warning"></i> Delete PitchFx Report
+								</ModalHeader>
+								<ModalBody>
+									<img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />
+								</ModalBody>
+							</Modal>
+						) : (
+							<Modal color="success" isOpen={this.state.deleteModal}>
+								<Form onSubmit={e => this.submitDelete(e)}>
+									<ModalHeader style={{ backgroundColor: "#f86c6b", color: "Black" }} toggle={this.hideDelete}>
+										<i className="fa fa-warning"></i> Delete PitchFx Report
+									</ModalHeader>
+									<ModalBody>
+										<Row>
+											<Col>
+												<FormGroup>
+													<Label htmlFor="naame">Are you sure you want to delete this report?</Label>
+												</FormGroup>
+											</Col>
+										</Row>
+									</ModalBody>
+									<ModalFooter>
+										<Button color="danger" type="submit" value="Add Venue" className="px-4">
+											Delete
+										</Button>
+										<Button color="secondary" onClick={this.hideDelete}>
 											Cancel
 										</Button>
 									</ModalFooter>
