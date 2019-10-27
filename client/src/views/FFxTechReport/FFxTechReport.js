@@ -40,10 +40,10 @@ class FFxTechReport extends Component {
 									<FormGroup>
 										<Label htmlFor="venue">Venue</Label>
 										<Input type="select" name="venue" id="venue" required>
-										<option selected="selected" value={this.state.editdata.venue} key="-1"></option>
+										{/* <option selected="selected" value={this.state.editdata.venue} key="-1"></option>
 													{this.state.venues.map((venue, idx) => {
 														return <option key={idx}>{venue.name}</option>;
-													})}
+													})} */}
 										</Input>
 									</FormGroup>
 									<FormGroup>
