@@ -29,7 +29,8 @@ const pfxTechSchema = new Schema(
 			required: true
 		},
 		hwswIssues: {
-			type: String
+			type: String,
+			default: "None"
 		},
 		t1Notes: {
 			type: String

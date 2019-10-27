@@ -53,6 +53,9 @@ class DefaultHeader extends Component {
           </NavItem>
         </Nav>
         <Nav className="ml-auto" navbar>
+        <NavItem className="d-sm-down-none">
+            Logged in as, {' '} <span style={{color: 'green', fontWeight: 'bold'}}> { this.props.whoAmI}</span>
+          </NavItem>
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>
             <i className="fa fa-gears"></i>

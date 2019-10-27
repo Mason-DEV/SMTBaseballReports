@@ -14,23 +14,103 @@ const logger = require("../../config/logger");
 router.route("/").get(function(req, res) {
 	let id = uuid();
 	logger.info(id + " === Requesting PFxTech");
-	PFxTech.find({}).exec(function(err, PFxTech) {
-		if (err) {
-			logger.error("Error on PFxTech/ " + err.stack);
+	PFxTech.find({})
+		.sort({ date: "desc" })
+		.exec(function(err, PFxTech) {
+			if (err) {
+				logger.error("Error on PFxTech/ " + err.stack);
+			} else {
+				res.json(PFxTech);
+				logger.info(id + " === PFxTech Returned");
+			}
+		});
+});
+
+// @route   GET api/pfxTech/today
+// @desc    Get All of todays PFxTech reports
+// @access  Public
+router.route("/today").get(function(req, res) {
+	let id = uuid();
+	//Gets todays date in ISO format
+	var curr = new Date();
+	curr.setDate(curr.getDate());
+	const searchDate = curr.toISOString().substr(0, 10);
+
+	logger.info(id + " === Requesting Today's PFxTech");
+	PFxTech.find({ date: searchDate })
+		.sort({ venue: "asc" })
+		.exec(function(err, PFxTech) {
+			if (err) {
+				logger.error("Error on PFxTech/Today " + err.stack);
+			} else {
+				res.json(PFxTech);
+				logger.info(id + " === Today's PFxTech Returned");
+			}
+		});
+});
+
+// // @route   Get api/pfxTech/pfxReportByID
+// // @desc    Get A Single PfxTech Report
+// // @access  Public
+router.route("/pfxReportByID").get(function(req, res) {
+	let _id = req.headers.id;
+	PFxTech.findById(_id, function(err, pfxTech) {
+		if (!pfxTech) {
+			logger.info("Could not find a pfxTech " + _id);
+			res.status(404).send("Can not find this pfxTech");
+		} else if (err) {
+			logger.error("pfxReportByID error " + err.stack);
+			res.status(404).send("Can not find this pfxTech");
 		} else {
-			res.json(PFxTech);
-			logger.info(id + " === PFxTech Returned");
+			logger.info("Sending pfxTech " + pfxTech._id);
+			res.status(200).send(pfxTech);
 		}
 	});
 });
 
-// @route   GET api/pfxTech/staffByID
-// @desc    Get A Single Staff
-// @access  Public
-
 // @route   PUT api/pfxTech/update/:id
-// @desc    Update A Staff
+// @desc    Update A PFxReport
 // @access  Public
+router.route("/update/:id").put(function(req, res) {
+	let _id = req.params.id;
+	let uid = uuid();
+	PFxTech.findById(_id, function(err, pfxTech) {
+		if (!pfxTech) {
+			logger.info("Could not find pfxTech with id " + _id);
+			res.status(404).send("Can not find this pfxTech in the DB");
+		} else if (err) {
+			logger.warn("Could not find an pfxTech" + err.stack);
+			res.status(404).send("Can not find this pfxTech in the DB");
+		} else {
+			try {
+				logger.warn(uid + " Modifying pfxTech from === " + pfxTech);
+				(pfxTech.venue = req.body.venue),
+					(pfxTech.operator = req.body.operator),
+					(pfxTech.date = req.body.date),
+					(pfxTech.logIn = req.body.logIn),
+					(pfxTech.logOut = req.body.logOut),
+					(pfxTech.firstPitch = req.body.firstPitch),
+					(pfxTech.hwswIssues = req.body.hwswIssues.trim() === "" ? "None" : req.body.hwswIssues),
+					(pfxTech.t1Notes = req.body.t1Notes),
+					(pfxTech.corrections = req.body.corrections);
+				logger.warn(uid + " Modifying pfxTech to === " + pfxTech);
+			} catch (error) {
+				logger.error(uid + " Error on update " + error);
+				res.status(404).send(error);
+			}
+			pfxTech
+			  .save()
+			  .then(pfxTech => {
+				logger.warn(uid + " Modifying Complete");
+				res.status(200).send(pfxTech);
+			  })
+			  .catch(err => {
+				logger.error(uid + " Error on update " + err);
+				res.sendStatus(404);
+			  });
+		}
+	});
+});
 
 // @route   POST api/pfxTech/create
 // @desc    Create A New Staff
@@ -39,12 +119,12 @@ router.route("/create/").post(function(req, res) {
 	let uid = uuid();
 	let length = Object.keys(req.body.corrections).length;
 	logger.info(uid + " Recieved PFxTech with " + length + " corrections");
+	
 	var corrections = {};
 	for (var i = 0; i < length; i++) {
-    let correct = JSON.stringify(req.body.corrections[i]);
-    corrections[i] = correct;
+		let correct = req.body.corrections[i];
+		corrections[i] = correct;
 	}
-  // console.log(corrections);
 	logger.info(uid + " Corrections " + corrections);
 	const pfxTech = new PFxTech({
 		venue: req.body.venue,
@@ -53,7 +133,7 @@ router.route("/create/").post(function(req, res) {
 		logIn: req.body.logIn,
 		logOut: req.body.logOut,
 		firstPitch: req.body.firstPitch,
-		hwswIssues: req.body.hwswIssues,
+		hwswIssues: req.body.hwswIssues.trim() === "" ? "None" : req.body.hwswIssues,
 		t1Notes: req.body.t1Notes,
 		corrections: corrections
 	});
