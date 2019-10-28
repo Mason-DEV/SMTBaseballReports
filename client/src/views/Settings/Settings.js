@@ -30,9 +30,15 @@ class Settings extends Component {
 	constructor(props) {
 		super(props);
 		this.toggle = this.toggle.bind(this);
+		this.onSubmit = this.onSubmit.bind(this);
+
 		this.state = {
 			activeTab: 1
 		};
+	}
+
+	onSubmit(e) {
+		e.preventDefault();
 	}
 
 	toggle(tab) {
@@ -71,18 +77,18 @@ class Settings extends Component {
 								>
 									Support Announcement
 								</ListGroupItem>
-								{/* <ListGroupItem disabled onClick={() => this.toggle(2)} action active={this.state.activeTab === 2}>
-									Tab 3
+								<ListGroupItem style={{ cursor: "pointer" }} disabled onClick={() => this.toggle(2)} action active={this.state.activeTab === 2}>
+									Create User
 								</ListGroupItem>
-								<ListGroupItem disabled onClick={() => this.toggle(3)} action active={this.state.activeTab === 3}>
-									tab 4
-								</ListGroupItem> */}
+								<ListGroupItem style={{ cursor: "pointer" }} disabled onClick={() => this.toggle(3)} action active={this.state.activeTab === 3}>
+									Change Password
+								</ListGroupItem>
 							</ListGroup>
 						</Col>
 						<Col xs="8">
 							<TabContent activeTab={this.state.activeTab}>
 								<TabPane tabId={0}>
-									<Form>
+									<Form id="opAnnounceForm" onSubmit={e => this.onSubmit(e)}>
 										<FormGroup>
 											<Label htmlFor="opAnnounce">Op Announcement</Label>
 											<Input
@@ -94,18 +100,18 @@ class Settings extends Component {
 												defaultValue="Cupidatat quis ad sint excepteur laborum in esse qui. Et excepteur consectetur ex nisi eu do cillum ad laborum. Mollit et eu officia dolore sunt Lorem culpa qui commodo velit ex amet id ex. Officia anim incididunt laboris deserunt anim aute dolor incididunt veniam aute dolore do exercitation. Dolor nisi culpa ex ad irure in elit eu dolore. Ad laboris ipsum reprehenderit irure non commodo enim culpa commodo veniam incididunt veniam ad."
 											></Input>
 										</FormGroup>
-										<Button type="submit" size="sm" color="success">
+										<Button disabled type="submit" size="sm" color="success">
 											<i className="fa fa-check"></i> Post
 										</Button>{" "}
-										<Button type="reset" size="sm" color="danger">
+										<Button disabled type="reset" size="sm" color="danger">
 											<i className="fa fa-ban"></i> Clear
 										</Button>
 									</Form>
 								</TabPane>
 								<TabPane tabId={1}>
-									<Form>
+									<Form id="supportAnnounceForm" onSubmit={e => this.onSubmit(e)}>
 										<FormGroup>
-                                            <Label htmlFor="supportAnnounce">Support Announcement</Label>
+											<Label htmlFor="supportAnnounce">Support Announcement</Label>
 											<Input
 												// onChange={e => this.change(e)}
 												id="supportAnnounce"
@@ -115,22 +121,16 @@ class Settings extends Component {
 												defaultValue="Cupidatat quis ad sint excepteur laborum in esse qui. Et excepteur consectetur ex nisi eu do cillum ad laborum. Mollit et eu officia dolore sunt Lorem culpa qui commodo velit ex amet id ex. Officia anim incididunt laboris deserunt anim aute dolor incididunt veniam aute dolore do exercitation. Dolor nisi culpa ex ad irure in elit eu dolore. Ad laboris ipsum reprehenderit irure non commodo enim culpa commodo veniam incididunt veniam ad."
 											></Input>
 										</FormGroup>
-										<Button type="submit" size="sm" color="success">
+										<Button disabled type="submit" size="sm" color="success">
 											<i className="fa fa-check"></i> Post
 										</Button>{" "}
-										<Button type="reset" size="sm" color="danger">
+										<Button disabled type="reset" size="sm" color="danger">
 											<i className="fa fa-ban"></i> Clear
 										</Button>
 									</Form>
 								</TabPane>
 								<TabPane tabId={2}>
-									<p>
-										Ut ut do pariatur aliquip aliqua aliquip exercitation do nostrud commodo reprehenderit aute ipsum
-										voluptate. Irure Lorem et laboris nostrud amet cupidatat cupidatat anim do ut velit mollit consequat
-										enim tempor. Consectetur est minim nostrud nostrud consectetur irure labore voluptate irure. Ipsum
-										id Lorem sit sint voluptate est pariatur eu ad cupidatat et deserunt culpa sit eiusmod deserunt.
-										Consectetur et fugiat anim do eiusmod aliquip nulla laborum elit adipisicing pariatur cillum.
-									</p>
+									
 								</TabPane>
 								<TabPane tabId={3}>
 									<p>
