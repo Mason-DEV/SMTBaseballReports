@@ -25,12 +25,16 @@
 .sidebar .nav-link.active .nav-icon {
   color: #54923D;
 }
+
 .sidebar .nav-link.active:hover{
   .nav-icon{
     color: white;
   }
 }
 
+.sidebar-minimized .sidebar .nav-item:hover > .nav-link {
+  background: #62aa58;
+}
 
 
 // .auditorCustomCheckbox .custom-control-input:checked~.custom-control-label::before{
