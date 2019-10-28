@@ -58,7 +58,6 @@ class Venue extends Component {
 
 	//#region Add Functions
 	showAdd() {
-		console.log("showing add", this.state);
 		this.setState({
 			addModal: !this.state.addModal
 		});
@@ -173,7 +172,7 @@ class Venue extends Component {
 			})
 			.catch(error => {
 				this.setState({ isDeleting: false });
-				console.log(error);
+				logger("error", error);
 			});
 		this.hideDelete();
 	}
@@ -189,7 +188,7 @@ class Venue extends Component {
 			//Data is loaded, so change from loading state
 			.then(isLoading => this.setState({ isLoading: false }))
 			.catch(function(error) {
-				console.log(error);
+				logger("error", error);
 			});
 	}
 
@@ -202,7 +201,7 @@ class Venue extends Component {
 					this.setState({ venueData: res.data, needToReload: false });
 				})
 				.catch(function(error) {
-					console.log(error);
+					logger("error", error);
 				});
 			this.setState({ needToReload: false });
 		}

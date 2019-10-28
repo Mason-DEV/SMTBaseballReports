@@ -56,7 +56,6 @@ class FFxAuditReport extends Component {
 	}
 
 	render() {
-		console.log("ffxaudit",this.props);
 		return (
 			<div className="animated fadeIn">
 				<br />

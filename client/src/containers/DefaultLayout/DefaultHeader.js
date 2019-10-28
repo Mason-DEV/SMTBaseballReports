@@ -30,7 +30,6 @@ class DefaultHeader extends Component {
   
   
   render() {
-    // console.log(this.state.name);
     const disabled = this.state.name === "op" ? true : false;
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;

@@ -31,7 +31,6 @@ const propTypes = {
 class CardsOP extends Component {
 	constructor(props) {
         super(props);
-        console.log(this.props);
         
 
 		//Binding states
@@ -94,7 +93,7 @@ class CardsOP extends Component {
 									</div>
 								</CardHeader>
 								<Collapse isOpen={this.state.collapse} id="collapseExample">
-									<CardBody>12345</CardBody>
+									<CardBody>To Set Announcement. Navigate to Settings > Configure > Op Announcement</CardBody>
 								</Collapse>
 							</Card>
 						</Col>

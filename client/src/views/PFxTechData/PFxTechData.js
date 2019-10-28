@@ -164,7 +164,8 @@ class PFxTechData extends Component {
 			})
 			.catch(error => {
 				this.setState({ isDeleting: false });
-				console.log(error);
+				logger("error", error);
+		
 			});
 		this.hideDelete();
 	}

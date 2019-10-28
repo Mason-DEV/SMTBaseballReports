@@ -110,7 +110,6 @@ class PFxTechReport extends Component {
 			});
 	}
 	cancelReport = () => {
-		console.log(this);
 		document.getElementById("pfx-tech-report").reset();
 	};
 
@@ -125,7 +124,6 @@ class PFxTechReport extends Component {
 	}
 
 	render() {
-		console.log("State", this.state);
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {

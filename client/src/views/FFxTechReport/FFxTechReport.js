@@ -28,11 +28,13 @@ class FFxTechReport extends Component {
 		//Binding states
 		this.onDismissSuccess = this.onDismissSuccess.bind(this);
 		this.onDismissError = this.onDismissError.bind(this);
+		this.onDismissDuplicate = this.onDismissDuplicate.bind(this);
 		//States
 		this.state = {
 			isLoading: true,
 			success: false,
 			error: false,
+			duplicate: false,
 			operators: {},
 			venues: {},
 			support: {},
@@ -80,10 +82,14 @@ class FFxTechReport extends Component {
 		this.setState({ error: false });
 	}
 
+	onDismissDuplicate() {
+		this.setState({ duplicate: false });
+	}
+
 	onSubmitReport(e) {
 		//^\d{4}[_][a-zA-Z]{6}[_][a-zA-Z]{6}[_]\d{1}    REGEX for gamestrings, if want to implement this
 		e.preventDefault();
-
+		this.setState({ isLoading: true });
 		//Build new report
 		const report = {
 			venue: this.state.fieldData.venue,
@@ -104,15 +110,20 @@ class FFxTechReport extends Component {
 			backupTask: this.state.fieldData.backupTask,
 			backupNote: this.state.fieldData.backupNote
 		};
+
 		axios
 			.post("/api/ffxTech/create", report)
 			.then(adding => {
 				this.setState({ isLoading: false, fieldData: {}, success: true });
-				this.cancelReport();
 			})
 			.catch(error => {
-				this.setState({ isLoading: false, fieldData: {}, error: true });
-				logger("error", "FFxTech Add === " + error);
+				if (error.response.status === 403) {
+					logger("error", "FFxTech Add === " + error);
+					this.setState({ isLoading: false, duplicate: true });
+				} else {
+					this.setState({ isLoading: false, error: true });
+					logger("error", "FFxTech Add === " + error);
+				}
 			});
 	}
 
@@ -131,7 +142,6 @@ class FFxTechReport extends Component {
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
-			console.log("State FFxTech", this.state);
 			return (
 				<React.Fragment>
 					<Alert color="success" isOpen={this.state.success} toggle={this.onDismissSuccess}>
@@ -139,6 +149,9 @@ class FFxTechReport extends Component {
 					</Alert>
 					<Alert color="danger" isOpen={this.state.error} toggle={this.onDismissError}>
 						<strong>Error on report upload!</strong>
+					</Alert>
+					<Alert color="danger" isOpen={this.state.duplicate} toggle={this.onDismissDuplicate}>
+						<strong>A game report for this gamestring  {this.state.fieldData.gameID} already exist, please check your gamestring and alert support if this issue continues.</strong>
 					</Alert>
 
 					<div className="animated fadeIn">

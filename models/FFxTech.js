@@ -52,7 +52,7 @@ const ffxTechSchema = new Schema(
 			type: String,
 			default: "None"
 		},
-		miscIssues: {
+		miscNotes: {
 			type: String,
 			default: "None"
 		},

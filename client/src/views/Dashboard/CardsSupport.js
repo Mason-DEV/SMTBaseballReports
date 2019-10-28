@@ -91,7 +91,7 @@ class CardsSupport extends Component {
 
 		//States
 		this.state = {
-			collapse: false,
+			collapse: true,
 			isLoading: true,
 			data: {},
 			accordion: [true, false, false],
@@ -137,7 +137,7 @@ class CardsSupport extends Component {
 					});
 				})
 				.catch(function(error) {
-					console.log(error);
+					logger("error", error);
 				});
         }
     }
@@ -176,14 +176,13 @@ class CardsSupport extends Component {
 			plays.push(+element.ffxPitches);
 		});
 		const sum = plays.reduce((partial_sum, a) => partial_sum + a, 0);
-		// console.log("sum",sum);
 		return sum;
 	}
 	//gets totalSync for all games
 	calcGDSync() {
 		var rawData = [];
 		this.state.data.forEach(element => {
-			//console.log()
+	
 			var perct = (+element.ffxPitches / +element.gdPitches).toFixed(2);
 			if (!isNaN(perct)) rawData.push(+perct);
 		});
@@ -229,7 +228,6 @@ class CardsSupport extends Component {
 	render() {
 		// eslint-disable-next-line
         const { children, ...attributes } = this.props;
-        console.log("support cards props",this.props);
             if (this.state.isLoading) {
                 return (
                     <img
@@ -264,7 +262,7 @@ class CardsSupport extends Component {
                                     </div>
                                 </CardHeader>
                                 <Collapse isOpen={this.state.collapse} id="collapseExample">
-                                    <CardBody>12345</CardBody>
+                                <CardBody>To Set Announcement. Navigate to Settings > Configure > Support Announcement</CardBody>
                                 </Collapse>
                             </Card>
                         </Col>

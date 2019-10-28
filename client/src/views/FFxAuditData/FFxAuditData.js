@@ -2,6 +2,9 @@ import React, { Component} from "react";
 import {Card,CardBody,CardHeader,} from "reactstrap";
 import { MDBDataTable  } from 'mdbreact';
 import axios from 'axios';
+import logger from "../../components/helpers/logger";
+
+
 
 //import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
@@ -74,8 +77,6 @@ const tableData = {
 class FFxAuditData extends Component {
 	constructor(props) {
 		super(props);
-		console.log(props)
-
 		//Binding states
 		this.toggle = this.toggle.bind(this);
 		this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
@@ -122,21 +123,21 @@ class FFxAuditData extends Component {
 			.then(res => { this.setState({ data: res.data }); })
 			//Data is loaded, so change from loading state
 			.then(isLoading => this.setState({ isLoading: false }))
-			.catch(function (error) {	  console.log(error);	});
+			.catch(function (error) {	  logger("error", error);	});
 			
 	};
 
 	_viewRecord(_id) {    
-		console.log("mongo _id", _id);
+
 		this.setState({modalOpen: true});	
-		console.log(this.state)
+
     }
 	_editRecord(_id) {    
-		console.log("mongo _id", _id);
+
     }
 
 	dataPopulate() {
-		console.log("pop",this.state.data);
+
 		this.state.data.forEach(element => {
 			tableData.rows.push({
 				edit: 	<div>

@@ -5,6 +5,7 @@ import { Container } from "reactstrap";
 import { getJwt } from "../../components/helpers/jwt";
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
+import logger from "../../components/helpers/logger";
 
 import {
 	AppBreadcrumb,
@@ -56,7 +57,7 @@ class DefaultLayout extends Component {
 				this.setState({ name: res.data.id, permission: res.data.permission});
 			})
 			.catch(function(error) {
-				console.log("defaultLayout",error);
+				logger("error", error);
 			});
 
 	}

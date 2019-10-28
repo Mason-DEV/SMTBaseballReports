@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form,	FormGroup,	Row, Col, Label, Input } from 'reactstrap';
 import axios from 'axios';
+import logger from "../../../components/helpers/logger";
 
 
 class ModalExample extends React.Component {
@@ -34,7 +35,7 @@ class ModalExample extends React.Component {
   }
   
   setDataDefault(){
-    console.log("resetting");
+ 
     this.setState({
       data: {
         _id: this.props.data.element._id,
@@ -106,7 +107,7 @@ class ModalExample extends React.Component {
 
 	onSubmit(e) {
 		e.preventDefault();
-		console.log("submit");
+	
 		//Build object that we are going to update based on its current state
 		const auditObj = {
 			_id: this.state.data._id,
@@ -120,11 +121,11 @@ class ModalExample extends React.Component {
 			addedPitches: this.state.data.addedPitches,
 			addedPicks: this.state.data.addedPicks,
 		};
-    console.log("obj", auditObj);
+
 		axios.put('/api/audits/update/'+auditObj._id, auditObj)
 		  .then(res => console.log(res.data))
 		  .catch(function (error) {
-		    console.log(error);
+			logger("error", error);
         })
 
         
