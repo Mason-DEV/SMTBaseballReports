@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-  Alert,
+	Alert,
 	Badge,
 	Button,
 	Card,
@@ -28,15 +28,15 @@ class PFxTechReport extends Component {
 		super(props);
 
 		//Binding states
-    this.toggle = this.toggle.bind(this);
-    this.onDismissSuccess = this.onDismissSuccess.bind(this);
-    this.onDismissError = this.onDismissError.bind(this);
+		this.toggle = this.toggle.bind(this);
+		this.onDismissSuccess = this.onDismissSuccess.bind(this);
+		this.onDismissError = this.onDismissError.bind(this);
 
 		//States
 		this.state = {
-      isLoading: true,
-      success: false,
-      error: false,
+			isLoading: true,
+			success: false,
+			error: false,
 			dropdownOpen: false,
 			operators: {},
 			venues: {},
@@ -62,14 +62,14 @@ class PFxTechReport extends Component {
 		this.setState({
 			dropdownOpen: !this.state.dropdownOpen
 		});
-  }
-  onDismissSuccess() {
-    this.setState({ success: false });
-  }
+	}
+	onDismissSuccess() {
+		this.setState({ success: false });
+	}
 
-  onDismissError() {
-    this.setState({ error: false });
-  }
+	onDismissError() {
+		this.setState({ error: false });
+	}
 
 	change(e) {
 		if (e.target.name === "date") {
@@ -108,11 +108,11 @@ class PFxTechReport extends Component {
 				this.setState({ isLoading: false, fieldData: {}, error: true });
 				logger("error", "PFxTech Add === " + error);
 			});
-  }
-  cancelReport = () => { 
-    console.log(this);
-    document.getElementById("pfx-tech-report").reset();
-  }
+	}
+	cancelReport = () => {
+		console.log(this);
+		document.getElementById("pfx-tech-report").reset();
+	};
 
 	componentDidMount() {
 		Promise.all([axios.get("/api/staff/operators"), axios.get("/api/venue/pitchFx")])
@@ -244,7 +244,7 @@ class PFxTechReport extends Component {
 										<Button type="submit" size="sm" color="success">
 											<i className="fa fa-check"></i> Submit
 										</Button>{" "}
-										<Button type="reset" onClick={this.cancelReport}size="sm" color="danger">
+										<Button type="reset" onClick={this.cancelReport} size="sm" color="danger">
 											<i className="fa fa-ban"></i> Clear
 										</Button>
 									</FormGroup>

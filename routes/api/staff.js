@@ -29,13 +29,13 @@ router.route("/").get(function(req, res) {
 // @access  Public
 router.route("/auditors").get(function(req, res) {
   let id = uuid();
-  logger.info(id + " === Requesting Staff");
+  logger.info(id + " === Requesting Staff Auditors");
   Staff.find({'roles.auditor': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
     if (err) {
       logger.error("Error on / " + err.stack);
     } else {
       res.json(staff);
-      logger.info(id + " === Staff Returned");
+      logger.info(id + " === Staff Auditors Returned");
     }
   });
 });
@@ -45,14 +45,14 @@ router.route("/auditors").get(function(req, res) {
 // @access  Public
 router.route("/operators").get(function(req, res) {
   let id = uuid();
-  logger.info(id + " === Requesting Staff");
+  logger.info(id + " === Requesting Staff Operators");
   Staff.find({'roles.operator': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
     if (err) {
       logger.error("Error on / " + err.stack);
     } else {
       // const staffToSend = [staff];
       res.json(staff);
-      logger.info(id + " === Staff Returned");
+      logger.info(id + " === Staff Operators Returned");
     }
   });
 });
@@ -62,13 +62,13 @@ router.route("/operators").get(function(req, res) {
 // @access  Public
 router.route("/support").get(function(req, res) {
   let id = uuid();
-  logger.info(id + " === Requesting Staff");
+  logger.info(id + " === Requesting Staff Support");
   Staff.find({'roles.support': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
     if (err) {
       logger.error("Error on / " + err.stack);
     } else {
       res.json(staff);
-      logger.info(id + " === Staff Returned");
+      logger.info(id + " === Staff Support Returned");
     }
   });
 });

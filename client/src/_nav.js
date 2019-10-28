@@ -49,7 +49,7 @@ export default {
 	},
 	{
 		name: "FFx Tech",
-		url: "/base",
+		url: "/ffxtechdata",
 		icon: "icon-globe"
 	},
 	{

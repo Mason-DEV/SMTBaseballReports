@@ -15,6 +15,7 @@ const Logger = require("./routes/api/logger");
 const Staff = require("./routes/api/staff");
 const Venue = require("./routes/api/venue");
 const PFxTech = require("./routes/api/pfxTech");
+const FFxTech = require("./routes/api/ffxTech");
 //Models
 const UserModel = require("./models/User");
 
@@ -100,6 +101,7 @@ app.use("/api/", Logger);
 app.use("/api/staff", Staff);
 app.use("/api/venue", Venue);
 app.use("/api/pfxTech", PFxTech);
+app.use("/api/ffxTech", FFxTech);
 
 
 //Server static assests if in prod
