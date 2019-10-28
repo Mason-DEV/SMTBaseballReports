@@ -33,10 +33,10 @@ router.route("/today").get(function(req, res) {
 	let id = uuid();
 	//Gets todays date in ISO format
 	var curr = new Date();
+	curr.setHours(curr.getHours() - 11)
 	curr.setDate(curr.getDate());
 	const searchDate = curr.toISOString().substr(0, 10);
-
-	logger.info(id + " === Requesting Today's PFxTech");
+	logger.info(id + " === Requesting Today's PFxTech " + searchDate);
 	PFxTech.find({ date: searchDate })
 		.sort({ venue: "asc" })
 		.exec(function(err, PFxTech) {
