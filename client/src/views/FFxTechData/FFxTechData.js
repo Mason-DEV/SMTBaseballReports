@@ -100,7 +100,7 @@ class FFxTechData extends Component {
 					<Table bordered striped responsive size="sm" style={{ tableLayout: "fixed" }}>
 						<thead>
 							<tr>
-								<th width="100">Actions</th>
+								<th width="">Actions</th>
 								<th width="">Date</th>
 								<th width="">Gamestring</th>
 								<th width="">Game Status</th>
