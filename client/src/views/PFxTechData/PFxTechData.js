@@ -4,6 +4,7 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
+	CardFooter,
 	Container,
 	CustomInput,
 	Modal,
@@ -23,8 +24,9 @@ import {
 	Table,
 	TabContent,
 	TabPane,
-	CardTitle,
-	CardText
+	Pagination,
+	PaginationLink,
+	PaginationItem
 } from "reactstrap";
 import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
@@ -46,7 +48,13 @@ class PFxTechData extends Component {
 		this.hideDelete = this.hideDelete.bind(this);
 		this.submitDelete = this.submitDelete.bind(this);
 
+		//Sets the amount of staff on a single page
+		this.pageSize = 1;
+
 		this.state = {
+			currentPage: 0,
+			pagesCountToday: 0,
+			pagesCountAll: 0,
 			isLoading: true,
 			allGameData: {},
 			todayGameData: {},
@@ -61,6 +69,15 @@ class PFxTechData extends Component {
 			venues: {},
 			operators: {}
 		};
+	}
+
+	//Click handler for pagniation
+	handleClick(e, index) {
+		e.preventDefault();
+
+		this.setState({
+			currentPage: index
+		});
 	}
 
 	removeBlur() {
@@ -165,7 +182,6 @@ class PFxTechData extends Component {
 			.catch(error => {
 				this.setState({ isDeleting: false });
 				logger("error", error);
-		
 			});
 		this.hideDelete();
 	}
@@ -175,7 +191,8 @@ class PFxTechData extends Component {
 		const newArray = this.state.activeTab.slice();
 		newArray[tabPane] = tab;
 		this.setState({
-			activeTab: newArray
+			activeTab: newArray,
+			currentPage: 0
 		});
 	}
 
@@ -188,6 +205,7 @@ class PFxTechData extends Component {
 	}
 
 	tabPane() {
+		const { currentPage } = this.state;
 		return (
 			<>
 				<TabPane tabId="1">
@@ -203,7 +221,9 @@ class PFxTechData extends Component {
 							</tr>
 						</thead>
 						<tbody>
-							{this.state.todayGameData.map((data, i) => {
+							{this.state.todayGameData
+							.slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
+							.map((data, i) => {
 								return (
 									<tr key={i}>
 										<td>
@@ -239,7 +259,9 @@ class PFxTechData extends Component {
 								</tr>
 							</thead>
 							<tbody>
-								{this.state.allGameData.map((data, i) => {
+								{this.state.allGameData
+								.slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
+								.map((data, i) => {
 									return (
 										<tr key={i}>
 											<td>
@@ -282,7 +304,13 @@ class PFxTechData extends Component {
 				const venues = venueResponse.data.map(obj => ({ name: obj.name }));
 				this.setState({ allGameData: all, todayGameData: today, operators: ops, venues });
 			})
-			.then(isLoading => this.setState({ isLoading: false }));
+			.then(isLoading =>
+				this.setState({
+					isLoading: false,
+					pagesCountToday: Math.ceil(this.state.todayGameData.length / this.pageSize),
+					pagesCountAll: Math.ceil(this.state.allGameData.length / this.pageSize)
+				})
+			);
 	}
 
 	componentDidUpdate() {
@@ -301,11 +329,18 @@ class PFxTechData extends Component {
 					const venues = venueResponse.data.map(obj => ({ name: obj.name }));
 					this.setState({ allGameData: all, todayGameData: today, operators: ops, venues });
 				})
-				.then(reloading => this.setState({ needToReload: false }));
+				.then(reloading =>
+					this.setState({
+						needToReload: false,
+						pagesCountToday: Math.ceil(this.state.todayGameData.length / this.pageSize),
+						pagesCountAll: Math.ceil(this.state.allGameData.length / this.pageSize)
+					})
+				);
 		}
 	}
 
 	render() {
+		const { currentPage } = this.state;
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
@@ -355,6 +390,59 @@ class PFxTechData extends Component {
 							</Nav>
 							<TabContent activeTab={this.state.activeTab[0]}>{this.tabPane()}</TabContent>
 						</CardBody>
+						<CardFooter>
+							{/* Check for which page we are on  */}
+							{this.state.activeTab[0]  === "1" ? (
+								<Pagination className="text-center">
+								<PaginationItem disabled={currentPage <= 0}>
+									<PaginationLink onClick={e => this.handleClick(e, 0)} first href="#" />
+								</PaginationItem>
+								<PaginationItem disabled={currentPage <= 0}>
+									<PaginationLink onClick={e => this.handleClick(e, currentPage - 1)} previous href="#" />
+								</PaginationItem>
+
+								{[...Array(this.state.pagesCountToday)].map((page, i) => (
+									<PaginationItem active={i === currentPage} key={i}>
+										<PaginationLink onClick={e => this.handleClick(e, i)} href="#">
+											{i + 1}
+										</PaginationLink>
+									</PaginationItem>
+								))}
+								<PaginationItem disabled={currentPage >= this.state.pagesCountToday - 1}>
+									<PaginationLink onClick={e => this.handleClick(e, currentPage + 1)} next href="#" />
+								</PaginationItem>
+								<PaginationItem disabled={currentPage >= this.state.pagesCountToday - 1}>
+									<PaginationLink onClick={e => this.handleClick(e, this.state.pagesCountToday - 1)} last href="#" />
+								</PaginationItem>
+							</Pagination>
+							) : (
+									<Pagination className="text-center">
+									<PaginationItem disabled={currentPage <= 0}>
+										<PaginationLink onClick={e => this.handleClick(e, 0)} first href="#" />
+									</PaginationItem>
+									<PaginationItem disabled={currentPage <= 0}>
+										<PaginationLink onClick={e => this.handleClick(e, currentPage - 1)} previous href="#" />
+									</PaginationItem>
+	
+									{[...Array(this.state.pagesCountAll)].map((page, i) => (
+										<PaginationItem active={i === currentPage} key={i}>
+											<PaginationLink onClick={e => this.handleClick(e, i)} href="#">
+												{i + 1}
+											</PaginationLink>
+										</PaginationItem>
+									))}
+									<PaginationItem disabled={currentPage >= this.state.pagesCountAll - 1}>
+										<PaginationLink onClick={e => this.handleClick(e, currentPage + 1)} next href="#" />
+									</PaginationItem>
+									<PaginationItem disabled={currentPage >= this.state.pagesCountAll - 1}>
+										<PaginationLink onClick={e => this.handleClick(e, this.state.pagesCountAll - 1)} last href="#" />
+									</PaginationItem>
+								</Pagination>
+
+							)}
+							
+							
+						</CardFooter>
 					</Card>
 
 					{/* Edit Modal */}

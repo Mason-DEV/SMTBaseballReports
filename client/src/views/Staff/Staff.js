@@ -66,7 +66,7 @@ class Staff extends Component {
 			deleteData: {}
 		};
 	}
-
+	//Click handler for pagniation
 	handleClick(e, index) {
 		e.preventDefault();
 
@@ -263,7 +263,7 @@ class Staff extends Component {
 	}
 
 	render() {
-    const { currentPage } = this.state;
+		const { currentPage } = this.state;
 
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
@@ -319,7 +319,7 @@ class Staff extends Component {
 						<CardFooter>
 							<Pagination className="text-center">
 								<PaginationItem disabled={currentPage <= 0}>
-									<PaginationLink  onClick={e => this.handleClick(e, 0)} first href="#" />
+									<PaginationLink onClick={e => this.handleClick(e, 0)} first href="#" />
 								</PaginationItem>
 								<PaginationItem disabled={currentPage <= 0}>
 									<PaginationLink onClick={e => this.handleClick(e, currentPage - 1)} previous href="#" />

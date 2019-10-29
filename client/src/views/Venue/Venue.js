@@ -4,6 +4,7 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
+	CardFooter,
 	Container,
 	CustomInput,
 	Modal,
@@ -17,7 +18,10 @@ import {
 	ModalFooter,
 	Button,
 	Row,
-	Table
+	Table,
+	Pagination,
+	PaginationLink,
+	PaginationItem
 } from "reactstrap";
 import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
@@ -40,7 +44,12 @@ class Venue extends Component {
 		this.hideDelete = this.hideDelete.bind(this);
 		this.submitDelete = this.submitDelete.bind(this);
 
+		//Sets the amount of venues on a single page
+		this.pageSize = 15;
+
 		this.state = {
+			currentPage: 0,
+			pagesCount: 0,
 			addModal: false,
 			editModal: false,
 			deleteModal: false,
@@ -54,6 +63,14 @@ class Venue extends Component {
 			addData: { roles: {} },
 			deleteData: {}
 		};
+	}
+	//Click handler for pagniation
+	handleClick(e, index) {
+		e.preventDefault();
+
+		this.setState({
+			currentPage: index
+		});
 	}
 
 	//#region Add Functions
@@ -75,8 +92,8 @@ class Venue extends Component {
 		this.setState({
 			addData: { ...this.state.addData, [e.target.name]: e.target.value }
 		});
-  }
-  
+	}
+
 	submitAdd(e) {
 		e.preventDefault();
 		this.setState({ isAdding: true });
@@ -186,7 +203,9 @@ class Venue extends Component {
 				this.setState({ venueData: res.data });
 			})
 			//Data is loaded, so change from loading state
-			.then(isLoading => this.setState({ isLoading: false }))
+			.then(isLoading =>
+				this.setState({ isLoading: false, pagesCount: Math.ceil(this.state.venueData.length / this.pageSize) })
+			)
 			.catch(function(error) {
 				logger("error", error);
 			});
@@ -198,7 +217,11 @@ class Venue extends Component {
 			axios
 				.get("/api/venue/")
 				.then(res => {
-					this.setState({ venueData: res.data, needToReload: false });
+					this.setState({
+						venueData: res.data,
+						needToReload: false,
+						pagesCount: Math.ceil(this.state.venueData.length / this.pageSize)
+					});
 				})
 				.catch(function(error) {
 					logger("error", error);
@@ -213,6 +236,8 @@ class Venue extends Component {
 	}
 
 	render() {
+		const { currentPage } = this.state;
+
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
@@ -237,28 +262,54 @@ class Venue extends Component {
 									</tr>
 								</thead>
 								<tbody>
-									{this.state.venueData.map((venue, i) => {
-										return (
-											<tr key={i}>
-												<td>
-													<Button onClick={e => this.showEdit(venue._id)} color="warning" size="sm">
-														Edit
-													</Button>{" "}
-													<Button onClick={e => this.showDelete(venue._id, venue.name)} color="danger" size="sm">
-														Delete
-													</Button>
-												</td>
-												<td>{venue.name}</td>
-												<td>
-													{venue.fieldFx ? <Badge color="info">Field Fx</Badge> : null}{" "}
-													{venue.pitchFx ? <Badge color="secondary">Pitch Fx</Badge> : null}
-												</td>
-											</tr>
-										);
-									})}
+									{this.state.venueData
+										.slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
+										.map((venue, i) => {
+											return (
+												<tr key={i}>
+													<td>
+														<Button onClick={e => this.showEdit(venue._id)} color="warning" size="sm">
+															Edit
+														</Button>{" "}
+														<Button onClick={e => this.showDelete(venue._id, venue.name)} color="danger" size="sm">
+															Delete
+														</Button>
+													</td>
+													<td>{venue.name}</td>
+													<td>
+														{venue.fieldFx ? <Badge color="info">Field Fx</Badge> : null}{" "}
+														{venue.pitchFx ? <Badge color="secondary">Pitch Fx</Badge> : null}
+													</td>
+												</tr>
+											);
+										})}
 								</tbody>
 							</Table>
 						</CardBody>
+						<CardFooter>
+							<Pagination className="text-center">
+								<PaginationItem disabled={currentPage <= 0}>
+									<PaginationLink onClick={e => this.handleClick(e, 0)} first href="#" />
+								</PaginationItem>
+								<PaginationItem disabled={currentPage <= 0}>
+									<PaginationLink onClick={e => this.handleClick(e, currentPage - 1)} previous href="#" />
+								</PaginationItem>
+
+								{[...Array(this.state.pagesCount)].map((page, i) => (
+									<PaginationItem active={i === currentPage} key={i}>
+										<PaginationLink onClick={e => this.handleClick(e, i)} href="#">
+											{i + 1}
+										</PaginationLink>
+									</PaginationItem>
+								))}
+								<PaginationItem disabled={currentPage >= this.state.pagesCount - 1}>
+									<PaginationLink onClick={e => this.handleClick(e, currentPage + 1)} next href="#" />
+								</PaginationItem>
+								<PaginationItem disabled={currentPage >= this.state.pagesCount - 1}>
+									<PaginationLink onClick={e => this.handleClick(e, this.state.pagesCount - 1)} last href="#" />
+								</PaginationItem>
+							</Pagination>
+						</CardFooter>
 					</Card>
 
 					{/* Add Modal */}
