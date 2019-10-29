@@ -114,7 +114,8 @@ class Staff extends Component {
 			email: this.state.addData.email,
 			roles: {
 				auditor: this.state.addData.roles.auditor ? true : false,
-				operator: this.state.addData.roles.operator ? true : false,
+				pfxOperator: this.state.addData.roles.pfxOperator ? true : false,
+				ffxOperator: this.state.addData.roles.ffxOperator ? true : false,
 				support: this.state.addData.roles.support ? true : false
 			}
 		};
@@ -306,9 +307,10 @@ class Staff extends Component {
 													<td>{staff.name}</td>
 													<td>{staff.email}</td>
 													<td>
-														{staff.roles.auditor ? <Badge color="info">Auditor</Badge> : null}{" "}
-														{staff.roles.operator ? <Badge color="warning">Operator</Badge> : null}{" "}
-														{staff.roles.support ? <Badge color="secondary">Support</Badge> : null}
+														{staff.roles.auditor ? <Badge color="warning">Auditor</Badge> : null}{" "}
+														{staff.roles.pfxOperator ? <Badge color="primary">Pfx Operator</Badge> : null}{" "}
+														{staff.roles.ffxOperator ? <Badge color="info">FFx Operator</Badge> : null}{" "}
+														{staff.roles.support ? <Badge color="danger">Support</Badge> : null}
 													</td>
 												</tr>
 											);
@@ -399,9 +401,16 @@ class Staff extends Component {
 														/>
 														<CustomInput
 															type="checkbox"
-															id="operatorCustomCheckbox"
-															label="Operator"
-															name="operator"
+															id="pfxoperatorCustomCheckbox"
+															label="PFX Operator"
+															name="pfxOperator"
+															onClick={e => this.changeAddDataRoles(e)}
+														/>
+														<CustomInput
+															type="checkbox"
+															id="ffperatorCustomCheckbox"
+															label="FFx Operator"
+															name="ffxOperator"
 															onClick={e => this.changeAddDataRoles(e)}
 														/>
 														<CustomInput
@@ -488,10 +497,18 @@ class Staff extends Component {
 														/>
 														<CustomInput
 															type="checkbox"
-															id="operatorCustomCheckbox"
-															label="Operator"
-															name="operator"
-															defaultChecked={this.state.editData.roles.operator}
+															id="pfxoperatorCustomCheckbox"
+															label="PFx Operator"
+															name="pfxOperator"
+															defaultChecked={this.state.editData.roles.pfxOperator}
+															onClick={e => this.changeEditDataRoles(e)}
+														/>
+														<CustomInput
+															type="checkbox"
+															id="ffxoperatorCustomCheckbox"
+															label="FFx Operator"
+															name="ffxOperator"
+															defaultChecked={this.state.editData.roles.ffxOperator}
 															onClick={e => this.changeEditDataRoles(e)}
 														/>
 														<CustomInput

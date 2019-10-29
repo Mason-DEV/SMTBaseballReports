@@ -117,7 +117,7 @@ class CardsSupport extends Component {
 			this.setState({ isLoading: false });
 		} else {
 			axios
-				.get("/api/audits")
+				.get("/api/FFxAudit/")
 				.then(res => {
 					this.setState({ data: res.data });
 				})

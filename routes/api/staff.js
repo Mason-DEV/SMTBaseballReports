@@ -40,19 +40,51 @@ router.route("/auditors").get(function(req, res) {
   });
 });
 
-// @route   GET api/staff/operators
+// @route   GET api/staff/Operators
 // @desc    Get All operators Staff name and email returned in asc order by name
 // @access  Public
-router.route("/operators").get(function(req, res) {
+router.route("/Operators").get(function(req, res) {
   let id = uuid();
-  logger.info(id + " === Requesting Staff Operators");
-  Staff.find({'roles.operator': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
+  logger.info(id + " === Requesting Staff PFx Operators");
+  Staff.find({'roles.pfxOperator': true, 'roles.ffxOperator': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
     if (err) {
       logger.error("Error on / " + err.stack);
     } else {
       // const staffToSend = [staff];
       res.json(staff);
-      logger.info(id + " === Staff Operators Returned");
+      logger.info(id + " === Staff Pfx Operators Returned");
+    }
+  });
+});
+// @route   GET api/staff/pfxOperators
+// @desc    Get All PFX operators Staff name and email returned in asc order by name
+// @access  Public
+router.route("/pfxOperators").get(function(req, res) {
+  let id = uuid();
+  logger.info(id + " === Requesting Staff PFx Operators");
+  Staff.find({'roles.pfxOperator': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
+    if (err) {
+      logger.error("Error on / " + err.stack);
+    } else {
+      // const staffToSend = [staff];
+      res.json(staff);
+      logger.info(id + " === Staff Pfx Operators Returned");
+    }
+  });
+});
+// @route   GET api/staff/ffxOperators
+// @desc    Get All FFX operators Staff name and email returned in asc order by name
+// @access  Public
+router.route("/FfxOperators").get(function(req, res) {
+  let id = uuid();
+  logger.info(id + " === Requesting Staff FFx Operators");
+  Staff.find({'roles.ffxOperator': true}, { 'name':1, 'email':1, '_id': 0}).sort({ name: 'asc' }).exec(function(err, staff) { 
+    if (err) {
+      logger.error("Error on / " + err.stack);
+    } else {
+      // const staffToSend = [staff];
+      res.json(staff);
+      logger.info(id + " === Staff FFx Operators Returned");
     }
   });
 });
@@ -113,7 +145,8 @@ router.route("/update/:id").put(function(req, res) {
         staff.email = req.body.email;
         staff.roles.auditor = req.body.roles.auditor;
         staff.roles.support = req.body.roles.support;
-        staff.roles.operator = req.body.roles.operator;
+        staff.roles.pfxOperator = req.body.roles.pfxOperator;
+        staff.roles.ffxOperator = req.body.roles.ffxOperator;
         logger.warn(uid + " Modifying staff to === " + staff);
       } catch (error) {
         logger.error(uid + " Error on update " + error);
@@ -143,7 +176,8 @@ router.route("/create/").post(function(req, res) {
     email: req.body.email,
     roles: {
       auditor: req.body.roles.auditor,
-      operator: req.body.roles.operator,
+      pfxOperator: req.body.roles.pfxOperator,
+      ffxOperator: req.body.roles.ffxOperator,
       support: req.body.roles.support
     }
   });

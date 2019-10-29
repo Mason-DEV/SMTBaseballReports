@@ -13,7 +13,11 @@ const staffSchema = new Schema(
       required: true
     },
     roles: {
-      operator: {
+      pfxOperator: {
+        type: Boolean,
+        default: false
+      },
+      ffxOperator: {
         type: Boolean,
         default: false
       },

@@ -9,13 +9,13 @@ const secret = require("./config/keys").SECERT_OR_KEY;
 //Logger import
 const logger = require('./config/logger');
 //Routes
-const audits = require("./routes/api/audits");
 const User = require("./routes/api/user");
 const Logger = require("./routes/api/logger");
 const Staff = require("./routes/api/staff");
 const Venue = require("./routes/api/venue");
 const PFxTech = require("./routes/api/pfxTech");
 const FFxTech = require("./routes/api/ffxTech");
+const FFxAudit = require("./routes/api/ffxAudit");
 //Models
 const UserModel = require("./models/User");
 
@@ -95,13 +95,13 @@ mongoose
 
 //Use Routes
 // app.use("/api/audits", passport.authenticate("jwt", { session: false }), audits);
-app.use("/api/audits", audits);
 app.use("/api/user", User);
 app.use("/api/", Logger);
 app.use("/api/staff", Staff);
 app.use("/api/venue", Venue);
 app.use("/api/pfxTech", PFxTech);
 app.use("/api/ffxTech", FFxTech);
+app.use("/api/ffxAudit", FFxAudit);
 
 
 //Server static assests if in prod

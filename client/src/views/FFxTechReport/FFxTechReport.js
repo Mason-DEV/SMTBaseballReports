@@ -130,7 +130,7 @@ class FFxTechReport extends Component {
 	}
 
 	componentDidMount() {
-		Promise.all([axios.get("/api/staff/operators"), axios.get("/api/venue/fieldFx"), axios.get("/api/staff/support")])
+		Promise.all([axios.get("/api/staff/ffxOperators"), axios.get("/api/venue/fieldFx"), axios.get("/api/staff/support")])
 			.then(([opResponse, venueResponse, supportResponse]) => {
 				const ops = opResponse.data.map(obj => ({ name: obj.name }));
 				const venues = venueResponse.data.map(obj => ({ name: obj.name }));

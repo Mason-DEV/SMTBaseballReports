@@ -114,7 +114,7 @@ class PFxTechReport extends Component {
 	};
 
 	componentDidMount() {
-		Promise.all([axios.get("/api/staff/operators"), axios.get("/api/venue/pitchFx")])
+		Promise.all([axios.get("/api/staff/pfxOperators"), axios.get("/api/venue/pitchFx")])
 			.then(([opResponse, venueResponse]) => {
 				const ops = opResponse.data.map(obj => ({ name: obj.name }));
 				const venues = venueResponse.data.map(obj => ({ name: obj.name }));

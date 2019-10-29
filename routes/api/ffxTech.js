@@ -49,9 +49,9 @@ router.route("/today").get(function(req, res) {
 		});
 });
 
-// // @route   Get api/ffxtech/ffxReportByID
-// // @desc    Get A Single ffxtech Report
-// // @access  Public
+// @route   Get api/ffxtech/ffxReportByID
+// @desc    Get A Single ffxtech Report
+// @access  Public
 router.route("/ffxReportByID").get(function(req, res) {
 	let _id = req.headers.id;
 	FFxTech.findById(_id, function(err, ffxTech) {
@@ -67,6 +67,7 @@ router.route("/ffxReportByID").get(function(req, res) {
 		}
 	});
 });
+
 // @route   PUT api/ffxtech/update/:id
 // @desc    Update A FFxReport
 // @access  Public
