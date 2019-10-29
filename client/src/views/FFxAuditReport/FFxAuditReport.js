@@ -67,7 +67,6 @@ class FFxAuditReport extends Component {
 	}
 
 	change(e) {
-		console.log(e.target.name);
 		if(e.target.name === "stepResolving" ||e.target.name === "stepAccuracy"|| e.target.name === "stepCompletion"  ){
 			this.setState({
 				fieldData: { ...this.state.fieldData, [e.target.name]: e.target.checked }
@@ -130,6 +129,7 @@ class FFxAuditReport extends Component {
 			timeResolving: this.state.fieldData.timeResolving,
 			ffxPitches: this.state.fieldData.ffxPitches,
 			gdPitches: this.state.fieldData.gdPitches,
+			vidGaps: this.state.fieldData.vidGaps,
 		};
 		console.log(report);
 

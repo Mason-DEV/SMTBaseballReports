@@ -43,36 +43,62 @@ router.route("/ffxReportByID").get(function(req, res) {
 	});
 });
 
-//  Defined update route
+// @route   PUT api/ffxAudit/update/:id
+// @desc    Update A FFxAudit Report
+// @access  Public
 router.route("/update/:id").put(function(req, res) {
 	let _id = req.params.id;
-	FFxAudit.findById(_id, function(err, audit) {
-		if (!audit) {
-			logger.info("Could not find an audit with id " + _id);
-			res.status(404).send("Can not find this Audit in the DB");
+	let uid = uuid();
+	//Find Report for this ID
+	FFxAudit.findById(_id, function(err, ffxAudit) {
+		if (!ffxAudit) {
+			logger.info("Could not find ffxAudit with id " + _id);
+			res.status(404).send("Can not find this ffxAudit in the DB");
 		} else if (err) {
-			logger.warn("Could not find an audit" + err.stack);
-			res.status(404).send("Can not find this Audit in the DB");
-		} else audit.gamestring = req.body.gamestring;
-		audit.auditor = req.body.auditor;
-		audit.operator = req.body.operator;
-		audit.ffxPitches = req.body.ffxPitches;
-		audit.gdPitches = req.body.gdPitches;
-		audit.missedPitches = req.body.missedPitches;
-		audit.missedBIP = req.body.missedBIP;
-		audit.pitchesAdd = req.body.pitchesAdd;
-		audit.pickAdd = req.body.pickAdd;
-		audit
-			.save()
-			.then(audit => {
-				logger.error("Saving audit / " + audit);
-				res.sendStatus(200).send(req.body.pickAdd);
-				res.json(req.body.pickAdd);
-			})
-			.catch(err => {
-				logger.error("Error on update " + err.stack);
-				res.status(400).send(err);
-			});
+			logger.warn("Could not find an ffxAudit" + err.stack);
+			res.status(404).send("Can not find this ffxAudit in the DB");
+		} else {
+			try {
+				logger.warn(uid + " Modifying ffxAudit from === " + ffxAudit);
+				ffxAudit.gamestring = req.body.gamestring;
+				ffxAudit.commentsBall = req.body.commentsBall;
+				ffxAudit.commentsMisc = req.body.commentsMisc;
+				ffxAudit.commentsPlayer = req.body.commentsPlayer;
+				ffxAudit.logIn = req.body.logIn;
+				ffxAudit.logOut = req.body.logOut;
+				ffxAudit.missedBIPVidGaps = req.body.missedBIPVidGaps;
+				ffxAudit.missedPitchesVidGaps = req.body.missedPitchesVidGaps;
+				ffxAudit.numBIPasPC = req.body.numBIPasPC;
+				ffxAudit.numFBasPC = req.body.numFBasPC;
+				ffxAudit.numPicksAdded = req.body.numPicksAdded;
+				ffxAudit.numPitchesAdded = req.body.numPitchesAdded;
+				ffxAudit.operator = req.body.operator;
+				ffxAudit.auditor = req.body.auditor;
+				ffxAudit.readyShare = req.body.readyShare;
+				ffxAudit.stepAccuracy = req.body.stepAccuracy;
+				ffxAudit.stepCompletion = req.body.stepCompletion;
+				ffxAudit.stepResolving = req.body.stepResolving;
+				ffxAudit.timeAccuracy = req.body.timeAccuracy;
+				ffxAudit.timeCompletion = req.body.timeCompletion;
+				ffxAudit.timeResolving = req.body.timeResolving;
+				ffxAudit.ffxPitches = req.body.ffxPitches;
+				ffxAudit.gdPitches = req.body.gdPitches;
+				logger.warn(uid + " Modifying ffxAudit to === " + ffxAudit);
+			} catch (error) {
+				logger.error(uid + " Error on update " + error);
+				res.status(404).send(error);
+			}
+			ffxAudit
+				.save()
+				.then(ffxAudit => {
+					logger.warn(uid + " Modifying Complete");
+					res.status(200).send(ffxAudit);
+				})
+				.catch(err => {
+					logger.error(uid + " Error on update " + err);
+					res.sendStatus(404);
+				});
+		}
 	});
 });
 

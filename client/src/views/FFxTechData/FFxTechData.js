@@ -310,7 +310,7 @@ class FFxTechData extends Component {
 		Promise.all([
 			axios.get("/api/FFxTech/"),
 			axios.get("/api/FFxTech/today"),
-			axios.get("/api/staff/operators"),
+			axios.get("/api/staff/ffxOperators"),
 			axios.get("/api/staff/support"),
 			axios.get("/api/venue/fieldFx")
 		])

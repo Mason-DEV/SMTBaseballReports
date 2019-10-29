@@ -95,7 +95,12 @@ const ffxAuditSchema = new Schema(
 		timeResolving: {
 			type: String,
 			required: false
+		},
+		vidGaps: {
+			type: String,
+			required: false
 		}
+		
 	},
 	{
 		collection: "ffxAudit"

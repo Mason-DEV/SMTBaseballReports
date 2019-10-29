@@ -5,6 +5,7 @@ import {
 	CardBody,
 	CardHeader,
 	CardFooter,
+	CustomInput,
 	Modal,
 	Form,
 	Col,
@@ -14,14 +15,9 @@ import {
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
-	Nav,
-	NavItem,
-	NavLink,
 	Button,
 	Row,
 	Table,
-	TabContent,
-	TabPane,
 	Pagination,
 	PaginationLink,
 	PaginationItem
@@ -30,13 +26,18 @@ import axios from "axios";
 import logger from "../../components/helpers/logger";
 import spinner from "../../assests/images/smtSpinner.gif";
 import _ from "lodash";
-// import ModalComponent from "./Modals/ModalComponent";
+import lgLogo from "../../../src/assests/images/SMT_Report_Tag.jpg";
 
 class FFxAuditData extends Component {
 	constructor(props) {
 		super(props);
 
 		//Binding states
+		this.showEdit = this.showEdit.bind(this);
+		this.hideEdit = this.hideEdit.bind(this);
+		this.submitEdit = this.submitEdit.bind(this);
+		this.changeEditData = this.changeEditData.bind(this);
+
 		this.showDelete = this.showDelete.bind(this);
 		this.hideDelete = this.hideDelete.bind(this);
 		this.submitDelete = this.submitDelete.bind(this);
@@ -80,9 +81,6 @@ class FFxAuditData extends Component {
 		}
 	}
 
-	showEdit(id) {
-		console.log("id for this thing", id);
-	}
 
 	//Click handler for pagniation
 	handleClick(e, index) {
@@ -98,7 +96,111 @@ class FFxAuditData extends Component {
 		if (el) el.blur();
 	}
 
+	//#region Edit Functions
+	getEditDate(date) {
+		if (date) {
+			const editDate = date.substr(0, 10);
+			return editDate;
+		}
+		return date;
+	}
+
+	hideEdit() {
+		this.setState({
+			editModal: !this.state.editModal,
+			editData: {},
+			needToReload: false
+		});
+	}
+
+	changeEdit(e) {
+		if (e.target.name === "date") {
+			this.setState({
+				editData: { ...this.state.editData, [e.target.name]: new Date(e.target.value).toISOString() }
+			});
+		} else {
+			this.setState({
+				editData: { ...this.state.editData, [e.target.name]: e.target.value }
+			});
+		}
+	}
+	showEdit(id) {
+		axios
+			.get("/api/FFxAudit/ffxReportByID", {
+				headers: { ID: id }
+			})
+			.then(res => {
+				this.setState({ editData: res.data });
+			})
+			.catch(function(error) {
+				logger("error", "Ffx Audit Report Show edit === " + error);
+			});
+
+		this.setState({
+			editModal: !this.state.editModal
+		});
+		this.removeBlur();
+	}
+	submitEdit(e) {
+		e.preventDefault();
+		const editedReport = {
+			gamestring: this.state.editData.gamestring,
+			commentsBall: this.state.editData.commentsBall,
+			commentsMisc: this.state.editData.commentsMisc,
+			commentsPlayer: this.state.editData.commentsPlayer,
+			logIn: this.state.editData.logIn,
+			logOut: this.state.editData.logOut,
+			missedBIPVidGaps: this.state.editData.missedBIPVidGaps,
+			missedPitchesVidGaps: this.state.editData.missedPitchesVidGaps,
+			numBIPasPC: this.state.editData.numBIPasPC,
+			numFBasPC: this.state.editData.numFBasPC,
+			numPicksAdded: this.state.editData.numPicksAdded,
+			numPitchesAdded: this.state.editData.numPitchesAdded,
+			operator: this.state.editData.operator,
+			auditor: this.state.editData.auditor,
+			readyShare: this.state.editData.readyShare,
+			stepAccuracy: this.state.editData.stepAccuracy  ? true : false,
+			stepCompletion: this.state.editData.stepCompletion  ? true : false,
+			stepResolving: this.state.editData.stepResolving ? true : false,
+			timeAccuracy: this.state.editData.timeAccuracy,
+			timeCompletion: this.state.editData.timeCompletion,
+			timeResolving: this.state.editData.timeResolving,
+			ffxPitches: this.state.editData.ffxPitches,
+			gdPitches: this.state.editData.gdPitches,
+			vidGaps: this.state.editData.vidGaps,
+		};
+		this.setState({ isEditing: true });
+		axios
+			.put("/api/FFxAudit/update/" + this.state.editData._id, editedReport)
+			.then(editing => {
+				this.setState({ isEditing: false, needToReload: true });
+			})
+			.catch(error => {
+				this.setState({ isEditing: false });
+				logger("error", "FFxAudit Submit === " + error);
+			});
+		this.hideEdit();
+	}
+	//#endregion Edit Functions
+
 	//#region Delete Functions
+	changeEditData(e) {
+		if(e.target.name === "stepResolving" ||e.target.name === "stepAccuracy"|| e.target.name === "stepCompletion"  ){
+			this.setState({
+				editData: { ...this.state.editData, [e.target.name]: e.target.checked }
+			});
+		}
+		if (e.target.name === "date") {
+			this.setState({
+				editData: { ...this.state.editData, [e.target.name]: new Date(e.target.value).toISOString() }
+			});
+		} else {
+			this.setState({
+				editData: { ...this.state.editData, [e.target.name]: e.target.value }
+			});
+		}
+	}
+
 	hideDelete() {
 		this.setState({
 			deleteModal: !this.state.deleteModal,
@@ -133,20 +235,23 @@ class FFxAuditData extends Component {
 	//#endregion Delete Functions
 
 	componentDidMount() {
-		//Axios api call to get all staffData
-		axios
-			.get("/api/FFxAudit/")
-			.then(res => {
-				this.setState({ data: res.data });
+		Promise.all([
+			axios.get("/api/FFxAudit/"),
+			axios.get("/api/staff/ffxOperators"),
+			axios.get("/api/staff/auditors")
+		])
+			.then(([allResponse, opResponse, auditorResponse]) => {
+				const data = allResponse.data;
+				const ops = opResponse.data.map(obj => ({ name: obj.name, email: obj.email }));
+				const auditor = auditorResponse.data.map(obj => ({ name: obj.name }));
+				this.setState({ data, operators: ops, auditor });
 			})
-			//Data is loaded, so change from loading state
 			.then(isLoading =>
-				this.setState({ isLoading: false, pagesCount: Math.ceil(this.state.data.length / this.pageSize) })
-			)
-			.catch(function(error) {
-				console.log(error);
-				logger("error", error);
-			});
+				this.setState({
+					isLoading: false,
+					pagesCount: Math.ceil(this.state.data.length / this.pageSize)
+				})
+			);
 	}
 
 	componentDidUpdate() {
@@ -163,7 +268,7 @@ class FFxAuditData extends Component {
 				})
 				.catch(function(error) {
 					console.log(error);
-					logger("error", "error on auditData component did update " +error.toString());
+					logger("error", "error on auditData component did update " + error.toString());
 				});
 			this.setState({ needToReload: false });
 		}
@@ -272,6 +377,369 @@ class FFxAuditData extends Component {
 							</CardFooter>
 						</CardFooter>
 					</Card>
+
+					{/* Edit Modal */}
+					<div>
+						{this.state.isEditing ? (
+							<Modal color="success" isOpen={this.state.editModal}>
+								<ModalHeader style={{ backgroundColor: "#ffc107", color: "Black" }}>
+									<i className="fa fa-pencil"></i> Edit FieldFx Audit Report
+								</ModalHeader>
+								<ModalBody>
+									<img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />
+								</ModalBody>
+							</Modal>
+						) : (
+							// <Modal size="lg" style={{maxWidth: '1600px', width: '80%'}} color="success" isOpen={this.state.editModal}>
+							<Modal size="lg" color="success" isOpen={this.state.editModal}>
+								<Form onSubmit={e => this.submitEdit(e)}>
+									<ModalHeader style={{ backgroundColor: "#ffc107", color: "Black" }} toggle={this.hideEdit}>
+										<i className="fa fa-pencil"></i> Edit FieldFx Audit Report
+									</ModalHeader>
+									<ModalBody>
+										<Row>
+											<Col>
+												<FormGroup>
+													<Label htmlFor="gameID">Game ID</Label>
+													<Input
+														onChange={e => this.changeEdit(e)}
+														type="text"
+														id="gameID"
+														name="gamestring"
+														defaultValue={this.state.editData.gamestring}
+														required
+													/>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="operator">Operator</Label>
+													<Input value={this.state.editData.operator} onChange={e => this.changeEdit(e)} type="select" name="operator" id="operator" required>
+														
+														{this.state.operators.map((op, idx) => {
+															return <option key={idx}>{op.name}</option>;
+														})}
+													</Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="auditor">Auditor</Label>
+													<Input value={this.state.editData.auditor} onChange={e => this.changeEdit(e)} type="select" name="auditor" id="operator" required>
+														{this.state.auditor.map((auditor, idx) => {
+															return <option key={idx}>{auditor.name}</option>;
+														})}
+													</Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="numPitchesAdded">Number of Pitches Added</Label>
+													<Input
+														onChange={e => this.changeEdit(e)}
+														defaultValue={this.state.editData.numPitchesAdded}
+														type="number"
+														min="0"
+														name="numPitchesAdded"
+														id="numPitchesAdded"
+													></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="numBIPasPC">Number of Balls in Play marked as P/C</Label>
+													<Input
+														onChange={e => this.changeEdit(e)}
+														defaultValue={this.state.editData.numBIPasPC}
+														type="number"
+														min="0"
+														name="numBIPasPC"
+														id="numBIPasPC"
+														></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="numFBasPC">Number of Foul Balls marked as P/C</Label>
+													<Input
+														defaultValue={this.state.editData.numFBasPC}
+														onChange={e => this.changeEdit(e)}
+														type="number"
+														min="0"
+														name="numFBasPC"
+														id="numFBasPC"
+														></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="numPicksAdded">Number of Pickoffs Added</Label>
+													<Input
+														onChange={e => this.changeEdit(e)}
+														type="number"
+														defaultValue={this.state.editData.numPicksAdded}
+														min="0"
+														name="numPicksAdded"
+														id="numPicksAdded"
+													></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="vidGaps">Video Gaps</Label>
+													<Input defaultValue={this.state.editData.vidGaps} onChange={e => this.changeEdit(e)} type="text" name="vidGaps" id="vidGaps"></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="missedPitchesVidGaps">Number of Missed Pitches due to Video Gaps</Label>
+													<Input
+														onChange={e => this.changeEdit(e)}
+														type="number"
+														defaultValue={this.state.editData.missedPitchesVidGaps}
+														min="0"
+														name="missedPitchesVidGaps"
+														id="missedPitchesVidGaps"
+													></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="missedBIPVidGaps">Number of Missed BIP due to Video Gaps</Label>
+													<Input
+														defaultValue={this.state.editData.missedBIPVidGaps}
+														onChange={e => this.changeEdit(e)}
+														type="number"
+														min="0"
+														name="missedBIPVidGaps"
+														id="missedBIPVidGaps"
+													></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="commentsPlayer">Comments on Player Pathing</Label>
+													<Input
+														value={this.state.editData.commentsPlayer}
+														onChange={e => this.changeEdit(e)}
+														type="textarea"
+														name="commentsPlayer"
+														id="commentsPlayer"
+													></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="commentsBall">Comments on Ball Trajectories</Label>
+													<Input
+														value={this.state.editData.commentsBall}
+														onChange={e => this.changeEdit(e)}
+														type="textarea"
+														name="commentsBall"
+														id="commentsBall"
+													></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="commentsMisc">Miscellaneous Comments</Label>
+													<Input
+														value={this.state.editData.commentsMisc}
+														onChange={e => this.changeEdit(e)}
+														type="textarea"
+														name="commentsMisc"
+														id="commentsMisc"
+													></Input>
+												</FormGroup>
+											</Col>
+											<Col>
+												<FormGroup>
+													<Label htmlFor="logIn">
+														Log In <Badge>Eastern Time</Badge>
+													</Label>
+													<Input defaultValue={this.state.editData.logIn} onChange={e => this.changeEdit(e)} id="logIn" type="time" name="logIn" required></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="logOut">
+														Log Out <Badge>Eastern Time</Badge>
+													</Label>
+													<Input defaultValue={this.state.editData.logOut}  onChange={e => this.changeEdit(e)} id="logOut" type="time" name="logOut" required></Input>
+												</FormGroup>
+
+												<Label htmlFor="stepsCompleted">Steps Completed (check all that apply)</Label>
+												<FormGroup>
+													<CustomInput
+														defaultChecked={this.state.editData.stepResolving} 
+														type="checkbox"
+														id="resolvingCustomCheckbox"
+														label="Finished Resolving the Game"
+														name="stepResolving"
+														onClick={e => this.changeEdit(e)}
+													/>
+													<CustomInput
+														defaultChecked={this.state.editData.stepCompletion} 
+														id="completionCustomCheckbox"
+														type="checkbox"
+														label="Confirmed all Pitches, Pickoffs & Steals"
+														name="stepCompletion"
+														onClick={e => this.changeEdit(e)}
+													/>
+													<CustomInput
+														defaultChecked={this.state.editData.stepAccuracy}
+														id="accuracyCustomCheckbox"
+														type="checkbox"
+														label="Checked all Hits for Accuracy"
+														name="stepAccuracy"
+														onClick={e => this.changeEdit(e)}
+													/>
+												</FormGroup>
+												<br />
+												{this.state.editData.stepResolving === true ? (
+													<FormGroup>
+														<Label htmlFor="timeResolving">
+															Time Spent Finishing Resolving <Badge color="info"># of Min</Badge>
+														</Label>
+														<Input
+															required
+															defaultValue={this.state.editData.timeResolving}
+															onChange={e => this.changeEdit(e)}
+															type="number"
+															min="0"
+															name="timeResolving"
+															id="timeResolving"
+														/>
+													</FormGroup>
+												) : (
+													<FormGroup>
+														<Label htmlFor="timeResolving">
+															Time Spent Finishing Resolving <Badge color="info"># of Min</Badge>
+														</Label>
+														<Input
+															onChange={e => this.changeEdit(e)}
+															defaultValue={this.state.editData.timeResolving}
+															type="number"
+															min="0"
+															name="timeResolving"
+															id="timeResolving"
+														/>
+													</FormGroup>
+												)}
+												{this.state.editData.stepCompletion === true ? (
+													<FormGroup>
+														<Label htmlFor="timeCompletion">
+															Time Spent on Completion <Badge color="info"># of Min</Badge>
+														</Label>
+														<Input
+															defaultValue={this.state.editData.timeCompletion}
+															required
+															onChange={e => this.changeEdit(e)}
+															type="number"
+															min="0"
+															name="timeCompletion"
+															id="timeCompletion"
+														/>
+													</FormGroup>
+												) : (
+													<FormGroup>
+														<Label htmlFor="timeCompletion">
+															Time Spent on Completion <Badge color="info"># of Min</Badge>
+														</Label>
+														<Input
+															defaultValue={this.state.editData.timeCompletion}
+															onChange={e => this.changeEdit(e)}
+															type="number"
+															min="0"
+															name="timeCompletion"
+															id="timeCompletion"
+														/>
+													</FormGroup>
+												)}
+												{this.state.editData.stepAccuracy === true ? (
+													<FormGroup>
+														<Label htmlFor="timeAccuracy">
+															Time Spent Checking Hits for Accuracy <Badge color="info"># of Min</Badge>
+														</Label>
+														<Input
+															defaultValue={this.state.editData.timeAccuracy}
+															required
+															onChange={e => this.changeEdit(e)}
+															type="number"
+															min="0"
+															name="timeAccuracy"
+															id="timeAccuracy"
+														/>
+													</FormGroup>
+												) : (
+													<FormGroup>
+														<Label htmlFor="timeAccuracy">
+															Time Spent Checking Hits for Accuracy <Badge color="info"># of Min</Badge>
+														</Label>
+														<Input
+															defaultValue={this.state.editData.timeAccuracy}
+															onChange={e => this.changeEdit(e)}
+															type="number"
+															min="0"
+															name="timeAccuracy"
+															id="timeAccuracy"
+														/>
+													</FormGroup>
+												)}
+
+												<FormGroup>
+													<Label htmlFor="readyShare">Ready for Share?</Label>
+													<Input
+														value={this.state.editData.readyShare}
+														onChange={e => this.changeEdit(e)}
+														type="select"
+														name="readyShare"
+														id="readyShare"
+														required
+													>
+														<option></option>
+														<option>No</option>
+														<option>Yes</option>
+													</Input>
+												</FormGroup>
+
+												{this.state.editData.readyShare === "Yes" ? (
+													<FormGroup>
+														<Label htmlFor="gdPitches"># Gameday Pitches</Label>
+														<Input
+															onChange={e => this.changeEdit(e)}
+															defaultValue={this.state.editData.gdPitches}
+															required
+															type="text"
+															name="gdPitches"
+															id="gdPitches"
+														></Input>
+														<Label htmlFor="ffxPitches"># Fieldfx Pitches</Label>
+														<Input
+															defaultValue={this.state.editData.ffxPitches}
+															onChange={e => this.changeEdit(e)}
+															required
+															type="text"
+															name="ffxPitches"
+															id="ffxPitches"
+														></Input>
+													</FormGroup>
+												) : (
+													<FormGroup>
+														<Label htmlFor="gdPitches"># Gameday Pitches</Label>
+														<Input disabled type="text" name="gdPitches" id="gdPitches"></Input>
+														<Label htmlFor="ffxPitches"># Fieldfx Pitches</Label>
+														<Input disabled type="text" name="ffxPitches" id="ffxPitches"></Input>
+													</FormGroup>
+												)}
+
+												<FormGroup>
+													<Label htmlFor="screenShots">Screenshots</Label>
+													<Row>
+														<Col>
+															<Input type="file" name="screenShots1" id="screenShots1"></Input>
+															<br />
+															<Input type="file" name="screenShots2" id="screenShots2"></Input>
+														</Col>
+
+														<Col>
+															<Input type="file" name="screenShots3" id="screenShots3"></Input>
+															<br />
+															<Input type="file" name="screenShots4" id="screenShots4"></Input>
+														</Col>
+													</Row>
+												</FormGroup>
+
+												<img src={lgLogo} alt="SMT Logo"></img>
+											</Col>
+										</Row>
+									</ModalBody>
+									<ModalFooter>
+										<Button color="success" type="submit" value="Add Venue" className="px-4">
+											Update
+										</Button>
+										<Button color="secondary" onClick={this.hideEdit}>
+											Cancel
+										</Button>
+									</ModalFooter>
+								</Form>
+							</Modal>
+						)}
+					</div>
 
 					{/* Delete Modal */}
 					<div>
