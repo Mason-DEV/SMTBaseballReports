@@ -84,23 +84,25 @@ router.route("/update/:id").put(function(req, res) {
 		} else {
 			try {
 				logger.warn(uid + " Modifying ffxTech from === " + ffxTech);
-				ffxTech.venue = req.body.venue,
-				ffxTech.operator = req.body.operator,
-				ffxTech.support = req.body.support,
-				ffxTech.date=  req.body.date,
-				ffxTech.logIn=  req.body.logIn,
-				ffxTech.logOut=  req.body.logOut,
-				ffxTech.firstPitch = req.body.firstPitch,
-				ffxTech.gameID=  req.body.gameID,
-				ffxTech.ipCamIssues = req.body.ipCamIssues.trim() === "" ? "None" : req.body.ipCamIssues,
-				ffxTech.fgdIssues=  req.body.fgdIssues.trim() === "" ? "None" : req.body.fgdIssues,
-				ffxTech.resolverIssues=  req.body.resolverIssues.trim() === "" ? "None" : req.body.resolverIssues,
-				ffxTech.hardwareIssues=  req.body.hardwareIssues.trim() === "" ? "None" : req.body.hardwareIssues,
-				ffxTech.miscNotes=  req.body.miscNotes.trim() === "" ? "None" : req.body.miscNotes,
-				ffxTech.supportNotes=  req.body.supportNotes,
-				ffxTech.bisonSet=  req.body.bisonSet,
-				ffxTech.backupTask=  req.body.backupTask,
-				ffxTech.backupNote= req.body.backupNote
+				(ffxTech.venue = req.body.venue),
+					(ffxTech.operator = req.body.operator),
+					(ffxTech.support = req.body.support),
+					(ffxTech.date = req.body.date),
+					(ffxTech.logIn = req.body.logIn),
+					(ffxTech.logOut = req.body.logOut),
+					(ffxTech.firstPitch = req.body.firstPitch),
+					(ffxTech.gameID = req.body.gameID),
+					(ffxTech.bitMode = req.body.bitMode),
+					(ffxTech.gameStatus = req.body.gameStatus),
+					(ffxTech.ipCamIssues = req.body.ipCamIssues.trim() === "" ? "None" : req.body.ipCamIssues),
+					(ffxTech.fgdIssues = req.body.fgdIssues.trim() === "" ? "None" : req.body.fgdIssues),
+					(ffxTech.resolverIssues = req.body.resolverIssues.trim() === "" ? "None" : req.body.resolverIssues),
+					(ffxTech.hardwareIssues = req.body.hardwareIssues.trim() === "" ? "None" : req.body.hardwareIssues),
+					(ffxTech.miscNotes = req.body.miscNotes.trim() === "" ? "None" : req.body.miscNotes),
+					(ffxTech.supportNotes = req.body.supportNotes),
+					(ffxTech.bisonSet = req.body.bisonSet),
+					(ffxTech.backupTask = req.body.backupTask),
+					(ffxTech.backupNote = req.body.backupNote);
 				logger.warn(uid + " Modifying ffxTech to === " + ffxTech);
 			} catch (error) {
 				logger.error(uid + " Error on update " + error);
@@ -137,6 +139,8 @@ router.route("/create/").post(function(req, res) {
 				logOut: req.body.logOut,
 				firstPitch: req.body.firstPitch,
 				gameID: req.body.gameID,
+				bitMode: req.body.bitMode,
+				gameStatus: req.body.gameStatus,
 				ipCamIssues: req.body.ipCamIssues.trim() === "" ? "None" : req.body.ipCamIssues,
 				fgdIssues: req.body.fgdIssues.trim() === "" ? "None" : req.body.fgdIssues,
 				resolverIssues: req.body.resolverIssues.trim() === "" ? "None" : req.body.resolverIssues,

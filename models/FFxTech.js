@@ -36,6 +36,14 @@ const ffxTechSchema = new Schema(
             type: String,
             required: true
 		},
+		bitMode: {
+            type: String,
+            required: true
+		},
+		gameStatus: {
+            type: String,
+            required: true
+		},
 		ipCamIssues: {
 			type: String,
 			default: "None"

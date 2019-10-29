@@ -100,6 +100,8 @@ class FFxTechReport extends Component {
 			logOut: this.state.fieldData.logOut,
 			firstPitch: this.state.fieldData.firstPitch,
 			gameID: this.state.fieldData.gameID,
+			bitMode: this.state.fieldData.bitMode,
+			gameStatus: this.state.fieldData.gameStatus,
 			ipCamIssues: this.state.fieldData.ipCamIssues,
 			fgdIssues: this.state.fieldData.fgdIssues,
 			resolverIssues: this.state.fieldData.resolverIssues,
@@ -151,7 +153,10 @@ class FFxTechReport extends Component {
 						<strong>Error on report upload!</strong>
 					</Alert>
 					<Alert color="danger" isOpen={this.state.duplicate} toggle={this.onDismissDuplicate}>
-						<strong>A game report for this gamestring  {this.state.fieldData.gameID} already exist, please check your gamestring and alert support if this issue continues.</strong>
+						<strong>
+							A game report for this gamestring {this.state.fieldData.gameID} already exist, please check your
+							gamestring and alert support if this issue continues.
+						</strong>
 					</Alert>
 
 					<div className="animated fadeIn">
@@ -203,40 +208,28 @@ class FFxTechReport extends Component {
 													required
 												/>
 											</FormGroup>
-										</Col>
-										<Col>
 											<FormGroup>
-												<Label htmlFor="date">Date</Label>
-												<Input onChange={e => this.change(e)} id="date" type="date" name="date" required></Input>
+												<Label htmlFor="bitMode">Bit Mode</Label>
+												<Input onChange={e => this.change(e)} type="select" name="bitMode" id="bitMode" required>
+													<option key="-1"></option>
+													<option>8-Bit (Day Game)</option>
+													<option>12-Bit (Night Game)</option>
+												</Input>
 											</FormGroup>
 											<FormGroup>
-												<Label htmlFor="logIn">
-													Log In <Badge>Eastern Time</Badge>
-												</Label>
-												<Input onChange={e => this.change(e)} id="logIn" type="time" name="logIn" required></Input>
+												<Label htmlFor="gameStatus">Game Status</Label>
+												<Input onChange={e => this.change(e)} type="select" name="gameStatus" id="gameStatus" required>
+													<option key="-1"></option>
+													<option>Ready for Share</option>
+													<option>Ready for Audit</option>
+													<option>All PC's Done</option>
+													<option>Incomplete -- 70% Resolved</option>
+													<option>Incomplete -- 60% Resolved</option>
+													<option>Incomplete -- 50% Resolved</option>
+													<option>Incomplete -- less than 50% Resolved</option>
+													<option>Recorded Only</option>
+												</Input>
 											</FormGroup>
-											<FormGroup>
-												<Label htmlFor="firstPitch">
-													First Pitch <Badge>Eastern Time</Badge>
-												</Label>
-												<Input
-													onChange={e => this.change(e)}
-													id="firstPitch"
-													type="time"
-													name="firstPitch"
-													required
-												></Input>
-											</FormGroup>
-											<FormGroup>
-												<Label htmlFor="logOut">
-													Log Out <Badge>Eastern Time</Badge>
-												</Label>
-												<Input onChange={e => this.change(e)} id="logOut" type="time" name="logOut" required></Input>
-											</FormGroup>
-										</Col>
-									</Row>
-									<Row>
-										<Col>
 											<FormGroup>
 												<Label htmlFor="ipCamIssues">IPCamRelay Issues?</Label>
 												<Input
@@ -274,6 +267,34 @@ class FFxTechReport extends Component {
 											</FormGroup>
 										</Col>
 										<Col>
+											<FormGroup>
+												<Label htmlFor="date">Date</Label>
+												<Input onChange={e => this.change(e)} id="date" type="date" name="date" required></Input>
+											</FormGroup>
+											<FormGroup>
+												<Label htmlFor="logIn">
+													Log In <Badge>Eastern Time</Badge>
+												</Label>
+												<Input onChange={e => this.change(e)} id="logIn" type="time" name="logIn" required></Input>
+											</FormGroup>
+											<FormGroup>
+												<Label htmlFor="firstPitch">
+													First Pitch <Badge>Eastern Time</Badge>
+												</Label>
+												<Input
+													onChange={e => this.change(e)}
+													id="firstPitch"
+													type="time"
+													name="firstPitch"
+													required
+												></Input>
+											</FormGroup>
+											<FormGroup>
+												<Label htmlFor="logOut">
+													Log Out <Badge>Eastern Time</Badge>
+												</Label>
+												<Input onChange={e => this.change(e)} id="logOut" type="time" name="logOut" required></Input>
+											</FormGroup>
 											<Label>
 												{this.props.permission === "support" ? (
 													<h5 style={{ color: "red" }}>Support Section</h5>
@@ -344,10 +365,6 @@ class FFxTechReport extends Component {
 											</FormGroup>
 											<img src={lgLogo} alt="SMT Logo"></img>
 										</Col>
-									</Row>
-									<Row>
-										<Col></Col>
-										<Col></Col>
 									</Row>
 								</CardBody>
 								<CardFooter>

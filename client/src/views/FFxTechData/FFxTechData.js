@@ -7,8 +7,7 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
-	Container,
-	CustomInput,
+	CardFooter,
 	Modal,
 	Form,
 	Col,
@@ -26,8 +25,9 @@ import {
 	Table,
 	TabContent,
 	TabPane,
-	CardTitle,
-	CardText
+	Pagination,
+	PaginationLink,
+	PaginationItem
 } from "reactstrap";
 
 class FFxTechData extends Component {
@@ -45,7 +45,13 @@ class FFxTechData extends Component {
 		this.hideDelete = this.hideDelete.bind(this);
 		this.submitDelete = this.submitDelete.bind(this);
 
+		//Sets the amount of data on a single page
+		this.pageSize = 15;
+
 		this.state = {
+			currentPage: 0,
+			pagesCountToday: 0,
+			pagesCountAll: 0,
 			isLoading: true,
 			activeTab: new Array(3).fill("1"),
 			venues: {},
@@ -63,11 +69,21 @@ class FFxTechData extends Component {
 		};
 	}
 
+	//Click handler for pagniation
+	handleClick(e, index) {
+		e.preventDefault();
+
+		this.setState({
+			currentPage: index
+		});
+	}
+
 	toggle(tabPane, tab) {
 		const newArray = this.state.activeTab.slice();
 		newArray[tabPane] = tab;
 		this.setState({
-			activeTab: newArray
+			activeTab: newArray,
+			currentPage: 0
 		});
 	}
 
@@ -77,15 +93,17 @@ class FFxTechData extends Component {
 	}
 
 	tabPane() {
+		const { currentPage } = this.state;
 		return (
 			<>
 				<TabPane tabId="1">
-					<Table bordered striped responsive size="sm">
+					<Table bordered striped responsive size="sm" style={{ tableLayout: "fixed" }}>
 						<thead>
 							<tr>
-								<th width="">Actions</th>
+								<th width="100">Actions</th>
 								<th width="">Date</th>
 								<th width="">Gamestring</th>
+								<th width="">Game Status</th>
 								<th width="">Venue</th>
 								<th width="">Operator</th>
 								<th width="">Support Notes</th>
@@ -93,10 +111,12 @@ class FFxTechData extends Component {
 							</tr>
 						</thead>
 						<tbody>
-							{this.state.todayGameData.map((data, i) => {
+							{this.state.todayGameData
+							.slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
+							.map((data, i) => {
 								return (
 									<tr key={i}>
-										<td>
+										<td style={{ maxWidth: "300px" }}>
 											<Button onClick={e => this.showEdit(data._id)} color="warning" size="sm">
 												Edit
 											</Button>{" "}
@@ -104,11 +124,14 @@ class FFxTechData extends Component {
 												Delete
 											</Button>
 										</td>
-										<td>{data.date.substr(0, 10)}</td>
+										<td style={{ maxWidth: "300px", minWidth: "100px" }}>{data.date.substr(0, 10)}</td>
 										<td>{data.gameID}</td>
+										<td>{data.gameStatus}</td>
 										<td>{data.venue}</td>
 										<td>{data.operator}</td>
-										<td>{data.supportNotes}</td>
+										<td style={{ maxWidth: "300px", minWidth: "150px", wordWrap: "break-word" }}>
+											{data.supportNotes}
+										</td>
 										<td>{data.backupTask}</td>
 									</tr>
 								);
@@ -124,6 +147,7 @@ class FFxTechData extends Component {
 									<th width="">Actions</th>
 									<th width="">Date</th>
 									<th width="">Gamestring</th>
+									<th width="">Game Status</th>
 									<th width="">Venue</th>
 									<th width="">Operator</th>
 									<th width="">Support Notes</th>
@@ -131,10 +155,12 @@ class FFxTechData extends Component {
 								</tr>
 							</thead>
 							<tbody>
-								{this.state.allGameData.map((data, i) => {
+								{this.state.allGameData
+								.slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
+								.map((data, i) => {
 									return (
 										<tr key={i}>
-											<td>
+											<td style={{ maxWidth: "300px" }}>
 												<Button onClick={e => this.showEdit(data._id)} color="warning" size="sm">
 													Edit
 												</Button>{" "}
@@ -142,11 +168,14 @@ class FFxTechData extends Component {
 													Delete
 												</Button>
 											</td>
-											<td>{data.date.substr(0, 10)}</td>
+											<td style={{ maxWidth: "300px", minWidth: "100px" }}>{data.date.substr(0, 10)}</td>
 											<td>{data.gameID}</td>
+											<td>{data.gameStatus}</td>
 											<td>{data.venue}</td>
 											<td>{data.operator}</td>
-											<td>{data.supportNotes}</td>
+											<td style={{ maxWidth: "300px", minWidth: "150px", wordWrap: "break-word" }}>
+												{data.supportNotes}
+											</td>
 											<td>{data.backupTask}</td>
 										</tr>
 									);
@@ -216,6 +245,8 @@ class FFxTechData extends Component {
 			logOut: this.state.editData.logOut,
 			firstPitch: this.state.editData.firstPitch,
 			gameID: this.state.editData.gameID,
+			bitMode: this.state.editData.bitMode,
+			gameStatus: this.state.editData.gameStatus,
 			ipCamIssues: this.state.editData.ipCamIssues,
 			fgdIssues: this.state.editData.fgdIssues,
 			resolverIssues: this.state.editData.resolverIssues,
@@ -291,7 +322,13 @@ class FFxTechData extends Component {
 				const support = supportResponse.data.map(obj => ({ name: obj.name }));
 				this.setState({ allGameData: all, todayGameData: today, operators: ops, support, venues });
 			})
-			.then(isLoading => this.setState({ isLoading: false }));
+			.then(isLoading =>
+				this.setState({
+					isLoading: false,
+					pagesCountToday: Math.ceil(this.state.todayGameData.length / this.pageSize),
+					pagesCountAll: Math.ceil(this.state.allGameData.length / this.pageSize)
+				})
+			);
 	}
 
 	componentDidUpdate() {
@@ -310,11 +347,18 @@ class FFxTechData extends Component {
 					const venues = venueResponse.data.map(obj => ({ name: obj.name }));
 					this.setState({ allGameData: all, todayGameData: today, operators: ops, venues });
 				})
-				.then(reloading => this.setState({ needToReload: false }));
+				.then(reloading =>
+					this.setState({
+						needToReload: false,
+						pagesCountToday: Math.ceil(this.state.todayGameData.length / this.pageSize),
+						pagesCountAll: Math.ceil(this.state.allGameData.length / this.pageSize)
+					})
+				);
 		}
 	}
 
 	render() {
+		const { currentPage } = this.state;
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
@@ -354,6 +398,58 @@ class FFxTechData extends Component {
 							</Nav>
 							<TabContent activeTab={this.state.activeTab[0]}>{this.tabPane()}</TabContent>
 						</CardBody>
+						<CardFooter>
+							{/* Check for which page we are on  */}
+							{this.state.activeTab[0]  === "1" ? (
+								<Pagination className="text-center">
+								<PaginationItem disabled={currentPage <= 0}>
+									<PaginationLink onClick={e => this.handleClick(e, 0)} first href="#" />
+								</PaginationItem>
+								<PaginationItem disabled={currentPage <= 0}>
+									<PaginationLink onClick={e => this.handleClick(e, currentPage - 1)} previous href="#" />
+								</PaginationItem>
+
+								{[...Array(this.state.pagesCountToday)].map((page, i) => (
+									<PaginationItem active={i === currentPage} key={i}>
+										<PaginationLink onClick={e => this.handleClick(e, i)} href="#">
+											{i + 1}
+										</PaginationLink>
+									</PaginationItem>
+								))}
+								<PaginationItem disabled={currentPage >= this.state.pagesCountToday - 1}>
+									<PaginationLink onClick={e => this.handleClick(e, currentPage + 1)} next href="#" />
+								</PaginationItem>
+								<PaginationItem disabled={currentPage >= this.state.pagesCountToday - 1}>
+									<PaginationLink onClick={e => this.handleClick(e, this.state.pagesCountToday - 1)} last href="#" />
+								</PaginationItem>
+							</Pagination>
+							) : (
+									<Pagination className="text-center">
+									<PaginationItem disabled={currentPage <= 0}>
+										<PaginationLink onClick={e => this.handleClick(e, 0)} first href="#" />
+									</PaginationItem>
+									<PaginationItem disabled={currentPage <= 0}>
+										<PaginationLink onClick={e => this.handleClick(e, currentPage - 1)} previous href="#" />
+									</PaginationItem>
+	
+									{[...Array(this.state.pagesCountAll)].map((page, i) => (
+										<PaginationItem active={i === currentPage} key={i}>
+											<PaginationLink onClick={e => this.handleClick(e, i)} href="#">
+												{i + 1}
+											</PaginationLink>
+										</PaginationItem>
+									))}
+									<PaginationItem disabled={currentPage >= this.state.pagesCountAll - 1}>
+										<PaginationLink onClick={e => this.handleClick(e, currentPage + 1)} next href="#" />
+									</PaginationItem>
+									<PaginationItem disabled={currentPage >= this.state.pagesCountAll - 1}>
+										<PaginationLink onClick={e => this.handleClick(e, this.state.pagesCountAll - 1)} last href="#" />
+									</PaginationItem>
+								</Pagination>
+
+							)}
+							
+						</CardFooter>
 					</Card>
 
 					{/* Edit Modal */}
@@ -435,62 +531,40 @@ class FFxTechData extends Component {
 														required
 													/>
 												</FormGroup>
-											</Col>
-											<Col>
 												<FormGroup>
-													<Label htmlFor="date">Date</Label>
+													<Label htmlFor="bitMode">Bit Mode</Label>
 													<Input
-														id="date"
-														type="date"
-														name="date"
+														value={this.state.editData.bitMode}
 														onChange={e => this.changeEditData(e)}
-														required
-														defaultValue={this.getEditDate(this.state.editData.date)}
-													></Input>
+														type="select"
+														name="bitMode"
+														id="bitMode"
+													>
+														<option key="-1"></option>
+														<option>8-Bit (Day Game)</option>
+														<option>12-Bit (Night Game)</option>
+													</Input>
 												</FormGroup>
 												<FormGroup>
-													<Label htmlFor="logIn">
-														Log In <Badge>Eastern Time</Badge>
-													</Label>
+													<Label htmlFor="gameStatus">Game Status</Label>
 													<Input
-														defaultValue={this.state.editData.logIn}
+														value={this.state.editData.gameStatus}
 														onChange={e => this.changeEditData(e)}
-														id="logIn"
-														type="time"
-														name="logIn"
-														required
-													></Input>
+														type="select"
+														name="gameStatus"
+														id="gameStatus"
+													>
+														<option key="-1"></option>
+														<option>Ready for Share</option>
+														<option>Ready for Audit</option>
+														<option>All PC's Done</option>
+														<option>Incomplete -- 70% Resolved</option>
+														<option>Incomplete -- 60% Resolved</option>
+														<option>Incomplete -- 50% Resolved</option>
+														<option>Incomplete -- less than 50% Resolved</option>
+														<option>Recorded Only</option>
+													</Input>
 												</FormGroup>
-												<FormGroup>
-													<Label htmlFor="firstPitch">
-														First Pitch <Badge>Eastern Time</Badge>
-													</Label>
-													<Input
-														defaultValue={this.state.editData.firstPitch}
-														onChange={e => this.changeEditData(e)}
-														id="firstPitch"
-														type="time"
-														name="firstPitch"
-														required
-													></Input>
-												</FormGroup>
-												<FormGroup>
-													<Label htmlFor="logOut">
-														Log Out <Badge>Eastern Time</Badge>
-													</Label>
-													<Input
-														defaultValue={this.state.editData.logOut}
-														onChange={e => this.changeEditData(e)}
-														id="logOut"
-														type="time"
-														name="logOut"
-														required
-													></Input>
-												</FormGroup>
-											</Col>
-										</Row>
-										<Row>
-											<Col>
 												<FormGroup>
 													<Label htmlFor="ipCamIssues">IPCamRelay Issues?</Label>
 													<Input
@@ -543,6 +617,56 @@ class FFxTechData extends Component {
 												</FormGroup>
 											</Col>
 											<Col>
+												<FormGroup>
+													<Label htmlFor="date">Date</Label>
+													<Input
+														id="date"
+														type="date"
+														name="date"
+														onChange={e => this.changeEditData(e)}
+														required
+														defaultValue={this.getEditDate(this.state.editData.date)}
+													></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="logIn">
+														Log In <Badge>Eastern Time</Badge>
+													</Label>
+													<Input
+														defaultValue={this.state.editData.logIn}
+														onChange={e => this.changeEditData(e)}
+														id="logIn"
+														type="time"
+														name="logIn"
+														required
+													></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="firstPitch">
+														First Pitch <Badge>Eastern Time</Badge>
+													</Label>
+													<Input
+														defaultValue={this.state.editData.firstPitch}
+														onChange={e => this.changeEditData(e)}
+														id="firstPitch"
+														type="time"
+														name="firstPitch"
+														required
+													></Input>
+												</FormGroup>
+												<FormGroup>
+													<Label htmlFor="logOut">
+														Log Out <Badge>Eastern Time</Badge>
+													</Label>
+													<Input
+														defaultValue={this.state.editData.logOut}
+														onChange={e => this.changeEditData(e)}
+														id="logOut"
+														type="time"
+														name="logOut"
+														required
+													></Input>
+												</FormGroup>
 												<Label>
 													{this.props.permission === "support" ? (
 														<h5 style={{ color: "red" }}>Support Section</h5>
@@ -554,6 +678,7 @@ class FFxTechData extends Component {
 													<Label htmlFor="supportNotes">Support Notes</Label>
 													{this.props.permission === "support" ? (
 														<Input
+															style={{ height: 100 }}
 															value={this.state.editData.supportNotes}
 															type="textarea"
 															onChange={e => this.changeEditData(e)}
@@ -607,9 +732,7 @@ class FFxTechData extends Component {
 													)}
 												</FormGroup>
 												<FormGroup>
-													<Label  htmlFor="backupNotes">
-														Backup Notes
-													</Label>
+													<Label htmlFor="backupNotes">Backup Notes</Label>
 													{this.props.permission === "support" ? (
 														<Input
 															defaultValue={this.state.editData.backupNote}
@@ -622,6 +745,7 @@ class FFxTechData extends Component {
 														<Input disabled type="text" name="backupNotes" id="backupNotes" />
 													)}
 												</FormGroup>
+
 												{/* <img src={lgLogo} alt="SMT Logo"></img> */}
 											</Col>
 										</Row>

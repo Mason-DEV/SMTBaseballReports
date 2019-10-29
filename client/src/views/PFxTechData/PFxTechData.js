@@ -5,8 +5,6 @@ import {
 	CardBody,
 	CardHeader,
 	CardFooter,
-	Container,
-	CustomInput,
 	Modal,
 	Form,
 	Col,
@@ -48,8 +46,8 @@ class PFxTechData extends Component {
 		this.hideDelete = this.hideDelete.bind(this);
 		this.submitDelete = this.submitDelete.bind(this);
 
-		//Sets the amount of staff on a single page
-		this.pageSize = 1;
+		//Sets the amount of data on a single page
+		this.pageSize = 15;
 
 		this.state = {
 			currentPage: 0,
