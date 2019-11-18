@@ -36,8 +36,10 @@ class Settings extends Component {
 	constructor(props) {
 		super(props);
 		this.toggle = this.toggle.bind(this);
-		this.onSubmit = this.onSubmit.bind(this);
 		this.onDismissError = this.onDismissError.bind(this);
+
+		this.onSubmitSupport = this.onSubmitSupport.bind(this);
+		this.changeSupport = this.changeSupport.bind(this);
 
 		this.changePFXFields = this.changePFXFields.bind(this);
 		this.generateTestPFxPDF = this.generateTestPFxPDF.bind(this);
@@ -46,23 +48,13 @@ class Settings extends Component {
 			isLoading: true,
 			error: false,
 			activeTab: 2,
+			editSupportText: "",
 			pfxDailyEmail: {
 				details: {
 					Emails: [],
 					Fields: {}
 				}
 			}
-			// pfxFields: {
-			// 	operator: false,
-			// 	corrections: false,
-			// 	date: false,
-			// 	firstPitch: false,
-			// 	hwswIssues: false,
-			// 	logIn: false,
-			// 	logOut: false,
-			// 	t1Notes: false,
-			// 	venue: false
-			// }
 		};
 	}
 
@@ -104,8 +96,38 @@ class Settings extends Component {
 		}));
 	}
 
-	onSubmit(e) {
+	changeSupport(e) {
+		if (e.target.name === "hidden") {
+			this.setState({
+				editSupport: { ...this.state.editSupportText, [e.target.name]: e.target.checked }
+			});
+		} else {
+			this.setState({
+				editSupport: { ...this.state.editSupportText, [e.target.name]: e.target.value }
+			});
+		}
+	}
+
+	onSubmitSupport(e) {
 		e.preventDefault();
+		const details = {
+			hidden:
+				this.state.editSupport.hidden === true || this.state.editSupport.hidden === false
+					? this.state.editSupport.hidden
+					: this.state.supportAnnounce.details.hidden,
+			AnnouncementText: this.state.editSupport.AnnouncementText
+				? this.state.editSupport.AnnouncementText
+				: this.state.supportAnnounce.details.AnnouncementText
+		};
+		const edit = { details };
+		axios
+			.put("/api/settings/updateAnnouncement/" + this.state.supportAnnounce._id, edit)
+			.then(editing => {
+				// this.setState({ isEditing: false, needToReload: true });
+			})
+			.catch(error => {
+				logger("error", "Support Announce Submit === " + error);
+			});
 	}
 
 	toggle(tab) {
@@ -141,7 +163,6 @@ class Settings extends Component {
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
-			console.log(this.state);
 			return (
 				<React.Fragment>
 					<Alert color="danger" isOpen={this.state.error} toggle={this.onDismissError}>
@@ -235,14 +256,14 @@ class Settings extends Component {
 											</Form>
 										</TabPane>
 										<TabPane tabId={1}>
-											<Form id="supportAnnounceForm" onSubmit={e => this.onSubmit(e)}>
+											<Form id="supportAnnounceForm" onSubmit={e => this.onSubmitSupport(e)}>
 												<FormGroup>
 													<Label htmlFor="supportAnnounce">Support Announcement</Label>
 													<Input
-														// onChange={e => this.change(e)}
+														onChange={e => this.changeSupport(e)}
 														id="supportAnnounce"
 														type="textarea"
-														name="supportAnnounce"
+														name="AnnouncementText"
 														style={{ height: 100 }}
 														defaultValue={
 															this.state.supportAnnounce ? this.state.supportAnnounce.details.AnnouncementText : ""
@@ -252,11 +273,12 @@ class Settings extends Component {
 														type="checkbox"
 														id="supportAnnoucmentVisible"
 														label="Hide Support Announcement Field"
-														name="supportAnnoucmentVisible"
-														// onClick={e => this.change(e)}
+														name="hidden"
+														defaultChecked={this.state.supportAnnounce.details.hidden}
+														onClick={e => this.changeSupport(e)}
 													/>
 												</FormGroup>
-												<Button disabled type="submit" size="sm" color="success">
+												<Button type="submit" size="sm" color="success">
 													<i className="fa fa-check"></i> Save
 												</Button>{" "}
 												<Button disabled type="reset" size="sm" color="danger">

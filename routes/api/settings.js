@@ -43,40 +43,40 @@ router.route("/opAnnouncement").get(function(req, res) {
 // @route   PUT api/settings/update/:id
 // @desc    Update A Settings
 // @access  Public
-// router.route("/updateAnnouncement/:id").put(function(req, res) {
-//   let _id = req.params.id;
-//   let uid = uuid();
-//   Settings.findById(_id, function(err, settings) {
-//     if (!settings) {
-//       logger.info("Could not find settings with id " + _id);
-//       ``;
-//       res.status(404).send("Can not find this settings in the DB");
-//     } else if (err) {
-//       logger.warn("Could not find an settings" + err.stack);
-//       res.status(404).send("Can not find this settings in the DB");
-//     } else {
-//         try {
-//           logger.warn(uid + " Modifying settings from === " + settings);
-//           settings.details.hidden = req.body.details.hidden;
-//           settings.details.AnnouncementText = req.body.details.AnnouncementText;
-//           logger.warn(uid + " Modifying settings to === " + settings);
-//         } catch (error) {
-//           logger.error(uid + " Error on update " + error);
-//           res.status(404).send(error);
-//         }
-//       settings
-//         .save()
-//         .then(settings => {
-//           logger.warn(uid + " Modifying Complete");
-//           res.sendStatus(200);
-//         })
-//         .catch(err => {
-//           logger.error(uid + " Error on update " + err);
-//           res.sendStatus(404);
-//         });
-//     }
-//   });
-// });
+router.route("/updateAnnouncement/:id").put(function(req, res) {
+  let _id = req.params.id;
+  let uid = uuid();
+  Settings.findById(_id, function(err, settings) {
+    if (!settings) {
+      logger.info("Could not find settings with id " + _id);
+      ``;
+      res.status(404).send("Can not find this settings in the DB");
+    } else if (err) {
+      logger.warn("Could not find an settings" + err.stack);
+      res.status(404).send("Can not find this settings in the DB");
+    } else {
+        try {
+          logger.warn(uid + " Modifying settings from === " + settings);
+          settings.details.hidden = req.body.details.hidden;
+          settings.details.AnnouncementText = req.body.details.AnnouncementText;
+          logger.warn(uid + " Modifying settings to === " + settings);
+        } catch (error) {
+          logger.error(uid + " Error on update " + error);
+          res.status(404).send(error);
+        }
+      settings
+        .save()
+        .then(settings => {
+          logger.warn(uid + " Modifying Complete");
+          res.sendStatus(200);
+        })
+        .catch(err => {
+          logger.error(uid + " Error on update " + err);
+          res.sendStatus(404);
+        });
+    }
+  });
+});
 
 
 
