@@ -123,7 +123,7 @@ class CardsSupport extends Component {
             ])
                 .then(([auditResponse, supportResponse]) => {
                     const data = auditResponse.data;
-                    const supportAnnounce = supportResponse.data ? supportResponse.data.details.AnnouncementText : "";
+                    const supportAnnounce = supportResponse.data;
                     this.setState({ data, supportAnnounce});
                 })
                 .then(isLoading =>
@@ -147,31 +147,6 @@ class CardsSupport extends Component {
                     console.log(error);
 					logger("error", error);
 				});
-
-
-			// axios
-			// 	.get("/api/FFxAudit/")
-			// 	.then(res => {
-			// 		this.setState({ data: res.data });
-			// 	})
-			// 	.then(isLoading => {
-			// 		this.setState({ isLoading: false });
-			// 	})
-			// 	.then(resDash => {
-			// 		this.setState({
-			// 			dashData: {
-			// 				...this.state.dashData,
-			// 				playsResolved: this.calcPlaysResolved(),
-			// 				gdSync: this.calcGDSync(),
-			// 				missedPitches: this.calcMissedPitches(),
-			// 				missedBIP: this.calcMissedBIP(),
-			// 				addedPitches: this.calcAddedPitches()
-			// 			}
-			// 		});
-			// 	})
-			// 	.catch(function(error) {
-			// 		logger("error", error);
-			// 	});
         }
     }
 
@@ -279,7 +254,7 @@ class CardsSupport extends Component {
                     <React.Fragment>
                     <Row>
                         <Col>
-                            <Card className="bg-secondary" style={{display: "show"}}>
+                            <Card className="bg-secondary" style={{display: this.state.supportAnnounce.details.hidden ? "none": "show" }}>
                                 <CardHeader>
                                     <i className="fa fa-bullhorn"></i>
                                     <strong>Announcements</strong>
@@ -296,7 +271,7 @@ class CardsSupport extends Component {
                                     </div>
                                 </CardHeader>
                                 <Collapse isOpen={this.state.collapse} id="collapseExample">
-                                    <CardBody>{this.state.supportAnnounce}</CardBody>
+                                    <CardBody>{this.state.supportAnnounce.details.AnnouncementText}</CardBody>
                                 </Collapse>
                             </Card>
                         </Col>

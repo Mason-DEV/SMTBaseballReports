@@ -8,10 +8,17 @@ const settingsSchema = new Schema(
 			type: String,
 			required: true
         },
-		
 		details: {
-            type: Object,
-            required: true
+            // type: Object,
+            // required: true,
+            AnnouncementText:{
+                type: String,
+                required:false
+            },
+            hidden:{
+                type: Boolean,
+                required:false
+            },
         }
 	},
 	{

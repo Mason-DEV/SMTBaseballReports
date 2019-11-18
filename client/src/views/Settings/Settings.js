@@ -46,45 +46,62 @@ class Settings extends Component {
 			isLoading: true,
 			error: false,
 			activeTab: 2,
-			pfxEmails: [],
-			pfxFields: {
-				operator: false,
-				corrections: false,
-				date: false,
-				firstPitch: false,
-				hwswIssues: false,
-				logIn: false,
-				logOut: false,
-				t1Notes: false,
-				venue: false
+			pfxDailyEmail: {
+				details: {
+					Emails: [],
+					Fields: {}
+				}
 			}
+			// pfxFields: {
+			// 	operator: false,
+			// 	corrections: false,
+			// 	date: false,
+			// 	firstPitch: false,
+			// 	hwswIssues: false,
+			// 	logIn: false,
+			// 	logOut: false,
+			// 	t1Notes: false,
+			// 	venue: false
+			// }
 		};
 	}
 
 	changePFXFields(e) {
-		this.setState({
-			pfxFields: { ...this.state.pfxFields, [e.target.name]: e.target.checked }
-		});
-		// this.setState({
-		// 	editData: {
-		// 		...this.state.editData,
-		// 		roles: {
-		// 			...this.state.editData.roles,
-		// 			[e.target.name]: e.target.checked
-		// 		}
-		// 	}
-		// });
+		e.persist();
+		this.setState(prevState => ({
+			...prevState,
+			pfxDailyEmail: {
+				...prevState.pfxDailyEmail,
+				details: {
+					...prevState.pfxDailyEmail.details,
+					Fields: {
+						...prevState.pfxDailyEmail.details.Fields,
+						[e.target.name]: e.target.checked
+					}
+				}
+			}
+		}));
 	}
 
-	generateTestPFxPDF(e){
+	generateTestPFxPDF(e) {
 		console.log("need to gen pfx PDF with fields", this.state.pfxFields);
 	}
 
 	onDismissError() {
 		this.setState({ error: false });
 	}
+
 	handlePFXEmailChange(tags) {
-		this.setState({ pfxEmails : tags });
+		this.setState(prevState => ({
+			...prevState,
+			pfxDailyEmail: {
+				...prevState.pfxDailyEmail,
+				details: {
+					...prevState.pfxDailyEmail.details,
+					Emails: tags
+				}
+			}
+		}));
 	}
 
 	onSubmit(e) {
@@ -100,11 +117,18 @@ class Settings extends Component {
 	}
 
 	componentDidMount() {
-		Promise.all([axios.get("/api/settings/opAnnouncement"), axios.get("/api/settings/supportAnnouncement")])
-			.then(([opResponse, supportResponse]) => {
+		Promise.all([
+			axios.get("/api/settings/opAnnouncement"),
+			axios.get("/api/settings/supportAnnouncement"),
+			axios.get("/api/settings/pfxDailyEmail")
+		])
+			.then(([opResponse, supportResponse, pfxDailyResponse]) => {
 				const opAnnounce = opResponse.data;
 				const supportAnnounce = supportResponse.data;
-				this.setState({ opAnnounce: opAnnounce, supportAnnounce: supportAnnounce });
+				const pfxDaily = pfxDailyResponse.data;
+
+				console.log(opAnnounce);
+				this.setState({ opAnnounce: opAnnounce, supportAnnounce: supportAnnounce, pfxDailyEmail: pfxDaily });
 			})
 			.then(isLoading =>
 				this.setState({
@@ -127,7 +151,7 @@ class Settings extends Component {
 						<CardHeader>
 							<i className="fa fa-cogs"></i>
 							<strong>Configuration Page</strong>
-							<div className="card-header-actions">{/* <Badge>NEW</Badge> */}</div>
+							<div className="card-header-actions"></div>
 						</CardHeader>
 						<CardBody>
 							<Row>
@@ -168,6 +192,15 @@ class Settings extends Component {
 											active={this.state.activeTab === 3}
 										>
 											FFx Daily Summary Emails
+										</ListGroupItem>
+										<ListGroupItem
+											className="configListItem"
+											style={{ cursor: "pointer" }}
+											onClick={() => this.toggle(4)}
+											action
+											active={this.state.activeTab === 4}
+										>
+											Audit Report Emails
 										</ListGroupItem>
 									</ListGroup>
 								</Col>
@@ -236,7 +269,8 @@ class Settings extends Component {
 												<FormGroup>
 													<Label htmlFor="pfxEmail">Email Receipents</Label>
 													<TagsInput
-														value={this.state.pfxEmails}
+														style={{ cursor: "text" }}
+														value={this.state.pfxDailyEmail.details.Emails}
 														inputProps={{ placeholder: "Add An Email" }}
 														validationRegex={EMAIL_VALIDATION_REGEX}
 														onValidationReject={e => this.setState({ error: true })}
@@ -260,6 +294,7 @@ class Settings extends Component {
 																	id="venueCustomCheckbox"
 																	label="Venue"
 																	name="venue"
+																	defaultChecked={this.state.pfxDailyEmail.details.Fields.venue}
 																	onClick={e => this.changePFXFields(e)}
 																/>
 																<CustomInput
@@ -267,6 +302,7 @@ class Settings extends Component {
 																	id="pfxoperatorCustomCheckbox"
 																	label="Operator"
 																	name="operator"
+																	defaultChecked={this.state.pfxDailyEmail.details.Fields.operator}
 																	onClick={e => this.changePFXFields(e)}
 																/>
 																<CustomInput
@@ -274,6 +310,7 @@ class Settings extends Component {
 																	id="dateCustomCheckbox"
 																	label="Date"
 																	name="date"
+																	defaultChecked={this.state.pfxDailyEmail.details.Fields.date}
 																	onClick={e => this.changePFXFields(e)}
 																/>
 																<CustomInput
@@ -281,6 +318,7 @@ class Settings extends Component {
 																	id="logInCustomCheckbox"
 																	label="Log In"
 																	name="logIn"
+																	defaultChecked={this.state.pfxDailyEmail.details.Fields.logIn}
 																	onClick={e => this.changePFXFields(e)}
 																/>
 																<CustomInput
@@ -288,6 +326,7 @@ class Settings extends Component {
 																	id="logOutCustomCheckbox"
 																	label="Log Out"
 																	name="logOut"
+																	defaultChecked={this.state.pfxDailyEmail.details.Fields.logOut}
 																	onClick={e => this.changePFXFields(e)}
 																/>
 															</Col>
@@ -297,6 +336,7 @@ class Settings extends Component {
 																	id="firstPitchCustomCheckbox"
 																	label="First Pitch"
 																	name="firstPitch"
+																	defaultChecked={this.state.pfxDailyEmail.details.Fields.firstPitch}
 																	onClick={e => this.changePFXFields(e)}
 																/>
 																<CustomInput
@@ -304,6 +344,7 @@ class Settings extends Component {
 																	id="hwswIssuesCustomCheckbox"
 																	label="Hardware/Software Issues"
 																	name="hwswIssues"
+																	defaultChecked={this.state.pfxDailyEmail.details.Fields.hwswIssues}
 																	onClick={e => this.changePFXFields(e)}
 																/>
 																<CustomInput
@@ -311,6 +352,7 @@ class Settings extends Component {
 																	id="t1NotesCustomCheckbox"
 																	label="T1 Notes"
 																	name="t1Notes"
+																	defaultChecked={this.state.pfxDailyEmail.details.Fields.t1Notes}
 																	onClick={e => this.changePFXFields(e)}
 																/>
 																<CustomInput
@@ -318,6 +360,7 @@ class Settings extends Component {
 																	id="correctionsCustomCheckbox"
 																	label="Corrections"
 																	name="corrections"
+																	defaultChecked={this.state.pfxDailyEmail.details.Fields.corrections}
 																	onClick={e => this.changePFXFields(e)}
 																/>
 															</Col>
@@ -330,21 +373,13 @@ class Settings extends Component {
 												<Button disabled type="reset" size="sm" color="danger">
 													<i className="fa fa-ban"></i> Clear
 												</Button>{" "}
-												<Button onClick={e=> this.generateTestPFxPDF(e)} size="sm" color="warning">
+												<Button onClick={e => this.generateTestPFxPDF(e)} size="sm" color="warning">
 													<i className="fa fa-file-pdf-o"></i> Preview PDF
 												</Button>
 											</Form>
 										</TabPane>
-										<TabPane tabId={3}>
-											<p>
-												Irure enim occaecat labore sit qui aliquip reprehenderit amet velit. Deserunt ullamco ex elit
-												nostrud ut dolore nisi officia magna sit occaecat laboris sunt dolor. Nisi eu minim cillum
-												occaecat aute est cupidatat aliqua labore aute occaecat ea aliquip sunt amet. Aute mollit dolor
-												ut exercitation irure commodo non amet consectetur quis amet culpa. Quis ullamco nisi amet qui
-												aute irure eu. Magna labore dolor quis ex labore id nostrud deserunt dolor eiusmod eu pariatur
-												culpa mollit in irure.
-											</p>
-										</TabPane>
+										<TabPane tabId={3}></TabPane>
+										<TabPane tabId={4}></TabPane>
 									</TabContent>
 								</Col>
 							</Row>
