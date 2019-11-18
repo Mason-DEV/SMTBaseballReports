@@ -116,15 +116,22 @@ class CardsSupport extends Component {
 		if (this.props.permission == "op") {
 			this.setState({ isLoading: false });
 		} else {
-			axios
-				.get("/api/FFxAudit/")
-				.then(res => {
-					this.setState({ data: res.data });
-				})
-				.then(isLoading => {
-					this.setState({ isLoading: false });
-				})
-				.then(resDash => {
+
+              Promise.all([
+                axios.get("/api/FFxAudit/"),
+                axios.get("/api/settings/supportAnnouncement")
+            ])
+                .then(([auditResponse, supportResponse]) => {
+                    const data = auditResponse.data;
+                    const supportAnnounce = supportResponse.data ? supportResponse.data.details.AnnouncementText : "";
+                    this.setState({ data, supportAnnounce});
+                })
+                .then(isLoading =>
+                    this.setState({
+                        isLoading: false
+                    })
+                )
+                .then(resDash => {
 					this.setState({
 						dashData: {
 							...this.state.dashData,
@@ -134,11 +141,37 @@ class CardsSupport extends Component {
 							missedBIP: this.calcMissedBIP(),
 							addedPitches: this.calcAddedPitches()
 						}
-					});
-				})
-				.catch(function(error) {
+					})
+                })
+                .catch(function(error) {
+                    console.log(error);
 					logger("error", error);
 				});
+
+
+			// axios
+			// 	.get("/api/FFxAudit/")
+			// 	.then(res => {
+			// 		this.setState({ data: res.data });
+			// 	})
+			// 	.then(isLoading => {
+			// 		this.setState({ isLoading: false });
+			// 	})
+			// 	.then(resDash => {
+			// 		this.setState({
+			// 			dashData: {
+			// 				...this.state.dashData,
+			// 				playsResolved: this.calcPlaysResolved(),
+			// 				gdSync: this.calcGDSync(),
+			// 				missedPitches: this.calcMissedPitches(),
+			// 				missedBIP: this.calcMissedBIP(),
+			// 				addedPitches: this.calcAddedPitches()
+			// 			}
+			// 		});
+			// 	})
+			// 	.catch(function(error) {
+			// 		logger("error", error);
+			// 	});
         }
     }
 
@@ -241,11 +274,12 @@ class CardsSupport extends Component {
                 )
             }
             else{
+                console.log(this.state);
                 return(
                     <React.Fragment>
                     <Row>
                         <Col>
-                            <Card className="bg-secondary">
+                            <Card className="bg-secondary" style={{display: "show"}}>
                                 <CardHeader>
                                     <i className="fa fa-bullhorn"></i>
                                     <strong>Announcements</strong>
@@ -262,7 +296,7 @@ class CardsSupport extends Component {
                                     </div>
                                 </CardHeader>
                                 <Collapse isOpen={this.state.collapse} id="collapseExample">
-                                <CardBody>To Set Announcement. Navigate to Settings > Configure > Support Announcement</CardBody>
+                                    <CardBody>{this.state.supportAnnounce}</CardBody>
                                 </Collapse>
                             </Card>
                         </Col>

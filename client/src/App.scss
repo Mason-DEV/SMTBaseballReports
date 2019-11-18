@@ -36,6 +36,11 @@
   background: #62aa58;
 }
 
+.configListItem.active {
+  background: #62aa58;
+  border-color: #62aa58; 
+}
+
 
 // .auditorCustomCheckbox .custom-control-input:checked~.custom-control-label::before{
 //     // color: black;
