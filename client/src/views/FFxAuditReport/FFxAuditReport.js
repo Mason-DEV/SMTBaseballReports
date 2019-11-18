@@ -131,7 +131,6 @@ class FFxAuditReport extends Component {
 			gdPitches: this.state.fieldData.gdPitches,
 			vidGaps: this.state.fieldData.vidGaps,
 		};
-		console.log(report);
 
 		axios
 			.post("/api/FFxAudit/create", report)
@@ -167,7 +166,7 @@ class FFxAuditReport extends Component {
 	}
 
 	render() {
-		console.log(this.state);
+
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {

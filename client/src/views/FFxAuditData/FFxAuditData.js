@@ -81,7 +81,6 @@ class FFxAuditData extends Component {
 		}
 	}
 
-
 	//Click handler for pagniation
 	handleClick(e, index) {
 		e.preventDefault();
@@ -267,7 +266,6 @@ class FFxAuditData extends Component {
 					});
 				})
 				.catch(function(error) {
-					console.log(error);
 					logger("error", "error on auditData component did update " + error.toString());
 				});
 			this.setState({ needToReload: false });
@@ -763,7 +761,6 @@ class FFxAuditData extends Component {
 											<Col>
 												<FormGroup>
 													<Label htmlFor="name">
-														{console.log(this.state)}
 														Are you sure you want to delete {this.state.deleteData.gamestring}'s Audit report?
 													</Label>
 												</FormGroup>

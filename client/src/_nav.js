@@ -74,11 +74,6 @@ export default {
 			name: "Venues",
 			url: "/venue",
 			icon: "icon-location-pin",
-		},
-		{
-			name: "Daily Summaries",
-			url: "/404",
-			icon: "icon-list"
-		}
+		}		
 	]
 };
