@@ -51,7 +51,7 @@ class Settings extends Component {
 			isLoading: true,
 			error: false,
 			success: false,
-			activeTab: 3,
+			activeTab: 0,
 			editSupportText: "",
 			editOP: "",
 			pfxDailyEmail: {
@@ -663,10 +663,10 @@ class Settings extends Component {
 														</Row>
 													</Container>
 												</FormGroup>
-												<Button type="submit" size="sm" color="success">
+												<Button disabled type="submit" size="sm" color="success">
 													<i className="fa fa-check"></i> Save
 												</Button>{" "}
-												<Button onClick={e => this.generateTestPFxPDF(e)} size="sm" color="warning">
+												<Button disabled onClick={e => this.generateTestPFxPDF(e)} size="sm" color="warning">
 													<i className="fa fa-file-pdf-o"></i> Preview PDF
 												</Button>
 											</Form>
