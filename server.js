@@ -17,6 +17,9 @@ const Settings = require("./routes/api/settings");
 const PFxTech = require("./routes/api/pfxTech");
 const FFxTech = require("./routes/api/ffxTech");
 const FFxAudit = require("./routes/api/ffxAudit");
+
+//Docment PDF Route
+const PDFCreate = require("./routes/documents/pdf");
 //Models
 const UserModel = require("./models/User");
 
@@ -104,6 +107,10 @@ app.use("/api/settings", Settings);
 app.use("/api/pfxTech", PFxTech);
 app.use("/api/ffxTech", FFxTech);
 app.use("/api/ffxAudit", FFxAudit);
+
+//PDF Routes
+app.use("/api/pdf", PDFCreate);
+
 
 
 //Server static assests if in prod

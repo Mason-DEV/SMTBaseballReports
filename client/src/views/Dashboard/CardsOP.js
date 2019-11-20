@@ -1,13 +1,14 @@
 //Layout for the OPS
 import React, { Component } from "react";
-import PropTypes from "prop-types";import {
+import PropTypes from "prop-types";
+import {
 	Button,
 	ButtonDropdown,
 	ButtonGroup,
-    Card,
-    CardText,
-    CardTitle,
-    CardFooter,
+	Card,
+	CardText,
+	CardTitle,
+	CardFooter,
 	Collapse,
 	CardBody,
 	CardHeader,
@@ -18,6 +19,8 @@ import PropTypes from "prop-types";import {
 	Row,
 	Table
 } from "reactstrap";
+import axios from 'axios';
+import logger from "../../components/helpers/logger";
 
 //Assests
 import spinner from "../../assests/images/smtSpinner.gif";
@@ -30,8 +33,7 @@ const propTypes = {
 
 class CardsOP extends Component {
 	constructor(props) {
-        super(props);
-        
+		super(props);
 
 		//Binding states
 		this.toggleAnnouc = this.toggleAnnouc.bind(this);
@@ -39,47 +41,59 @@ class CardsOP extends Component {
 		//States
 		this.state = {
 			collapse: true,
-			isLoading: false
+			isLoading: true
 		};
 	}
 
 	toggleAnnouc() {
 		this.setState({ collapse: !this.state.collapse });
-    }
-    
-    ffxAuditClick(){
-        this.props.history.push("/ffxauditreport");
-    }
-    ffxTechClick(){
-        this.props.history.push("/ffxtechreport");
-    }
-    pfxTechClick(){
-        this.props.history.push("/pfxtechreport");
-    }
+	}
+
+	ffxAuditClick() {
+		this.props.history.push("/ffxauditreport");
+	}
+	ffxTechClick() {
+		this.props.history.push("/ffxtechreport");
+	}
+	pfxTechClick() {
+		this.props.history.push("/pfxtechreport");
+	}
+
+	// Fetch audit data on first mount
+	componentDidMount() {
+		Promise.all([axios.get("/api/settings/opAnnouncement")])
+			.then(([opResponse]) => {
+				const opAnnounce = opResponse.data;
+				console.log(opAnnounce);
+				this.setState({ opAnnounce });
+			})
+			.then(isLoading =>
+				this.setState({
+					isLoading: false
+				})
+			)
+			.catch(function(error) {
+				console.log(error);
+				logger("error", error);
+			});
+	}
 
 	render() {
 		// eslint-disable-next-line
-        // const { children, ...attributes } = this.props;
+		// const { children, ...attributes } = this.props;
 
 		if (this.state.isLoading) {
-			return (
-				<img
-					src={spinner}
-					height="150"
-					width="150"
-					alt="spinner"
-					align="center"
-					style={{ height: "100%" }}
-				/>);
+			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
+			
 			return (
 				<React.Fragment>
 					<Row>
 						<Col>
-							<Card className="text-dark" >
+							<Card className="text-dark" style={{display: this.state.opAnnounce.details.hidden ? "none": "show" }}>
 								<CardHeader>
 									<i className="fa fa-bullhorn"></i>
-									<strong>Things To Know</strong>
+									<strong>Announcement</strong>
 									<div className="card-header-actions">
 										{/*eslint-disable-next-line*/}
 										<a
@@ -93,7 +107,7 @@ class CardsOP extends Component {
 									</div>
 								</CardHeader>
 								<Collapse isOpen={this.state.collapse} id="collapseExample">
-									<CardBody>To Set Announcement. Navigate to Settings > Configure > Op Announcement</CardBody>
+									<CardBody>{this.state.opAnnounce.details.AnnouncementText}</CardBody>
 								</Collapse>
 							</Card>
 						</Col>
@@ -105,7 +119,9 @@ class CardsOP extends Component {
 								<CardBody>
 									<CardTitle>Report Page for Pitch F/x </CardTitle>
 									<CardText></CardText>
-									<Button color="success" onClick={e => this.pfxTechClick()}>Go To Report</Button>
+									<Button color="success" onClick={e => this.pfxTechClick()}>
+										Go To Report
+									</Button>
 								</CardBody>
 							</Card>
 						</Col>
@@ -115,7 +131,9 @@ class CardsOP extends Component {
 								<CardBody>
 									<CardTitle>Report Page for Field F/x </CardTitle>
 									<CardText></CardText>
-									<Button color="success" onClick={e => this.ffxTechClick()}>Go To Report</Button>
+									<Button color="success" onClick={e => this.ffxTechClick()}>
+										Go To Report
+									</Button>
 								</CardBody>
 							</Card>
 						</Col>
@@ -125,7 +143,9 @@ class CardsOP extends Component {
 								<CardBody>
 									<CardTitle>Audit Report Page for Field F/x </CardTitle>
 									<CardText></CardText>
-									<Button color="success" onClick={e => this.ffxAuditClick()}>Go To Report</Button>
+									<Button color="success" onClick={e => this.ffxAuditClick()}>
+										Go To Report
+									</Button>
 								</CardBody>
 							</Card>
 						</Col>

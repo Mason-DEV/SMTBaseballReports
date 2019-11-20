@@ -4,6 +4,7 @@
     overflow: hidden;
     padding-left: 5px;
     padding-top: 5px;
+    border-radius: 5px;
   }
   
   .react-tagsinput--focused {
@@ -12,7 +13,7 @@
   
   .react-tagsinput-tag {
     background-color: #62aa58;
-    border-radius: 2px;
+    border-radius: 5px;
     border: 1px solid #62aa58;
     color: white;
     display: inline-block;

@@ -113,7 +113,7 @@ class CardsSupport extends Component {
     // Fetch audit data on first mount
 	componentDidMount() {
 	
-		if (this.props.permission == "op") {
+		if (this.props.permission === "op") {
 			this.setState({ isLoading: false });
 		} else {
 
