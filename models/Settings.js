@@ -19,6 +19,14 @@ const settingsSchema = new Schema(
                 type: Boolean,
                 required:false
             },
+            Emails:{
+                type: Array,
+                required:false
+            },
+            Fields:{
+                type: Object,
+                required:false
+            },
         }
 	},
 	{
