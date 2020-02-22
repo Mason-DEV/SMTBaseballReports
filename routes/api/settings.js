@@ -112,6 +112,7 @@ router.route("/pfxDailyEmail").get(function(req, res) {
     });
   });
 
+
 // @route   PUT api/settings/updatePFxDaily/:id
 // @desc    Update pfxDailyEmail Settings details
 // @access  Public
@@ -129,6 +130,62 @@ router.route("/updatePFxDaily/:id").put(function(req, res) {
     } else {
         try {
           logger.warn(uid + " Modifying settings from === " + settings);
+          settings.details.runTask = req.body.details.runTask;
+          settings.details.Emails = req.body.details.Emails;
+          settings.details.Fields = req.body.details.Fields;
+          logger.warn(uid + " Modifying settings to === " + settings);
+        } catch (error) {
+          logger.error(uid + " Error on update " + error);
+          res.status(404).send(error);
+        }
+      settings
+        .save()
+        .then(settings => {
+          logger.warn(uid + " Modifying Complete");
+          res.sendStatus(200);
+        })
+        .catch(err => {
+          logger.error(uid + " Error on update " + err);
+          res.sendStatus(404);
+        });
+    }
+  });
+});
+
+// @route   GET api/settings/pfxDailyEmail
+// @desc    Gets pfxDailyEmail Settings details
+// @access  Public
+router.route("/ffxDailyEmail").get(function(req, res) {
+  let id = uuid();
+  logger.info(id + " === Requesting Settings");
+  Settings.findOne({'configType': "FFxDailyEmail"}).sort({}).exec(function(err, settings) { 
+    if (err) {
+      logger.error("Error on / " + err.stack);
+    } else {
+      res.json(settings);
+      logger.info(id + " === Settings Returned");
+    }
+  });
+});
+
+// @route   PUT api/settings/updateFFxDaily/:id
+// @desc    Update ffxDailyEmail Settings details
+// @access  Public
+router.route("/updateFFxDaily/:id").put(function(req, res) {
+  let _id = req.params.id;
+  let uid = uuid();
+  Settings.findById(_id, function(err, settings) {
+    if (!settings) {
+      logger.info("Could not find settings with id " + _id);
+      ``;
+      res.status(404).send("Can not find this settings in the DB");
+    } else if (err) {
+      logger.warn("Could not find an settings" + err.stack);
+      res.status(404).send("Can not find this settings in the DB");
+    } else {
+        try {
+          logger.warn(uid + " Modifying settings from === " + settings);
+          settings.details.runTask = req.body.details.runTask;
           settings.details.Emails = req.body.details.Emails;
           settings.details.Fields = req.body.details.Fields;
           logger.warn(uid + " Modifying settings to === " + settings);

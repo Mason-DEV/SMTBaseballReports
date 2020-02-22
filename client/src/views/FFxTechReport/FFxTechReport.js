@@ -220,13 +220,12 @@ class FFxTechReport extends Component {
 												<Label htmlFor="gameStatus">Game Status</Label>
 												<Input onChange={e => this.change(e)} type="select" name="gameStatus" id="gameStatus" required>
 													<option key="-1"></option>
-													<option>Ready for Share</option>
-													<option>Ready for Audit</option>
-													<option>All PC's Done</option>
-													<option>Incomplete -- 70% Resolved</option>
-													<option>Incomplete -- 60% Resolved</option>
-													<option>Incomplete -- 50% Resolved</option>
-													<option>Incomplete -- less than 50% Resolved</option>
+													<option>Fully Resolved</option>
+													<option>90% Resolved</option>
+													<option>80% Resolved</option>
+													<option>70% Resolved</option>
+													<option>60% Resolved</option>
+													<option>50% Resolved</option>
 													<option>Recorded Only</option>
 												</Input>
 											</FormGroup>

@@ -7,30 +7,35 @@ const settingsSchema = new Schema(
 		configType: {
 			type: String,
 			required: true
-        },
+		},
+
 		details: {
-            // type: Object,
-            // required: true,
-            AnnouncementText:{
-                type: String,
-                required:false
-            },
-            hidden:{
-                type: Boolean,
-                required:false
-            },
-            Emails:{
-                type: Array,
-                required:false
-            },
-            Fields:{
-                type: Object,
-                required:false
-            },
-        }
+			// type: Object,
+			// required: true,
+			AnnouncementText: {
+				type: String,
+				required: false
+			},
+			hidden: {
+				type: Boolean,
+				required: false
+			},
+			Emails: {
+				type: Array,
+				required: false
+			},
+			Fields: {
+				type: Object,
+				required: false
+			},
+			runTask: {
+				type: Boolean,
+				required: false
+			}
+		}
 	},
 	{
-        strict: false,
+		strict: false,
 		collection: "settings"
 	}
 );

@@ -11,7 +11,13 @@ class AuthComponent extends Component {
 		super(props);
 		this.state = {
 			user: undefined,
-			permission: undefined
+			pfxTechPermission: undefined,
+			ffxTechPermission: undefined,
+			ffxAuditPermission: undefined,
+			pfxTechDataPermission: undefined,
+			ffxTechDataPermission: undefined,
+			ffxAuditDataPermission: undefined,
+			extrasPermission: undefined
 		};
 	}
 
@@ -29,7 +35,16 @@ class AuthComponent extends Component {
 		//Check to make sure this JWT we have is valid
 		axios.get('/getUser', { headers: { Authorization: `Bearer ${jwt}`} })
 			.then(res =>{
-				this.setState({	user: res.data.id, permission: res.data.permission});
+				this.setState({	user: res.data.id, 
+					pfxTechPermission: res.data.pfxTechPermission,
+					ffxTechPermission: res.data.ffxTechPermission,
+					ffxAuditPermission: res.data.ffxAuditPermission,
+					pfxTechDataPermission: res.data.pfxTechDataPermission,
+					ffxTechDataPermission: res.data.ffxTechDataPermission,
+					ffxAuditDataPermission: res.data.ffxAuditDataPermission,
+					extrasPermission: res.data.extrasPermission
+				
+				});
 			})
 			.catch(err => {
 				setKickBack("No Token");

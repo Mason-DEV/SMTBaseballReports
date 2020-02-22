@@ -112,30 +112,30 @@ class FFxTechData extends Component {
 						</thead>
 						<tbody>
 							{this.state.todayGameData
-							.slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
-							.map((data, i) => {
-								return (
-									<tr key={i}>
-										<td style={{ maxWidth: "300px" }}>
-											<Button onClick={e => this.showEdit(data._id)} color="warning" size="sm">
-												Edit
-											</Button>{" "}
-											<Button onClick={e => this.showDelete(data._id, data.gameID)} color="danger" size="sm">
-												Delete
-											</Button>
-										</td>
-										<td style={{ maxWidth: "300px", minWidth: "100px" }}>{data.date.substr(0, 10)}</td>
-										<td>{data.gameID}</td>
-										<td>{data.gameStatus}</td>
-										<td>{data.venue}</td>
-										<td>{data.operator}</td>
-										<td style={{ maxWidth: "300px", minWidth: "150px", wordWrap: "break-word" }}>
-											{data.supportNotes}
-										</td>
-										<td>{data.backupTask}</td>
-									</tr>
-								);
-							})}
+								.slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
+								.map((data, i) => {
+									return (
+										<tr key={i}>
+											<td style={{ maxWidth: "300px" }}>
+												<Button onClick={e => this.showEdit(data._id)} color="warning" size="sm">
+													Edit
+												</Button>{" "}
+												<Button onClick={e => this.showDelete(data._id, data.gameID)} color="danger" size="sm">
+													Delete
+												</Button>
+											</td>
+											<td style={{ maxWidth: "300px", minWidth: "100px" }}>{data.date.substr(0, 10)}</td>
+											<td>{data.gameID}</td>
+											<td>{data.gameStatus}</td>
+											<td>{data.venue}</td>
+											<td>{data.operator}</td>
+											<td style={{ maxWidth: "300px", minWidth: "150px", wordWrap: "break-word" }}>
+												{data.supportNotes}
+											</td>
+											<td>{data.backupTask}</td>
+										</tr>
+									);
+								})}
 						</tbody>
 					</Table>
 				</TabPane>
@@ -156,30 +156,30 @@ class FFxTechData extends Component {
 							</thead>
 							<tbody>
 								{this.state.allGameData
-								.slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
-								.map((data, i) => {
-									return (
-										<tr key={i}>
-											<td style={{ maxWidth: "300px" }}>
-												<Button onClick={e => this.showEdit(data._id)} color="warning" size="sm">
-													Edit
-												</Button>{" "}
-												<Button onClick={e => this.showDelete(data._id)} color="danger" size="sm">
-													Delete
-												</Button>
-											</td>
-											<td style={{ maxWidth: "300px", minWidth: "100px" }}>{data.date.substr(0, 10)}</td>
-											<td>{data.gameID}</td>
-											<td>{data.gameStatus}</td>
-											<td>{data.venue}</td>
-											<td>{data.operator}</td>
-											<td style={{ maxWidth: "300px", minWidth: "150px", wordWrap: "break-word" }}>
-												{data.supportNotes}
-											</td>
-											<td>{data.backupTask}</td>
-										</tr>
-									);
-								})}
+									.slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
+									.map((data, i) => {
+										return (
+											<tr key={i}>
+												<td style={{ maxWidth: "300px" }}>
+													<Button onClick={e => this.showEdit(data._id)} color="warning" size="sm">
+														Edit
+													</Button>{" "}
+													<Button onClick={e => this.showDelete(data._id)} color="danger" size="sm">
+														Delete
+													</Button>
+												</td>
+												<td style={{ maxWidth: "300px", minWidth: "100px" }}>{data.date.substr(0, 10)}</td>
+												<td>{data.gameID}</td>
+												<td>{data.gameStatus}</td>
+												<td>{data.venue}</td>
+												<td>{data.operator}</td>
+												<td style={{ maxWidth: "300px", minWidth: "150px", wordWrap: "break-word" }}>
+													{data.supportNotes}
+												</td>
+												<td>{data.backupTask}</td>
+											</tr>
+										);
+									})}
 							</tbody>
 						</Table>
 					}
@@ -400,38 +400,38 @@ class FFxTechData extends Component {
 						</CardBody>
 						<CardFooter>
 							{/* Check for which page we are on  */}
-							{this.state.activeTab[0]  === "1" ? (
+							{this.state.activeTab[0] === "1" ? (
 								<Pagination className="text-center">
-								<PaginationItem disabled={currentPage <= 0}>
-									<PaginationLink onClick={e => this.handleClick(e, 0)} first href="#" />
-								</PaginationItem>
-								<PaginationItem disabled={currentPage <= 0}>
-									<PaginationLink onClick={e => this.handleClick(e, currentPage - 1)} previous href="#" />
-								</PaginationItem>
-
-								{[...Array(this.state.pagesCountToday)].map((page, i) => (
-									<PaginationItem active={i === currentPage} key={i}>
-										<PaginationLink onClick={e => this.handleClick(e, i)} href="#">
-											{i + 1}
-										</PaginationLink>
-									</PaginationItem>
-								))}
-								<PaginationItem disabled={currentPage >= this.state.pagesCountToday - 1}>
-									<PaginationLink onClick={e => this.handleClick(e, currentPage + 1)} next href="#" />
-								</PaginationItem>
-								<PaginationItem disabled={currentPage >= this.state.pagesCountToday - 1}>
-									<PaginationLink onClick={e => this.handleClick(e, this.state.pagesCountToday - 1)} last href="#" />
-								</PaginationItem>
-							</Pagination>
-							) : (
-									<Pagination className="text-center">
 									<PaginationItem disabled={currentPage <= 0}>
 										<PaginationLink onClick={e => this.handleClick(e, 0)} first href="#" />
 									</PaginationItem>
 									<PaginationItem disabled={currentPage <= 0}>
 										<PaginationLink onClick={e => this.handleClick(e, currentPage - 1)} previous href="#" />
 									</PaginationItem>
-	
+
+									{[...Array(this.state.pagesCountToday)].map((page, i) => (
+										<PaginationItem active={i === currentPage} key={i}>
+											<PaginationLink onClick={e => this.handleClick(e, i)} href="#">
+												{i + 1}
+											</PaginationLink>
+										</PaginationItem>
+									))}
+									<PaginationItem disabled={currentPage >= this.state.pagesCountToday - 1}>
+										<PaginationLink onClick={e => this.handleClick(e, currentPage + 1)} next href="#" />
+									</PaginationItem>
+									<PaginationItem disabled={currentPage >= this.state.pagesCountToday - 1}>
+										<PaginationLink onClick={e => this.handleClick(e, this.state.pagesCountToday - 1)} last href="#" />
+									</PaginationItem>
+								</Pagination>
+							) : (
+								<Pagination className="text-center">
+									<PaginationItem disabled={currentPage <= 0}>
+										<PaginationLink onClick={e => this.handleClick(e, 0)} first href="#" />
+									</PaginationItem>
+									<PaginationItem disabled={currentPage <= 0}>
+										<PaginationLink onClick={e => this.handleClick(e, currentPage - 1)} previous href="#" />
+									</PaginationItem>
+
 									{[...Array(this.state.pagesCountAll)].map((page, i) => (
 										<PaginationItem active={i === currentPage} key={i}>
 											<PaginationLink onClick={e => this.handleClick(e, i)} href="#">
@@ -446,9 +446,7 @@ class FFxTechData extends Component {
 										<PaginationLink onClick={e => this.handleClick(e, this.state.pagesCountAll - 1)} last href="#" />
 									</PaginationItem>
 								</Pagination>
-
 							)}
-							
 						</CardFooter>
 					</Card>
 
@@ -555,13 +553,12 @@ class FFxTechData extends Component {
 														id="gameStatus"
 													>
 														<option key="-1"></option>
-														<option>Ready for Share</option>
-														<option>Ready for Audit</option>
-														<option>All PC's Done</option>
-														<option>Incomplete -- 70% Resolved</option>
-														<option>Incomplete -- 60% Resolved</option>
-														<option>Incomplete -- 50% Resolved</option>
-														<option>Incomplete -- less than 50% Resolved</option>
+														<option>Fully Resolved</option>
+														<option>90% Resolved</option>
+														<option>80% Resolved</option>
+														<option>70% Resolved</option>
+														<option>60% Resolved</option>
+														<option>50% Resolved</option>
 														<option>Recorded Only</option>
 													</Input>
 												</FormGroup>
