@@ -7,8 +7,13 @@ const bcrypt = require('bcrypt-nodejs');
 const userSchema = new Schema({
   username: String,
   password: String,
-  permission: String,
-  //TODO: Permission level
+  pfxTechPermission: Boolean,
+  ffxTechPermission: Boolean,
+  ffxAuditPermission: Boolean,
+  pfxTechDataPermission: Boolean,
+  ffxTechDataPermission: Boolean,
+  ffxAuditDataPermission: Boolean,
+  extrasPermission: Boolean
 },
 {
   collection: 'users'

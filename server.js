@@ -17,6 +17,7 @@ const Settings = require("./routes/api/settings");
 const PFxTech = require("./routes/api/pfxTech");
 const FFxTech = require("./routes/api/ffxTech");
 const FFxAudit = require("./routes/api/ffxAudit");
+const DashData = require("./routes/api/dashData");
 
 //Docment PDF Route
 const PDFCreate = require("./routes/documents/pdf");
@@ -36,7 +37,16 @@ const opts = {
 };
 
 var strategy = new JwtStrategy(opts, function(jwt_payload, next) {
-    var user = UserModel.findOne({ id: jwt_payload.id, permission: jwt_payload.permission });
+    var user = UserModel.findOne({ 
+		id: jwt_payload.id,
+		pfxTechPermission: jwt_payload.pfxTechPermission,
+		ffxTechPermission: jwt_payload.ffxTechPermission,
+		ffxAuditPermission: jwt_payload.ffxAuditPermission,
+		pfxTechDataPermission: jwt_payload.pfxTechDataPermission,
+		ffxTechDataPermission: jwt_payload.ffxTechDataPermission,
+		ffxAuditDataPermission: jwt_payload.ffxAuditDataPermission,
+		extrasPermission: jwt_payload.extrasPermission
+	 });
 	if (user) {
 		next(null, user);
 	} else {
@@ -67,7 +77,16 @@ app.post("/getToken", function(req, res) {
 			logger.warn("Invalid password attempt in /getToken");
 			return res.status(401).json({ message: "Invalid User"});
 		} else {
-			var payload = {id:user.username, permission: user.permission };
+			var payload = {
+				id:user.username, 
+				pfxTechPermission: user.pfxTechPermission,
+				ffxTechPermission: user.ffxTechPermission,
+				ffxAuditPermission: user.ffxAuditPermission,
+				pfxTechDataPermission: user.pfxTechDataPermission,
+				ffxTechDataPermission: user.ffxTechDataPermission,
+				ffxAuditDataPermission: user.ffxAuditDataPermission,
+				extrasPermission: user.extrasPermission
+			};
 			var token = jwt.sign(payload, opts.secretOrKey);
 			logger.info("Token generated " + JSON.stringify(payload) +" "+token);
 			res.send({token, payload});
@@ -107,6 +126,7 @@ app.use("/api/settings", Settings);
 app.use("/api/pfxTech", PFxTech);
 app.use("/api/ffxTech", FFxTech);
 app.use("/api/ffxAudit", FFxAudit);
+app.use("/api/dashData", DashData);
 
 //PDF Routes
 app.use("/api/pdf", PDFCreate);

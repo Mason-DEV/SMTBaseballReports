@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import {  UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
-
 import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import lgLogo from '../../../src/assests/images/HeaderLogo.png';
 import smLogo from '../../../src/assests/images/HeaderLogoS.png';
-import axios from 'axios'
 
 const propTypes = {
   children: PropTypes.node,
@@ -23,15 +21,10 @@ class DefaultHeader extends Component {
     }
     
   }
-  componentDidMount() {
-    //Setting the state for the Prop we will set for whoIAm
-  
-	}
-  
   
   render() {
-    const disabled = this.state.name === "op" ? true : false;
-    // eslint-disable-next-line
+    console.log(this);
+    const disabled = this.props.permission.extrasPermission === false ? true : false;
     const { children, ...attributes } = this.props;
 
     return (

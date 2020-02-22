@@ -12,6 +12,13 @@ const logger = require('../../config/logger');
 router.route('/register').post(function (req, res) {
     var new_user = new User({
         username: req.body.username,
+        pfxTechPermission: req.body.pfxTechPermission,
+        ffxTechPermission: req.body.ffxTechPermission,
+        ffxAuditPermission: req.body.ffxAuditPermission,
+        pfxTechDataPermission: req.body.pfxTechDataPermission,
+        ffxTechDataPermission: req.body.ffxTechDataPermission,
+        ffxAuditDataPermission: req.body.ffxAuditDataPermission,
+        extrasPermission: req.body.extrasPermission
     });
     new_user.password = new_user.generateHash(req.body.password);
     new_user.save().then(new_user => {

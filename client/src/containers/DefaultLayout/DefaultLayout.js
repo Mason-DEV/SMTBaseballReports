@@ -2,13 +2,10 @@ import React, { Component, Suspense } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import * as router from "react-router-dom";
 import { Container } from "reactstrap";
-import { getJwt } from "../../components/helpers/jwt";
-import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import logger from "../../components/helpers/logger";
-
+import _ from "lodash";
 import {
-	AppBreadcrumb,
 	AppFooter,
 	AppHeader,
 	AppSidebar,
@@ -17,17 +14,9 @@ import {
 	AppSidebarMinimizer,
 	AppSidebarNav2 as AppSidebarNav
 } from "@coreui/react";
-// sidebar nav config
-import navigation from "../../_nav";
-import navigationOP from "../../_navOP";
-// routes config
-// import routes from "../../routes";
-import routesOP from "../../routesOP";
-import routesSupport from "../../routesSupport";
-const AuthComponent = React.lazy(() =>
-	import("../../components/AuthComponent")
-);
-
+import newNav from "../../nav";
+import routes from "../../routes";
+const AuthComponent = React.lazy(() =>	import("../../components/AuthComponent"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 
@@ -36,7 +25,7 @@ class DefaultLayout extends Component {
 		super(props);
 		this.state = {
 			name: "",
-			permission: ""
+			permission:{}
 		};
 	}
 
@@ -50,40 +39,78 @@ class DefaultLayout extends Component {
 		this.props.history.push("/login");
 	}
 	componentDidMount() {
-		//Setting the state for the Prop we will set for whoIAm
 		let token = localStorage.getItem('smt-jwt');
 		axios.get("/getUser", { headers: { Authorization: `Bearer ${token}` } })
 			.then(res => {
-				this.setState({ name: res.data.id, permission: res.data.permission});
+				this.setState({ name: res.data.id, 
+					permission:{
+						pfxTechPermission: res.data.pfxTechPermission,
+						ffxTechPermission: res.data.ffxTechPermission,
+						ffxAuditPermission: res.data.ffxAuditPermission,
+						pfxTechDataPermission: res.data.pfxTechDataPermission,
+						ffxTechDataPermission: res.data.ffxTechDataPermission,
+						ffxAuditDataPermission: res.data.ffxAuditDataPermission,
+						extrasPermission: res.data.extrasPermission
+					}
+				});
 			})
 			.catch(function(error) {
 				logger("error", error);
 			});
+	}
 
+	//filter the nav based on who is logged in
+	filterNav(){
+		var granted = [];
+		var navPermission = [];
+
+		_.forEach(this.state.permission, function(value, key) {
+			if(value)
+			granted.push(key);
+		});
+
+		newNav.items.forEach(element => {		
+			const auth = element.permission.some(r=> granted.includes(r))
+			if(auth){
+				navPermission.push(element);
+			}
+		});
+
+		return {items: navPermission}
 	}
 
 	//We filter routes availible based on who is logged in
-	filterRoutes(array){
-		var arrayFilter = [];
-		array.reduce(function(filtered, option) {
-			if (option.auth !== "required") {
-				arrayFilter.push(option);
+	filterRoutes(){
+		var granted = [];
+		var routePermission = [];
+
+		_.forEach(this.state.permission, function(value, key) {
+			if(value)
+			granted.push(key);
+		});
+
+		routes.forEach(element => {		
+			const auth = element.permission.some(r=> granted.includes(r))
+			if(auth){
+				routePermission.push(element);
 			}
-		}, []);
-		return arrayFilter
+		});
+
+		return routePermission
 	}
 
 	render() {
 		if(this.state.name === ''){
 			return(<div></div>)
 		}
-		//This is where we do our check for which nav to show depending on user type
-		const nav = this.state.name == 'op' ? navigationOP : navigation;
+
+		const navAuth = this.filterNav();
+		const routesAuth = this.filterRoutes();
 		return (
 				<div className="app">
 					<AppHeader fixed>
 						<Suspense fallback={this.loading()}>
-							<DefaultHeader onLogout={e => this.signOut(e)} whoAmI={this.state.name} />
+							<DefaultHeader onLogout={e => this.signOut(e)} whoAmI={this.state.name} permission={this.state.permission} />
 						</Suspense>
 					</AppHeader>
 					<div className="app-body">
@@ -92,7 +119,7 @@ class DefaultLayout extends Component {
 							<AppSidebarForm />
 							<Suspense>
 								<AppSidebarNav 
-									navConfig={ nav}
+									navConfig={navAuth}
 									{...this.props}
 									router={router}
 								/>
@@ -102,43 +129,30 @@ class DefaultLayout extends Component {
 						<main className="main">
 							<Container fluid style={{ marginTop: "10px" }}>
 								<Suspense fallback={this.loading()}>
+									{/* If we have any of the support permissions, show support cards therwise OP cards
+									pass in permissions to cards so we can show hide based on permssions at card level */}
 									<Switch>
-										{	
-											this.state.name === 'op' ? routesOP.map((route, idx) => {
+										{routesAuth.map((route, idx) => {
 											return route.component ? (
-												<Route
-													key={idx}
-													path={route.path}
-													exact={route.exact}
-													name={route.name }
-													whoAmI={""}
-													permission={""}
-													render={props => (
-														<AuthComponent>
-															<route.component whoAmI={this.state.name} permission={this.state.permission} {...props} />
-														</AuthComponent>
-													)}
-												/>
-											) : null;
-										}): routesSupport.map((route, idx) => {
-											return route.component ? (
-												<Route
-													key={idx}
-													path={route.path}
-													exact={route.exact}
-													name={route.name }
-													whoamI={""}
-													permission={""}
-													render={props => (
-														<AuthComponent>
-															<route.component whoAmI={this.state.name}  permission={this.state.permission} {...props} />
-														</AuthComponent>
-													)}
-												/>
-											) : null;
-										})
-									}
-										<Redirect to="/404" />
+											<Route
+												key={idx}
+												path={route.path}
+												exact={route.exact}
+												name={route.name}
+												whoAmI={""}
+												permission={""}
+												render={props => (
+													<AuthComponent>
+														<route.component 
+															whoAmI={this.state.name}  
+															permission={this.state.permission} 
+															{...props}>
+														</route.component>
+													</AuthComponent>
+												)} />
+											) : (null);
+										})}
+										<Redirect to="/404" /> 
 									</Switch>
 								</Suspense>
 							</Container>

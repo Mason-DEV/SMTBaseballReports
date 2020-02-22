@@ -19,6 +19,7 @@ export default {
       name: "FFx Audit Report",
       url: "/ffxauditreport",
 	  icon: "icon-note",
+	  permission: "ffxAuditData",
 	  attributes:{
 		//   style:{background: 'black'}
 	  }

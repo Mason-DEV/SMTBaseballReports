@@ -1,35 +1,24 @@
-//Layout for the OPS
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import {
 	Button,
-	ButtonDropdown,
-	ButtonGroup,
 	Card,
 	CardText,
 	CardTitle,
-	CardFooter,
 	Collapse,
 	CardBody,
 	CardHeader,
 	Col,
-	DropdownItem,
-	DropdownMenu,
-	DropdownToggle,
 	Row,
-	Table
 } from "reactstrap";
 import axios from 'axios';
 import logger from "../../components/helpers/logger";
-
 //Assests
 import spinner from "../../assests/images/smtSpinner.gif";
 
 const propTypes = {
 	children: PropTypes.node
 };
-
-// const defaultProps = {};
 
 class CardsOP extends Component {
 	constructor(props) {
@@ -59,12 +48,10 @@ class CardsOP extends Component {
 		this.props.history.push("/pfxtechreport");
 	}
 
-	// Fetch audit data on first mount
 	componentDidMount() {
 		Promise.all([axios.get("/api/settings/opAnnouncement")])
 			.then(([opResponse]) => {
 				const opAnnounce = opResponse.data;
-				console.log(opAnnounce);
 				this.setState({ opAnnounce });
 			})
 			.then(isLoading =>
@@ -78,14 +65,76 @@ class CardsOP extends Component {
 			});
 	}
 
-	render() {
-		// eslint-disable-next-line
-		// const { children, ...attributes } = this.props;
+	pfxTechCard() {
+			if(this.props.permission.pfxTechPermission){
+				return (
+					<Col>
+						<Card>
+							<CardHeader tag="h5">PFx Tech Report</CardHeader>
+							<CardBody>
+								<CardTitle>Report Page for Pitch F/x </CardTitle>
+								<CardText></CardText>
+								<Button color="success" onClick={e => this.pfxTechClick()}>
+									Go To Report
+								</Button>
+							</CardBody>
+						</Card>
+					</Col>
+					)
+			}else{
+				return
+			}
+	}
 
+	ffxTechCard() {
+			if(this.props.permission.ffxTechPermission){
+				return (
+					<Col>
+						<Card>
+							<CardHeader tag="h5">FFx Tech Report</CardHeader>
+							<CardBody>
+								<CardTitle>Report Page for Field F/x </CardTitle>
+								<CardText></CardText>
+								<Button color="success" onClick={e => this.ffxTechClick()}>
+									Go To Report
+								</Button>
+							</CardBody>
+						</Card>
+					</Col>
+					)
+			}else{
+				return
+			}
+	}
+
+	ffxAuditCard() {
+			if(this.props.permission.ffxAuditPermission){
+				return (
+					<Col>
+						<Card>
+							<CardHeader tag="h5">FFx Audit Report</CardHeader>
+							<CardBody>
+								<CardTitle>Audit Report Page for Field F/x </CardTitle>
+								<CardText></CardText>
+								<Button color="success" onClick={e => this.ffxAuditClick()}>
+									Go To Report
+								</Button>
+							</CardBody>
+						</Card>
+					</Col>
+					)
+			}else{
+				return
+			}
+	}	
+
+	render() {
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
-			
+			const ffxTechCard = this.ffxTechCard();
+			const pfxTechCard = this.pfxTechCard();
+			const ffxAuditCard = this.ffxAuditCard();
 			return (
 				<React.Fragment>
 					<Row>
@@ -113,42 +162,10 @@ class CardsOP extends Component {
 						</Col>
 					</Row>
 					<Row>
-						<Col>
-							<Card>
-								<CardHeader tag="h5">PFx Tech Report</CardHeader>
-								<CardBody>
-									<CardTitle>Report Page for Pitch F/x </CardTitle>
-									<CardText></CardText>
-									<Button color="success" onClick={e => this.pfxTechClick()}>
-										Go To Report
-									</Button>
-								</CardBody>
-							</Card>
-						</Col>
-						<Col>
-							<Card>
-								<CardHeader tag="h5">FFx Tech Report</CardHeader>
-								<CardBody>
-									<CardTitle>Report Page for Field F/x </CardTitle>
-									<CardText></CardText>
-									<Button color="success" onClick={e => this.ffxTechClick()}>
-										Go To Report
-									</Button>
-								</CardBody>
-							</Card>
-						</Col>
-						<Col>
-							<Card>
-								<CardHeader tag="h5">FFx Audit Report</CardHeader>
-								<CardBody>
-									<CardTitle>Audit Report Page for Field F/x </CardTitle>
-									<CardText></CardText>
-									<Button color="success" onClick={e => this.ffxAuditClick()}>
-										Go To Report
-									</Button>
-								</CardBody>
-							</Card>
-						</Col>
+						{pfxTechCard}
+						{ffxTechCard}
+						
+						
 					</Row>
 				</React.Fragment>
 			);
@@ -157,6 +174,5 @@ class CardsOP extends Component {
 }
 
 CardsOP.propTypes = propTypes;
-// CardsOP.defaultProps = defaultProps;
 
 export default CardsOP;

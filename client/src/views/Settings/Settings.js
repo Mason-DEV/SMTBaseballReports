@@ -23,7 +23,7 @@ import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
 import "./settingStyles.css";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
 const EMAIL_VALIDATION_REGEX = /^[-a-z0-9~!$%^&*_=+}{'?]+(\.[-a-z0-9~!$%^&*_=+}{'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(com|edu|gov|info|net|org|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
 
@@ -43,8 +43,8 @@ class Settings extends Component {
 		this.changeOP = this.changeOP.bind(this);
 		//Daily Summary Functions
 		this.changePFXFields = this.changePFXFields.bind(this);
+		this.changePFXTask = this.changePFXTask.bind(this);
 		this.onSubmitPFxDaily = this.onSubmitPFxDaily.bind(this);
-
 		this.generateTestPFxPDF = this.generateTestPFxPDF.bind(this);
 
 		this.state = {
@@ -86,9 +86,24 @@ class Settings extends Component {
 		}));
 	}
 
+	changePFXTask(e) {
+		e.persist();
+		console.log(this.state.pfxDailyEmail);
+		this.setState(prevState => ({
+			...prevState,
+			pfxDailyEmail: {
+				...prevState.pfxDailyEmail,
+				details: {
+					...prevState.pfxDailyEmail.details,
+
+					[e.target.name]: e.target.checked
+				}
+			}
+		}));
+	}
+
 	onSubmitPFxDaily(e) {
 		e.preventDefault();
-		// console.log("need to edit DB for pfxSummary edits", this.state.pfxDailyEmail.details);
 		const details = this.state.pfxDailyEmail.details;
 		const edit = { details };
 		console.log(edit);
@@ -116,18 +131,17 @@ class Settings extends Component {
 		}));
 	}
 	generateTestPFxPDF(e) {
-		// console.log("need to gen pfx PDF with fields", this.state.pfxDailyEmail.details);
 		const Fields = this.state.pfxDailyEmail.details.Fields;
-		const details = {Fields}
-		axios.post('/api/pdf/testPDF', details, { responseType: 'blob' })
-		.then((res) => {
-			const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-			saveAs(pdfBlob, 'testPFx.pdf');
+		const details = { Fields };
+		axios
+			.post("/api/pdf/testPDF", details, { responseType: "blob" })
+			.then(res => {
+				const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+				saveAs(pdfBlob, "PFx Preview.pdf");
 			})
-		.catch(error => {
-			logger("error", "OP Announce Submit === " + error);
-		});
-
+			.catch(error => {
+				logger("error", "OP Announce Submit === " + error);
+			});
 	}
 
 	showError() {
@@ -228,15 +242,20 @@ class Settings extends Component {
 		Promise.all([
 			axios.get("/api/settings/opAnnouncement"),
 			axios.get("/api/settings/supportAnnouncement"),
-			axios.get("/api/settings/pfxDailyEmail")
+			axios.get("/api/settings/pfxDailyEmail"),
+			axios.get("/api/settings/ffxDailyEmail")
 		])
-			.then(([opResponse, supportResponse, pfxDailyResponse]) => {
+			.then(([opResponse, supportResponse, pfxDailyResponse, ffxDailyResponse]) => {
 				const opAnnounce = opResponse.data;
 				const supportAnnounce = supportResponse.data;
 				const pfxDaily = pfxDailyResponse.data;
-
-				console.log(opAnnounce);
-				this.setState({ opAnnounce: opAnnounce, supportAnnounce: supportAnnounce, pfxDailyEmail: pfxDaily });
+				const ffxDaily = ffxDailyResponse.data;
+				this.setState({
+					opAnnounce: opAnnounce,
+					supportAnnounce: supportAnnounce,
+					pfxDailyEmail: pfxDaily,
+					ffxDailyEmail: ffxDaily
+				});
 			})
 			.then(isLoading =>
 				this.setState({
@@ -249,7 +268,7 @@ class Settings extends Component {
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
-			console.log(this.state.pfxDailyEmail.details.Fields);
+			console.log(this.state);
 			return (
 				<React.Fragment>
 					<Alert color="danger" isOpen={this.state.error} toggle={this.onDismissError}>
@@ -472,6 +491,14 @@ class Settings extends Component {
 															</Col>
 														</Row>
 													</Container>
+													<CustomInput
+														type="checkbox"
+														id="pfxTaskVisible"
+														label="Run/Send PFx Daily Summary Task"
+														name="runTask"
+														defaultChecked={this.state.pfxDailyEmail.details.runTask}
+														onClick={e => this.changePFXTask(e)}
+													/>
 												</FormGroup>
 												<Button type="submit" size="sm" color="success">
 													<i className="fa fa-check"></i> Save
@@ -534,7 +561,7 @@ class Settings extends Component {
 																	id="ffxgameIDCustomCheckbox"
 																	label="Game ID"
 																	name="gameID"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.gameId}
+																	defaultChecked={this.state.ffxDailyEmail.details.Fields.gameID}
 																	onClick={e => this.changeFFXFields(e)}
 																/>
 																<CustomInput
@@ -662,6 +689,14 @@ class Settings extends Component {
 															</Col>
 														</Row>
 													</Container>
+													<CustomInput
+														type="checkbox"
+														id="ffxTaskVisible"
+														label="Run/Send FFx Daily Summary Task"
+														name="runTask"
+														defaultChecked={this.state.ffxDailyEmail.details.runTask}
+														onClick={e => this.changeFFXTask(e)}
+													/>
 												</FormGroup>
 												<Button disabled type="submit" size="sm" color="success">
 													<i className="fa fa-check"></i> Save

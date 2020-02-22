@@ -15,12 +15,11 @@ import {
 	DropdownMenu,
 	DropdownToggle,
 	Row,
-	Table
+	UncontrolledTooltip
 } from "reactstrap";
-import axios from 'axios'
+import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
-import logger from '../../components/helpers/logger';
-
+import logger from "../../components/helpers/logger";
 
 const propTypes = {
 	children: PropTypes.node
@@ -74,12 +73,9 @@ function getRandom(length, max, min) {
 		.map(() => Math.round(Math.random() * (max - min) + min));
 }
 
-
-
-
 class CardsSupport extends Component {
-    constructor(props) {
-        super(props);
+	constructor(props) {
+		super(props);
 
 		//Binding states
 		this.toggle = this.toggle.bind(this);
@@ -107,31 +103,25 @@ class CardsSupport extends Component {
 				missedBIP: 0,
 				addedPitches: 0
 			}
-        };
-        
-    }
-    // Fetch audit data on first mount
+		};
+	}
+	// Fetch audit data on first mount
 	componentDidMount() {
-	
-		if (this.props.permission === "op") {
-			this.setState({ isLoading: false });
-		} else {
-
-              Promise.all([
-                axios.get("/api/FFxAudit/"),
-                axios.get("/api/settings/supportAnnouncement")
-            ])
-                .then(([auditResponse, supportResponse]) => {
-                    const data = auditResponse.data;
-                    const supportAnnounce = supportResponse.data;
-                    this.setState({ data, supportAnnounce});
-                })
-                .then(isLoading =>
-                    this.setState({
-                        isLoading: false
-                    })
-                )
-                .then(resDash => {
+		// if (this.props.permission === "op") {
+		// 	this.setState({ isLoading: false });
+		// } else {
+			Promise.all([axios.get("/api/FFxAudit/"), axios.get("/api/settings/supportAnnouncement")])
+				.then(([auditResponse, supportResponse]) => {
+					const data = auditResponse.data;
+					const supportAnnounce = supportResponse.data;
+					this.setState({ data, supportAnnounce });
+				})
+				.then(isLoading =>
+					this.setState({
+						isLoading: false
+					})
+				)
+				.then(resDash => {
 					this.setState({
 						dashData: {
 							...this.state.dashData,
@@ -141,16 +131,16 @@ class CardsSupport extends Component {
 							missedBIP: this.calcMissedBIP(),
 							addedPitches: this.calcAddedPitches()
 						}
-					})
-                })
-                .catch(function(error) {
-                    console.log(error);
+					});
+				})
+				.catch(function(error) {
+					console.log(error);
 					logger("error", error);
 				});
-        }
-    }
+		// }
+	}
 
-    toggle() {
+	toggle() {
 		this.setState({
 			dropdownOpen: !this.state.dropdownOpen
 		});
@@ -190,7 +180,6 @@ class CardsSupport extends Component {
 	calcGDSync() {
 		var rawData = [];
 		this.state.data.forEach(element => {
-	
 			var perct = (+element.ffxPitches / +element.gdPitches).toFixed(2);
 			if (!isNaN(perct)) rawData.push(+perct);
 		});
@@ -231,376 +220,312 @@ class CardsSupport extends Component {
 		const sum = rawData.reduce((partial_sum, a) => partial_sum + a, 0);
 
 		return sum;
-    }
-    
+	}
+
 	render() {
 		// eslint-disable-next-line
-        const { children, ...attributes } = this.props;
-            if (this.state.isLoading) {
-                return (
-                    <img
-                        src={spinner}
-                        height="150"
-                        width="150"
-                        alt="spinner"
-                        align="center"
-                        style={{ height: "100%" }}
-                    />
-                )
-            }
-            else{
-                console.log(this.state);
-                return(
-                    <React.Fragment>
-                    <Row>
-                        <Col>
-                            <Card className="bg-secondary" style={{display: this.state.supportAnnounce.details.hidden ? "none": "show" }}>
-                                <CardHeader>
-                                    <i className="fa fa-bullhorn"></i>
-                                    <strong>Announcements</strong>
-                                    <div className="card-header-actions">
-                                        {/*eslint-disable-next-line*/}
-                                        <a
-                                            style={{ cursor: "pointer" }}
-                                            className="card-header-action btn btn-minimize"
-                                            data-target="#collapseExample"
-                                            onClick={this.toggleAnnouc}
-                                        >
-                                            <i className="icon-arrow-down"></i>
-                                        </a>
-                                    </div>
-                                </CardHeader>
-                                <Collapse isOpen={this.state.collapse} id="collapseExample">
-                                    <CardBody>{this.state.supportAnnounce.details.AnnouncementText}</CardBody>
-                                </Collapse>
-                            </Card>
-                        </Col>
-                    </Row>
-                    {/* Cards ROW 1 */}
-                    <Row>
-                        {/* Card 1 - Average Audits */}
-                        <Col xs="12" sm="6" lg="3">
-                            <Card className="text-white bg-success border-secondary">
-                                <CardHeader>
-                                    Average Audits {this.state.avgAuditdropDownValue}
-                                    <ButtonGroup className="float-right">
-                                        <ButtonDropdown
-                                            id="avgAuditCard"
-                                            isOpen={this.state.avgAuditCard}
-                                            toggle={() => {
-                                                this.setState({
-                                                    avgAuditCard: !this.state.avgAuditCard
-                                                });
-                                            }}
-                                        >
-                                            <DropdownToggle caret className="p-0" color="transparent">
-                                                <i className="icon-settings"></i>{" "}
-                                            </DropdownToggle>
-                                            <DropdownMenu right>
-                                                <DropdownItem
-                                                    id="test"
-                                                    onClick={this.changeValueAvgAudit}
-                                                >
-                                                    Month
-                                                </DropdownItem>
-                                                <DropdownItem
-                                                    id="test"
-                                                    onClick={this.changeValueAvgAudit}
-                                                >
-                                                    Week
-                                                </DropdownItem>
-                                                <DropdownItem onClick={this.changeValueAvgAudit}>
-                                                    Day
-                                                </DropdownItem>
-                                            </DropdownMenu>
-                                        </ButtonDropdown>
-                                    </ButtonGroup>
-                                </CardHeader>
-                                <CardBody className="pb-0">
-                                    <div
-                                        id="avgAuditDataDiv"
-                                        className="text-value"
-                                        style={{ fontSize: "30px" }}
-                                    >
-                                        1234
-                                    </div>
-                                </CardBody>
-                                <div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-                                    <Line
-                                        data={cardChartData4}
-                                        options={cardChartOpts4}
-                                        height={70}
-                                    />
-                                </div>
-                            </Card>
-                        </Col>
-                        {/* Card 2 - Total Audits */}
-                        <Col xs="12" sm="6" lg="3">
-                            <Card className="text-white bg-primary border-secondary">
-                                <CardHeader>
-                                    Total Audits {this.state.totalAuditdropDownValue}
-                                    <ButtonGroup className="float-right">
-                                        <ButtonDropdown
-                                            id="totalAuditCard"
-                                            isOpen={this.state.totalAuditCard}
-                                            toggle={() => {
-                                                this.setState({
-                                                    totalAuditCard: !this.state.totalAuditCard
-                                                });
-                                            }}
-                                        >
-                                            <DropdownToggle caret className="p-0" color="transparent">
-                                                <i className="icon-settings"></i>{" "}
-                                            </DropdownToggle>
-                                            <DropdownMenu right>
-                                                <DropdownItem onClick={this.changeValueTotalAudit}>
-                                                    Season
-                                                </DropdownItem>
-                                                <DropdownItem onClick={this.changeValueTotalAudit}>
-                                                    Week
-                                                </DropdownItem>
-                                                <DropdownItem onClick={this.changeValueTotalAudit}>
-                                                    Month
-                                                </DropdownItem>
-                                            </DropdownMenu>
-                                        </ButtonDropdown>
-                                    </ButtonGroup>
-                                </CardHeader>
-                                <CardBody className="pb-0">
-                                    <div
-                                        id="totalAuditDataDiv"
-                                        className="text-value"
-                                        style={{ fontSize: "30px" }}
-                                    >
-                                        1234
-                                    </div>
-                                </CardBody>
-                                <div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-                                    <Bar
-                                        data={cardChartData4}
-                                        options={cardChartOpts4}
-                                        height={70}
-                                    />
-                                </div>
-                            </Card>
-                        </Col>
-    
-                        {/* Card 3 - Average Operator Resolve */}
-                        <Col xs="12" sm="6" lg="3">
-                            <Card className="text-white bg-danger border-secondary">
-                                <CardHeader>Average Op Resolve Percentage</CardHeader>
-                                <CardBody className="pb-0">
-                                    <div
-                                        id="totalAuditDataDiv"
-                                        className="text-value"
-                                        style={{ fontSize: "30px" }}
-                                    >
-                                        80%
-                                    </div>
-                                </CardBody>
-                                <div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-                                    <Line
-                                        data={cardChartData4}
-                                        options={cardChartOpts4}
-                                        height={70}
-                                    />
-                                </div>
-                            </Card>
-                        </Col>
-    
-                        {/* Card 4 - Pitches Added */}
-                        <Col xs="12" sm="6" lg="3">
-                            <Card className="text-white bg-info border-secondary">
-                                <CardHeader>
-                                    Total Pitches Added {this.state.pitchesdropDownValue}
-                                    <ButtonGroup className="float-right">
-                                        <ButtonDropdown
-                                            id="totalPitchesCard"
-                                            isOpen={this.state.totalPitchesCard}
-                                            toggle={() => {
-                                                this.setState({
-                                                    totalPitchesCard: !this.state.totalPitchesCard
-                                                });
-                                            }}
-                                        >
-                                            <DropdownToggle caret className="p-0" color="transparent">
-                                                <i className="icon-settings"></i>{" "}
-                                            </DropdownToggle>
-                                            <DropdownMenu right>
-                                                <DropdownItem onClick={this.changeValuePitches}>
-                                                    Season
-                                                </DropdownItem>
-                                                <DropdownItem onClick={this.changeValuePitches}>
-                                                    Week
-                                                </DropdownItem>
-                                                <DropdownItem onClick={this.changeValuePitches}>
-                                                    Month
-                                                </DropdownItem>
-                                            </DropdownMenu>
-                                        </ButtonDropdown>
-                                    </ButtonGroup>
-                                </CardHeader>
-                                <CardBody className="pb-0">
-                                    <div
-                                        id="totalAuditDataDiv"
-                                        className="text-value"
-                                        style={{ fontSize: "30px" }}
-                                    >
-                                        {this.state.dashData.addedPitches}
-                                    </div>
-                                </CardBody>
-                                <div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-                                    <Bar
-                                        data={cardChartData4}
-                                        options={cardChartOpts4}
-                                        height={70}
-                                    />
-                                </div>
-                            </Card>
-                        </Col>
-                    </Row>
-    
-                    <Row>
-                        <Col>
-                            <Card>
-                                <CardHeader>
-                                    <i className="fa fa-folder"></i>
-                                    <strong>PFx Stuff</strong>
-                                </CardHeader>
-                                <CardBody></CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-    
-                    {/* Row 2 - OP / Audit Performance */}
-    
-                    <Row>
-                        <Col>
-                            <Card>
-                                <CardHeader>
-                                    {" "}
-                                    <i className="fa fa-dashboard"> </i>
-                                    <strong>Operator {" & "} Auditor Performance</strong>
-                                </CardHeader>
-                                <CardBody>
-                                    {/* Row A - Performance Box */}
-    
-                                    <Row>
-                                        <Col xs="12" md="6" xl="6">
-                                            <Row>
-                                                <Col sm="6">
-                                                    <div className="callout callout-success">
-                                                        <small className="text-muted">
-                                                            Current Turn Over Time
-                                                        </small>
-                                                        <br />
-                                                        <strong className="h4">25 Hours</strong>
-                                                        <div className="chart-wrapper"></div>
-                                                    </div>
-                                                </Col>
-                                                <Col sm="6">
-                                                    <div className="callout callout-primary">
-                                                        <small className="text-muted">
-                                                            Average Audit Time
-                                                        </small>
-                                                        <br />
-                                                        <strong className="h4">3 Hours</strong>
-                                                        <div className="chart-wrapper"></div>
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <hr className="mt-0" />
-                                        </Col>
-                                        <Col xs="12" md="6" xl="6">
-                                            <Row>
-                                                <Col sm="6">
-                                                    <div className="callout callout-danger">
-                                                        <small className="text-muted">Plays Resolved</small>
-                                                        <br />
-                                                        <strong className="h4">
-                                                            {this.state.dashData.playsResolved}
-                                                        </strong>
-                                                        <div className="chart-wrapper"></div>
-                                                    </div>
-                                                </Col>
-                                                <Col sm="6">
-                                                    <div className="callout callout-info">
-                                                        <small className="text-muted">GD Sync</small>
-                                                        <br />
-                                                        <strong className="h4">
-                                                            {this.state.dashData.gdSync} %
-                                                        </strong>
-                                                        <div className="chart-wrapper"></div>
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <hr className="mt-0" />
-                                        </Col>
-                                    </Row>
-                                    <br />
-                                    {/* Row B - Performance Box */}
-                                    <Row>
-                                        <Col xs="12" md="6" xl="6">
-                                            <Row>
-                                                <Col sm="6">
-                                                    <div className="callout callout-success">
-                                                        <small className="text-muted">
-                                                            Missed Pitches due to Video Gaps
-                                                        </small>
-                                                        <br />
-                                                        <strong className="h4">
-                                                            {this.state.dashData.missedPitches}
-                                                        </strong>
-                                                        <div className="chart-wrapper"></div>
-                                                    </div>
-                                                </Col>
-                                                <Col sm="6">
-                                                    <div className="callout callout-primary">
-                                                        <small className="text-muted">
-                                                            Missed BIP due to Video Gaps
-                                                        </small>
-                                                        <br />
-                                                        <strong className="h4">
-                                                            {this.state.dashData.missedBIP}
-                                                        </strong>
-                                                        <div className="chart-wrapper"></div>
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <hr className="mt-0" />
-                                        </Col>
-                                        <Col xs="12" md="6" xl="6">
-                                            <Row>
-                                                <Col sm="6">
-                                                    <div className="callout callout-danger">
-                                                        <small className="text-muted">Data Metric</small>
-                                                        <br />
-                                                        <strong className="h4">12,345</strong>
-                                                        <div className="chart-wrapper"></div>
-                                                    </div>
-                                                </Col>
-                                                <Col sm="6">
-                                                    <div className="callout callout-info">
-                                                        <small className="text-muted">Data Metric</small>
-                                                        <br />
-                                                        <strong className="h4">12,345</strong>
-                                                        <div className="chart-wrapper"></div>
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                            <hr className="mt-0" />
-                                        </Col>
-                                    </Row>
-    
-                                    {/* Auditor Perfarmance Table */}
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-                </React.Fragment>
-                )
-            }
-			
+		const { children, ...attributes } = this.props;
+		if (this.state.isLoading) {
+			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
+		} else {
+			console.log(this.state);
+			return (
+				<React.Fragment>
+					<Row>
+						<Col>
+							<Card
+								className="bg-secondary"
+								style={{ display: this.state.supportAnnounce.details.hidden ? "none" : "show" }}
+							>
+								<CardHeader>
+									<i className="fa fa-bullhorn"></i>
+									<strong>Announcements</strong>
+									<div className="card-header-actions">
+										{/*eslint-disable-next-line*/}
+										<a
+											style={{ cursor: "pointer" }}
+											className="card-header-action btn btn-minimize"
+											data-target="#collapseExample"
+											onClick={this.toggleAnnouc}
+										>
+											<i className="icon-arrow-down"></i>
+										</a>
+									</div>
+								</CardHeader>
+								<Collapse isOpen={this.state.collapse} id="collapseExample">
+									<CardBody>{this.state.supportAnnounce.details.AnnouncementText}</CardBody>
+								</Collapse>
+							</Card>
+						</Col>
+					</Row>
+					{/* Cards ROW 1 */}
+					<Row>
+						{/* Card 1 - Average Audits */}
+						<Col xs="12" sm="6" lg="3">
+							<Card className="text-white bg-success border-secondary">
+								<CardHeader>
+									Average Audits {this.state.avgAuditdropDownValue}
+									<ButtonGroup className="float-right">
+										<ButtonDropdown
+											id="avgAuditCard"
+											isOpen={this.state.avgAuditCard}
+											toggle={() => {
+												this.setState({
+													avgAuditCard: !this.state.avgAuditCard
+												});
+											}}
+										>
+											<DropdownToggle caret className="p-0" color="transparent">
+												<i className="icon-settings"></i>{" "}
+											</DropdownToggle>
+											<DropdownMenu right>
+												<DropdownItem id="test" onClick={this.changeValueAvgAudit}>
+													Month
+												</DropdownItem>
+												<DropdownItem id="test" onClick={this.changeValueAvgAudit}>
+													Week
+												</DropdownItem>
+												<DropdownItem onClick={this.changeValueAvgAudit}>Day</DropdownItem>
+											</DropdownMenu>
+										</ButtonDropdown>
+									</ButtonGroup>
+								</CardHeader>
+								<CardBody className="pb-0">
+									<div id="avgAuditDataDiv" className="text-value" style={{ fontSize: "30px" }}>
+										1234
+									</div>
+								</CardBody>
+								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
+									<Line data={cardChartData4} options={cardChartOpts4} height={70} />
+								</div>
+							</Card>
+						</Col>
+						{/* Card 2 - Total Audits */}
+						<Col xs="12" sm="6" lg="3">
+							<Card className="text-white bg-primary border-secondary">
+								<CardHeader>
+									Total Audits {this.state.totalAuditdropDownValue}
+									<ButtonGroup className="float-right">
+										<ButtonDropdown
+											id="totalAuditCard"
+											isOpen={this.state.totalAuditCard}
+											toggle={() => {
+												this.setState({
+													totalAuditCard: !this.state.totalAuditCard
+												});
+											}}
+										>
+											<DropdownToggle caret className="p-0" color="transparent">
+												<i className="icon-settings"></i>{" "}
+											</DropdownToggle>
+											<DropdownMenu right>
+												<DropdownItem onClick={this.changeValueTotalAudit}>Season</DropdownItem>
+												<DropdownItem onClick={this.changeValueTotalAudit}>Week</DropdownItem>
+												<DropdownItem onClick={this.changeValueTotalAudit}>Month</DropdownItem>
+											</DropdownMenu>
+										</ButtonDropdown>
+									</ButtonGroup>
+								</CardHeader>
+								<CardBody className="pb-0">
+									<div id="totalAuditDataDiv" className="text-value" style={{ fontSize: "30px" }}>
+										1234
+									</div>
+								</CardBody>
+								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
+									<Bar data={cardChartData4} options={cardChartOpts4} height={70} />
+								</div>
+							</Card>
+						</Col>
+
+						{/* Card 3 - Average Operator Resolve */}
+						<Col xs="12" sm="6" lg="3">
+							<Card className="text-white bg-danger border-secondary">
+								<CardHeader>Average Op Resolve Percentage</CardHeader>
+								<CardBody className="pb-0">
+									<div id="totalAuditDataDiv" className="text-value" style={{ fontSize: "30px" }}>
+										80%
+									</div>
+								</CardBody>
+								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
+									<Line data={cardChartData4} options={cardChartOpts4} height={70} />
+								</div>
+							</Card>
+						</Col>
+
+						{/* Card 4 - Pitches Added */}
+						<Col xs="12" sm="6" lg="3">
+							<Card className="text-white bg-info border-secondary">
+								<CardHeader>
+									Total Pitches Added {this.state.pitchesdropDownValue}
+									<ButtonGroup className="float-right">
+										<ButtonDropdown
+											id="totalPitchesCard"
+											isOpen={this.state.totalPitchesCard}
+											toggle={() => {
+												this.setState({
+													totalPitchesCard: !this.state.totalPitchesCard
+												});
+											}}
+										>
+											<DropdownToggle caret className="p-0" color="transparent">
+												<i className="icon-settings"></i>{" "}
+											</DropdownToggle>
+											<DropdownMenu right>
+												<DropdownItem onClick={this.changeValuePitches}>Season</DropdownItem>
+												<DropdownItem onClick={this.changeValuePitches}>Week</DropdownItem>
+												<DropdownItem onClick={this.changeValuePitches}>Month</DropdownItem>
+											</DropdownMenu>
+										</ButtonDropdown>
+									</ButtonGroup>
+								</CardHeader>
+								<CardBody className="pb-0">
+									<div id="totalAuditDataDiv" className="text-value" style={{ fontSize: "30px" }}>
+										{this.state.dashData.addedPitches}
+									</div>
+								</CardBody>
+								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
+									<Bar data={cardChartData4} options={cardChartOpts4} height={70} />
+								</div>
+							</Card>
+						</Col>
+					</Row>
+
+					{/* Row 2 - OP / Audit Performance */}
+
+					<Row>
+						<Col>
+							<Card>
+								<CardHeader>
+									{" "}
+									<i className="fa fa-dashboard"> </i>
+									<strong>Operator {" & "} Auditor Performance</strong>
+								</CardHeader>
+								<CardBody>
+									{/* Row A - Performance Box */}
+
+									<Row>
+										<Col xs="12" md="6" xl="6">
+											<Row>
+												<Col sm="6">
+													<div className="callout callout-success">
+														<small className="text-muted">Current Turn Over Time</small>
+														<br />
+														<strong className="h4">25 Hours</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+												<Col sm="6">
+													<div className="callout callout-primary">
+														<small className="text-muted">Average Audit Time</small>
+														<br />
+														<strong className="h4">3 Hours</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+											</Row>
+											<hr className="mt-0" />
+										</Col>
+										<Col xs="12" md="6" xl="6">
+											<Row>
+												<Col sm="6">
+													<div className="callout callout-danger">
+														<small className="text-muted"  href="#" id="totalPlaysTooltip" style={{ cursor: "help" }}>Plays Resolved</small>
+                                                        <UncontrolledTooltip placement="top" target="totalPlaysTooltip">
+															Total FFx Plays Resolved
+														</UncontrolledTooltip>
+														<br />
+														<strong className="h4">{this.state.dashData.playsResolved}</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+												<Col sm="6">
+													<div className="callout callout-info">
+														<small className="text-muted">GD Sync</small>
+														<br />
+														<strong className="h4">{this.state.dashData.gdSync} %</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+											</Row>
+											<hr className="mt-0" />
+										</Col>
+									</Row>
+									<br />
+									{/* Row B - Performance Box */}
+									<Row>
+										<Col xs="12" md="6" xl="6">
+											<Row>
+												<Col sm="6">
+													<div className="callout callout-success">
+														<small className="text-muted" href="#" id="missedPitchesTooltip" style={{ cursor: "help" }}>
+															Missed Pitches due to Video Gaps
+														</small>
+														<UncontrolledTooltip placement="top" target="missedPitchesTooltip">
+															Total Missed Pitches Reported
+														</UncontrolledTooltip>
+														<br />
+														<strong className="h4">{this.state.dashData.missedPitches}</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+												<Col sm="6">
+													<div className="callout callout-primary">
+														<small className="text-muted" href="#" id="missedBIPTooltip" style={{ cursor: "help" }}>
+															Missed BIP due to Video Gaps
+														</small>
+														<UncontrolledTooltip placement="top" target="missedBIPTooltip">
+															Total Missed BIP Reported
+														</UncontrolledTooltip>
+														<br />
+														<strong className="h4">{this.state.dashData.missedBIP}</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+											</Row>
+											<hr className="mt-0" />
+										</Col>
+										<Col xs="12" md="6" xl="6">
+											<Row>
+												<Col sm="6">
+													<div className="callout callout-danger">
+														<small className="text-muted" href="#" id="operatedTooltip" style={{ cursor: "help" }}>
+															Games Operated This Season
+														</small>
+														<UncontrolledTooltip placement="top" target="operatedTooltip">
+															Total FFx Games with Reports
+														</UncontrolledTooltip>
+														<br />
+														<strong className="h4">12,345</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+												<Col sm="6">
+													<div className="callout callout-info">
+														<small className="text-muted" href="#" id="backlogToolTip" style={{ cursor: "help" }}>
+															Games In Backlog
+														</small>
+
+														<UncontrolledTooltip placement="top" target="backlogToolTip">
+															Audit Reports not Ready for Share
+														</UncontrolledTooltip>
+														<br />
+														<strong className="h4">12,345</strong>
+														<div className="chart-wrapper"></div>
+													</div>
+												</Col>
+											</Row>
+											<hr className="mt-0" />
+										</Col>
+									</Row>
+
+									{/* Auditor Perfarmance Table */}
+								</CardBody>
+							</Card>
+						</Col>
+					</Row>
+				</React.Fragment>
+			);
+		}
 	}
 }
 
