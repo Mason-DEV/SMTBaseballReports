@@ -20,6 +20,9 @@ import axios from "axios";
 import lgLogo from "../../../src/assests/images/SMT_Report_Tag.jpg";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
+import APIHelper from "../../components/helpers/APIHelper";
+
 
 class FFxTechReport extends Component {
 	constructor(props) {
@@ -114,7 +117,7 @@ class FFxTechReport extends Component {
 		};
 
 		axios
-			.post("/api/ffxTech/create", report)
+			.post(APIHelper.createFFxTechReportAPI, report, { headers: { Authorization: `Bearer ${getJwt()}` }})
 			.then(adding => {
 				this.setState({ isLoading: false, fieldData: {}, success: true });
 			})
@@ -130,7 +133,10 @@ class FFxTechReport extends Component {
 	}
 
 	componentDidMount() {
-		Promise.all([axios.get("/api/staff/ffxOperators"), axios.get("/api/venue/fieldFx"), axios.get("/api/staff/support")])
+		Promise.all([
+			axios.get(APIHelper.getFFxStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+		 	axios.get(APIHelper.getFFxVenuesAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+		 	axios.get(APIHelper.getSupportStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })])
 			.then(([opResponse, venueResponse, supportResponse]) => {
 				const ops = opResponse.data.map(obj => ({ name: obj.name }));
 				const venues = venueResponse.data.map(obj => ({ name: obj.name }));

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { getJwt } from "./helpers/jwt";
+import APIHelper from "./helpers/APIHelper";
 import { setKickBack } from "./helpers/kickback";
 import spinner from "../assests/images/smtSpinner.gif";
 
@@ -33,7 +34,7 @@ class AuthComponent extends Component {
 			
 		}
 		//Check to make sure this JWT we have is valid
-		axios.get('/getUser', { headers: { Authorization: `Bearer ${jwt}`} })
+		axios.get(APIHelper.getUserAPI, { headers: { Authorization: `Bearer ${jwt}`} })
 			.then(res =>{
 				this.setState({	user: res.data.id, 
 					pfxTechPermission: res.data.pfxTechPermission,

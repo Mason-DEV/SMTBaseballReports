@@ -24,6 +24,8 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
+import APIHelper from "../../components/helpers/APIHelper";
 import spinner from "../../assests/images/smtSpinner.gif";
 import _ from "lodash";
 import lgLogo from "../../../src/assests/images/SMT_Report_Tag.jpg";
@@ -125,8 +127,8 @@ class FFxAuditData extends Component {
 	}
 	showEdit(id) {
 		axios
-			.get("/api/FFxAudit/ffxReportByID", {
-				headers: { ID: id }
+			.get(APIHelper.getFFxAuditReportByIdAPI,  {
+				headers: { ID: id , Authorization: `Bearer ${getJwt()}`}
 			})
 			.then(res => {
 				this.setState({ editData: res.data });
@@ -170,7 +172,7 @@ class FFxAuditData extends Component {
 		};
 		this.setState({ isEditing: true });
 		axios
-			.put("/api/FFxAudit/update/" + this.state.editData._id, editedReport)
+			.put(APIHelper.updateFFxAuditReportAPI + this.state.editData._id, editedReport,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(editing => {
 				this.setState({ isEditing: false, needToReload: true });
 			})
@@ -219,8 +221,8 @@ class FFxAuditData extends Component {
 		e.preventDefault();
 		this.setState({ isDeleting: true });
 		axios
-			.delete("/api/FFxAudit/delete/", {
-				headers: { ID: this.state.deleteData._id }
+			.delete(APIHelper.deleteFFxAuditReportByIdAPI, {
+				headers: { ID: this.state.deleteData._id,  Authorization: `Bearer ${getJwt()}`  }
 			})
 			.then(deleteing => {
 				this.setState({ isDeleting: false, needToReload: true });
@@ -235,9 +237,9 @@ class FFxAuditData extends Component {
 
 	componentDidMount() {
 		Promise.all([
-			axios.get("/api/FFxAudit/"),
-			axios.get("/api/staff/ffxOperators"),
-			axios.get("/api/staff/auditors")
+			axios.get(APIHelper.getFFxAuditAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getFFxStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getAuditStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 		])
 			.then(([allResponse, opResponse, auditorResponse]) => {
 				const data = allResponse.data;
@@ -254,10 +256,9 @@ class FFxAuditData extends Component {
 	}
 
 	componentDidUpdate() {
-		//Checking if we need to make an Axios api call to get all staffData
 		if (this.state.needToReload === true) {
 			axios
-				.get("/api/FFxAudit/")
+				.get(APIHelper.getFFxAuditAPI, { headers: { Authorization: `Bearer ${getJwt()}` } })
 				.then(res => {
 					this.setState({
 						data: res.data,

@@ -26,6 +26,9 @@ import {
 import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
+import APIHelper from "../../components/helpers/APIHelper";
+
 
 class Staff extends Component {
 	constructor(props) {
@@ -120,7 +123,7 @@ class Staff extends Component {
 			}
 		};
 		axios
-			.post("/api/staff/create/", staffToAdd)
+			.post(APIHelper.createStaffAPI, staffToAdd)
 			.then(adding => {
 				this.setState({ isAdding: false, needToReload: true });
 			})
@@ -158,8 +161,8 @@ class Staff extends Component {
 	}
 	showEdit(id) {
 		axios
-			.get("/api/staff/staffByID", {
-				headers: { ID: id }
+			.get(APIHelper.getStaffByIdAPI, {
+				headers: { ID: id , Authorization: `Bearer ${getJwt()}` }
 			})
 			.then(res => {
 				this.setState({ editData: res.data });
@@ -177,7 +180,7 @@ class Staff extends Component {
 		e.preventDefault();
 		this.setState({ isEditing: true });
 		axios
-			.put("/api/staff/update/" + this.state.editData._id, this.state.editData)
+			.put(APIHelper.updateStaffAPI + this.state.editData._id, this.state.editData,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(editing => {
 				this.setState({ isEditing: false, needToReload: true });
 			})
@@ -209,8 +212,8 @@ class Staff extends Component {
 		e.preventDefault();
 		this.setState({ isDeleting: true });
 		axios
-			.delete("/api/staff/delete/", {
-				headers: { ID: this.state.deleteData._id }
+			.delete(APIHelper.deleteStaffAPI, {
+				headers: { ID: this.state.deleteData._id, Authorization: `Bearer ${getJwt()}` }
 			})
 			.then(deleteing => {
 				this.setState({ isDeleting: false, needToReload: true });
@@ -224,9 +227,8 @@ class Staff extends Component {
 	//#endregion Delete Functions
 
 	componentDidMount() {
-		//Axios api call to get all staffData
 		axios
-			.get("/api/staff/")
+			.get(APIHelper.getStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(res => {
 				this.setState({ staffData: res.data });
 			})
@@ -240,10 +242,9 @@ class Staff extends Component {
 	}
 
 	componentDidUpdate() {
-		//Checking if we need to make an Axios api call to get all staffData
 		if (this.state.needToReload === true) {
 			axios
-				.get("/api/staff/")
+				.get(APIHelper.getStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 				.then(res => {
 					this.setState({
 						staffData: res.data,

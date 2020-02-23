@@ -1,12 +1,4 @@
 export default {
-
-    // pfxTechPermission: req.body.pfxTechPermission,
-    // ffxTechPermission: req.body.ffxTechPermission,
-    // ffxAuditPermission: req.body.ffxAuditPermission,
-    // pfxTechDataPermission: req.body.pfxTechDataPermission,
-    // ffxTechDataPermission: req.body.ffxTechDataPermission,
-    // ffxAuditDataPermission: req.body.ffxAuditDataPermission,
-    // extrasPermission: req.body.extrasPermission
 	items: [
 		{
 			name: "Dashboard",

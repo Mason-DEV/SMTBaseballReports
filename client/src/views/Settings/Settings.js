@@ -4,12 +4,10 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
-	Container,
 	CustomInput,
 	Form,
 	Col,
 	FormGroup,
-	Label,
 	ListGroup,
 	ListGroupItem,
 	Input,
@@ -22,8 +20,10 @@ import TagsInput from "react-tagsinput";
 import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
 import "./settingStyles.css";
 import { saveAs } from "file-saver";
+import APIHelper from "../../components/helpers/APIHelper";
 
 const EMAIL_VALIDATION_REGEX = /^[-a-z0-9~!$%^&*_=+}{'?]+(\.[-a-z0-9~!$%^&*_=+}{'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(com|edu|gov|info|net|org|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
 
@@ -57,13 +57,13 @@ class Settings extends Component {
 			pfxDailyEmail: {
 				details: {
 					Emails: [],
-					Fields: {}
+					// Fields: {}
 				}
 			},
 			ffxDailyEmail: {
 				details: {
 					Emails: [],
-					Fields: {}
+					// Fields: {}
 				}
 			}
 		};
@@ -77,10 +77,10 @@ class Settings extends Component {
 				...prevState.pfxDailyEmail,
 				details: {
 					...prevState.pfxDailyEmail.details,
-					Fields: {
-						...prevState.pfxDailyEmail.details.Fields,
-						[e.target.name]: e.target.checked
-					}
+					// Fields: {
+					// 	...prevState.pfxDailyEmail.details.Fields,
+					// 	[e.target.name]: e.target.checked
+					// }
 				}
 			}
 		}));
@@ -88,14 +88,12 @@ class Settings extends Component {
 
 	changePFXTask(e) {
 		e.persist();
-		console.log(this.state.pfxDailyEmail);
 		this.setState(prevState => ({
 			...prevState,
 			pfxDailyEmail: {
 				...prevState.pfxDailyEmail,
 				details: {
 					...prevState.pfxDailyEmail.details,
-
 					[e.target.name]: e.target.checked
 				}
 			}
@@ -107,9 +105,8 @@ class Settings extends Component {
 		const details = this.state.pfxDailyEmail.details;
 		const edit = { details };
 		console.log(edit);
-		console.log(this.state);
 		axios
-			.put("/api/settings/updatePFxDaily/" + this.state.pfxDailyEmail._id, edit)
+			.put(APIHelper.updateSettingsPFxDailyAPI + this.state.pfxDailyEmail._id, edit)
 			.then(editing => {
 				this.showSuccess();
 			})
@@ -134,10 +131,10 @@ class Settings extends Component {
 		const Fields = this.state.pfxDailyEmail.details.Fields;
 		const details = { Fields };
 		axios
-			.post("/api/pdf/testPDF", details, { responseType: "blob" })
+			.post(APIHelper.buildTestPFxDailyPDFAPI, details, { responseType: "blob" })
 			.then(res => {
 				const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-				saveAs(pdfBlob, "PFx Preview.pdf");
+				saveAs(pdfBlob, "PFx Daily Preview.pdf");
 			})
 			.catch(error => {
 				logger("error", "OP Announce Submit === " + error);
@@ -187,7 +184,7 @@ class Settings extends Component {
 		const edit = { details };
 		console.log(edit);
 		axios
-			.put("/api/settings/updateAnnouncement/" + this.state.opAnnounce._id, edit)
+			.put(APIHelper.updateSettingsAnnouncementAPI + this.state.opAnnounce._id, edit)
 			.then(editing => {
 				this.showSuccess();
 			})
@@ -221,7 +218,7 @@ class Settings extends Component {
 		};
 		const edit = { details };
 		axios
-			.put("/api/settings/updateAnnouncement/" + this.state.supportAnnounce._id, edit)
+			.put(APIHelper.updateSettingsAnnouncementAPI + this.state.supportAnnounce._id, edit)
 			.then(editing => {
 				this.showSuccess();
 			})
@@ -240,10 +237,10 @@ class Settings extends Component {
 
 	componentDidMount() {
 		Promise.all([
-			axios.get("/api/settings/opAnnouncement"),
-			axios.get("/api/settings/supportAnnouncement"),
-			axios.get("/api/settings/pfxDailyEmail"),
-			axios.get("/api/settings/ffxDailyEmail")
+			axios.get(APIHelper.getSettingsOPAnnounceAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getSettingsSupportAnnounceAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getSettingsPFxDailyEmailAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getSettingsFFxDailyEmailAPI, { headers: { Authorization: `Bearer ${getJwt()}` } })
 		])
 			.then(([opResponse, supportResponse, pfxDailyResponse, ffxDailyResponse]) => {
 				const opAnnounce = opResponse.data;
@@ -339,7 +336,7 @@ class Settings extends Component {
 										<TabPane tabId={0}>
 											<Form id="opAnnounceForm" onSubmit={e => this.onSubmitOP(e)}>
 												<FormGroup>
-													<Label htmlFor="opAnnounce">Op Announcement</Label>
+													<h4 htmlFor="opAnnounce">Op Announcement</h4>
 													<Input
 														onChange={e => this.changeOP(e)}
 														id="opAnnounce"
@@ -364,7 +361,7 @@ class Settings extends Component {
 										<TabPane tabId={1}>
 											<Form id="supportAnnounceForm" onSubmit={e => this.onSubmitSupport(e)}>
 												<FormGroup>
-													<Label htmlFor="supportAnnounce">Support Announcement</Label>
+													<h4 htmlFor="supportAnnounce">Support Announcement</h4>
 													<Input
 														onChange={e => this.changeSupport(e)}
 														id="supportAnnounce"
@@ -392,7 +389,7 @@ class Settings extends Component {
 										<TabPane tabId={2}>
 											<Form id="pfxEmailForm" onSubmit={e => this.onSubmitPFxDaily(e)}>
 												<FormGroup>
-													<Label htmlFor="pfxEmail">Email Receipents</Label>
+													<h4 htmlFor="pfxEmail">PFX Daily Email Receipents</h4>
 													<TagsInput
 														style={{ cursor: "text" }}
 														value={this.state.pfxDailyEmail.details.Emails}
@@ -405,8 +402,9 @@ class Settings extends Component {
 													/>
 												</FormGroup>
 												<FormGroup>
+													{/*
 													<Label htmlFor="pfxFieldSelection">PFx Report Fields To Include</Label>
-													<Container
+													 <Container
 														style={{
 															border: "1px solid #e4e7ea",
 															borderRadius: "0.25rem"
@@ -490,7 +488,7 @@ class Settings extends Component {
 																/>
 															</Col>
 														</Row>
-													</Container>
+													</Container> */}
 													<CustomInput
 														type="checkbox"
 														id="pfxTaskVisible"
@@ -511,7 +509,7 @@ class Settings extends Component {
 										<TabPane tabId={3}>
 											<Form id="ffxEmailForm" onSubmit={e => this.onSubmitFFxDaily(e)}>
 												<FormGroup>
-													<Label htmlFor="ffxEmail">Email Receipents</Label>
+													<h4 htmlFor="ffxEmail">FFx Daily Email Receipents</h4>
 													<TagsInput
 														style={{ cursor: "text" }}
 														value={this.state.ffxDailyEmail.details.Emails}
@@ -523,7 +521,7 @@ class Settings extends Component {
 													/>
 												</FormGroup>
 												<FormGroup>
-													<Label htmlFor="ffxFieldSelection">FFx Report Fields To Include</Label>
+													{/* <Label htmlFor="ffxFieldSelection">FFx Report Fields To Include</Label>
 													<Container
 														style={{
 															border: "1px solid #e4e7ea",
@@ -688,7 +686,7 @@ class Settings extends Component {
 																/>
 															</Col>
 														</Row>
-													</Container>
+													</Container> */}
 													<CustomInput
 														type="checkbox"
 														id="ffxTaskVisible"

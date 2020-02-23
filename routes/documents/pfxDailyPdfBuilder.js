@@ -65,7 +65,7 @@ router.route("/testPDF").post(function(req, res) {
 
 	console.log(formatted);
 	//Here is where we would get the data needed for TODAYS Games and create the array
-	logger.info(id + " === Requesting Test PFx pdf");
+	logger.info(id + " === Requesting Test PFx Daily Summary pdf");
 	var docDefinition = {
 		pageOrientation: "landscape",
 		content: [
@@ -116,7 +116,7 @@ router.route("/testPDF").post(function(req, res) {
 	var pdfDoc = printer.createPdfKitDocument(docDefinition);
 	pdfDoc.pipe(res);
 	pdfDoc.end();
-	logger.info(id + " === Returning Test PFx pdf");
+	logger.info(id + " === Returning Test PFx Daily Summary pdf");
 });
 
 module.exports = router;

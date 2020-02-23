@@ -29,7 +29,10 @@ import {
 import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
 import EditTable from "./EditTable";
+import APIHelper from "../../components/helpers/APIHelper";
+
 
 class PFxTechData extends Component {
 	constructor(props) {
@@ -109,8 +112,8 @@ class PFxTechData extends Component {
 	}
 	showEdit(id) {
 		axios
-			.get("/api/pfxTech/pfxReportByID", {
-				headers: { ID: id }
+			.get(APIHelper.getPFxTechReportAPI, {
+				headers: { ID: id, Authorization: `Bearer ${getJwt()}` }
 			})
 			.then(res => {
 				this.setState({ editData: res.data });
@@ -139,7 +142,7 @@ class PFxTechData extends Component {
 		};
 		this.setState({ isEditing: true });
 		axios
-			.put("/api/pfxTech/update/" + this.state.editData._id, editedReport)
+			.put(APIHelper.updatePFxTechReportAPI + this.state.editData._id, editedReport,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(editing => {
 				this.setState({ isEditing: false, needToReload: true });
 			})
@@ -171,8 +174,8 @@ class PFxTechData extends Component {
 		e.preventDefault();
 		this.setState({ isDeleting: true });
 		axios
-			.delete("/api/PFxTech/delete/", {
-				headers: { ID: this.state.deleteData._id }
+			.delete(APIHelper.deletePFxTechReportAPI, {
+				headers: { ID: this.state.deleteData._id, Authorization: `Bearer ${getJwt()}` }
 			})
 			.then(deleteing => {
 				this.setState({ isDeleting: false, needToReload: true });
@@ -288,12 +291,11 @@ class PFxTechData extends Component {
 	}
 
 	componentDidMount() {
-		// Axios api call to get all venueData
 		Promise.all([
-			axios.get("/api/PFxTech/"),
-			axios.get("/api/PFxTech/today"),
-			axios.get("/api/staff/operators"),
-			axios.get("/api/venue/pitchFx")
+			axios.get(APIHelper.getPFXTechAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getPFXTechTodayAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getPFxStaffAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getPfxVenuesAPI, { headers: { Authorization: `Bearer ${getJwt()}` } })
 		])
 			.then(([allResponse, todayResponse, opResponse, venueResponse]) => {
 				const all = allResponse.data;
@@ -312,13 +314,12 @@ class PFxTechData extends Component {
 	}
 
 	componentDidUpdate() {
-		//Checking if we need to make an Axios api call to get all venueData
 		if (this.state.needToReload === true) {
 			Promise.all([
-				axios.get("/api/PFxTech/"),
-				axios.get("/api/PFxTech/today"),
-				axios.get("/api/staff/operators"),
-				axios.get("/api/venue/pitchFx")
+				axios.get(APIHelper.getPFXTechAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getPFXTechTodayAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getPFxStaffAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getPfxVenuesAPI, { headers: { Authorization: `Bearer ${getJwt()}` } })
 			])
 				.then(([allResponse, todayResponse, opResponse, venueResponse]) => {
 					const all = allResponse.data;

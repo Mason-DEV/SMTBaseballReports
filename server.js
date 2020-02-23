@@ -20,7 +20,7 @@ const FFxAudit = require("./routes/api/ffxAudit");
 const DashData = require("./routes/api/dashData");
 
 //Docment PDF Route
-const PDFCreate = require("./routes/documents/pdf");
+const PfxDailyPdfBuilder = require("./routes/documents/pfxDailyPdfBuilder");
 //Models
 const UserModel = require("./models/User");
 
@@ -118,18 +118,18 @@ mongoose
 
 //Use Routes
 // app.use("/api/audits", passport.authenticate("jwt", { session: false }), audits);
-app.use("/api/user", User);
-app.use("/api/", Logger);
-app.use("/api/staff", Staff);
-app.use("/api/venue", Venue);
-app.use("/api/settings", Settings);
-app.use("/api/pfxTech", PFxTech);
-app.use("/api/ffxTech", FFxTech);
-app.use("/api/ffxAudit", FFxAudit);
-app.use("/api/dashData", DashData);
+app.use("/api/user",  passport.authenticate("jwt", { session: false }), User);
+app.use("/api/",  passport.authenticate("jwt", { session: false }), Logger);
+app.use("/api/staff",  passport.authenticate("jwt", { session: false }), Staff);
+app.use("/api/venue",  passport.authenticate("jwt", { session: false }), Venue);
+app.use("/api/settings",  passport.authenticate("jwt", { session: false }), Settings);
+app.use("/api/pfxTech",   passport.authenticate("jwt", { session: false }), PFxTech);
+app.use("/api/ffxTech",  passport.authenticate("jwt", { session: false }), FFxTech);
+app.use("/api/ffxAudit", passport.authenticate("jwt", { session: false }), FFxAudit);
+app.use("/api/dashData",  passport.authenticate("jwt", { session: false }), DashData);
 
 //PDF Routes
-app.use("/api/pdf", PDFCreate);
+app.use("/api/pfxDailyPdfBuilder",  passport.authenticate("jwt", { session: false }), PfxDailyPdfBuilder);
 
 
 

@@ -15,6 +15,9 @@ import axios from 'axios';
 import logger from "../../components/helpers/logger";
 //Assests
 import spinner from "../../assests/images/smtSpinner.gif";
+import {getJwt} from "../../components/helpers/jwt";
+import APIHelper from "../../components/helpers/APIHelper";
+
 
 const propTypes = {
 	children: PropTypes.node
@@ -49,7 +52,7 @@ class CardsOP extends Component {
 	}
 
 	componentDidMount() {
-		Promise.all([axios.get("/api/settings/opAnnouncement")])
+		Promise.all([axios.get(APIHelper.getSettingsOPAnnounceAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })])
 			.then(([opResponse]) => {
 				const opAnnounce = opResponse.data;
 				this.setState({ opAnnounce });
