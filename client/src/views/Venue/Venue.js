@@ -105,7 +105,7 @@ class Venue extends Component {
 			pitchFx: this.state.addData.pitchFx ? true : false
 		};
 		axios
-			.post(APIHelper.createVenueAPI, venueToAdd)
+			.post(APIHelper.createVenueAPI, venueToAdd,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(adding => {
 				this.setState({ isAdding: false, needToReload: true });
 			})
