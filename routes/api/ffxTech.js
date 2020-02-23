@@ -10,7 +10,7 @@ const logger = require("../../config/logger");
 
 // @route   GET api/ffxtech/
 // @desc    Get All ffxtech reports
-// @access  Public
+// @access  Private
 router.route("/").get(function(req, res) {
 	let id = uuid();
 	logger.info(id + " === Requesting FFxTech");
@@ -28,7 +28,7 @@ router.route("/").get(function(req, res) {
 
 // @route   GET api/ffxtech/today
 // @desc    Get All of todays ffxtech reports
-// @access  Public
+// @access  Private
 router.route("/today").get(function(req, res) {
 	let id = uuid();
 	//Gets todays date in ISO format
@@ -51,7 +51,7 @@ router.route("/today").get(function(req, res) {
 
 // @route   Get api/ffxtech/ffxReportByID
 // @desc    Get A Single ffxtech Report
-// @access  Public
+// @access  Private
 router.route("/ffxReportByID").get(function(req, res) {
 	let _id = req.headers.id;
 	FFxTech.findById(_id, function(err, ffxTech) {
@@ -70,7 +70,7 @@ router.route("/ffxReportByID").get(function(req, res) {
 
 // @route   PUT api/ffxtech/update/:id
 // @desc    Update A FFxReport
-// @access  Public
+// @access  Private
 router.route("/update/:id").put(function(req, res) {
 	let _id = req.params.id;
 	let uid = uuid();
@@ -124,7 +124,7 @@ router.route("/update/:id").put(function(req, res) {
 });
 // @route   POST api/ffxtech/create
 // @desc    Create A New Staff
-// @access  Public
+// @access  Private
 router.route("/create/").post(function(req, res) {
 	let uid = uuid();
 	//First we check to make sure this gamestring doesnt exist already
@@ -172,7 +172,7 @@ router.route("/create/").post(function(req, res) {
 
 // @route   Delete api/ffxtech/delete/:id
 // @desc    Delete A ffxtech Report
-// @access  Public
+// @access  Private
 router.delete("/delete/", (req, res) => {
 	let uid = uuid();
 	FFxTech.findById(req.headers.id)

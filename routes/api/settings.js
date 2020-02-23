@@ -10,7 +10,7 @@ const logger = require("../../config/logger");
 
 // // @route   GET api/settings/
 // // @desc    Get All Settings returned in asc order by name
-// // @access  Public
+// // @access  Private
 router.route("/").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Settings");
@@ -26,7 +26,7 @@ router.route("/").get(function(req, res) {
 
 // @route   GET api/settings/opAnnouncement
 // @desc    Gets opAnnouncement Settings details
-// @access  Public
+// @access  Private
 router.route("/opAnnouncement").get(function(req, res) {
     let id = uuid();
     logger.info(id + " === Requesting Settings");
@@ -42,7 +42,7 @@ router.route("/opAnnouncement").get(function(req, res) {
 
 // @route   PUT api/settings/update/:id
 // @desc    Update An Announcement Settings
-// @access  Public
+// @access  Private
 router.route("/updateAnnouncement/:id").put(function(req, res) {
   let _id = req.params.id;
   let uid = uuid();
@@ -82,7 +82,7 @@ router.route("/updateAnnouncement/:id").put(function(req, res) {
 
 // @route   GET api/settings/supportAnnouncement
 // @desc    Gets supportAnnouncement Settings details
-// @access  Public
+// @access  Private
 router.route("/SupportAnnouncement").get(function(req, res) {
     let id = uuid();
     logger.info(id + " === Requesting Settings");
@@ -98,7 +98,7 @@ router.route("/SupportAnnouncement").get(function(req, res) {
 
 // @route   GET api/settings/pfxDailyEmail
 // @desc    Gets pfxDailyEmail Settings details
-// @access  Public
+// @access  Private
 router.route("/pfxDailyEmail").get(function(req, res) {
     let id = uuid();
     logger.info(id + " === Requesting Settings");
@@ -115,7 +115,7 @@ router.route("/pfxDailyEmail").get(function(req, res) {
 
 // @route   PUT api/settings/updatePFxDaily/:id
 // @desc    Update pfxDailyEmail Settings details
-// @access  Public
+// @access  Private
 router.route("/updatePFxDaily/:id").put(function(req, res) {
   let _id = req.params.id;
   let uid = uuid();
@@ -154,7 +154,7 @@ router.route("/updatePFxDaily/:id").put(function(req, res) {
 
 // @route   GET api/settings/pfxDailyEmail
 // @desc    Gets pfxDailyEmail Settings details
-// @access  Public
+// @access  Private
 router.route("/ffxDailyEmail").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Settings");
@@ -170,7 +170,7 @@ router.route("/ffxDailyEmail").get(function(req, res) {
 
 // @route   PUT api/settings/updateFFxDaily/:id
 // @desc    Update ffxDailyEmail Settings details
-// @access  Public
+// @access  Private
 router.route("/updateFFxDaily/:id").put(function(req, res) {
   let _id = req.params.id;
   let uid = uuid();
@@ -210,7 +210,7 @@ router.route("/updateFFxDaily/:id").put(function(req, res) {
 
 // // @route   GET api/settings/fieldFx
 // // @desc    Get All fieldFx Settings name and email returned in asc order by name
-// // @access  Public
+// // @access  Private
 // router.route("/fieldFx").get(function(req, res) {
 //   let id = uuid();
 //   logger.info(id + " === Requesting Settings");
@@ -226,7 +226,7 @@ router.route("/updateFFxDaily/:id").put(function(req, res) {
 
 // // // @route   GET api/settings/settingsByID
 // // // @desc    Get A Single Settings
-// // // @access  Public
+// // // @access  Private
 // router.route("/settingsByID").get(function(req, res) {
 //   let _id = req.headers.id;
 //   Settings.findById(_id, function(err, settings) {
@@ -245,7 +245,7 @@ router.route("/updateFFxDaily/:id").put(function(req, res) {
 
 // // @route   PUT api/settings/update/:id
 // // @desc    Update A Settings
-// // @access  Public
+// // @access  Private
 // router.route("/update/:id").put(function(req, res) {
 //   let _id = req.params.id;
 //   let uid = uuid();
@@ -284,7 +284,7 @@ router.route("/updateFFxDaily/:id").put(function(req, res) {
 
 // // // @route   POST api/settings/create
 // // // @desc    Create A New Settings
-// // // @access  Public
+// // // @access  Private
 // router.route("/create/").post(function(req, res) {
 //   let uid = uuid();
 //   const settings = new Settings({
@@ -305,7 +305,7 @@ router.route("/updateFFxDaily/:id").put(function(req, res) {
 
 // // // @route   Delete api/settings/delete/:id
 // // // @desc    Delete A Settings
-// // // @access  Public
+// // // @access  Private
 // router.delete("/delete/", (req, res) => {
 //   let uid = uuid();
 //   Settings.findById(req.headers.id)

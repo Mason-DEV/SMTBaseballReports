@@ -10,7 +10,7 @@ const logger = require("../../config/logger");
 
 // @route   GET api/staff/
 // @desc    Get All Staff returned in asc order by name
-// @access  Public
+// @access  Private
 router.route("/").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Staff");
@@ -26,7 +26,7 @@ router.route("/").get(function(req, res) {
 
 // @route   GET api/staff/auditors
 // @desc    Get All auditors Staff name and email returned in asc order by name
-// @access  Public
+// @access  Private
 router.route("/auditors").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Staff Auditors");
@@ -42,7 +42,7 @@ router.route("/auditors").get(function(req, res) {
 
 // @route   GET api/staff/Operators
 // @desc    Get All operators Staff name and email returned in asc order by name
-// @access  Public
+// @access  Private
 router.route("/Operators").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Staff PFx Operators");
@@ -58,7 +58,7 @@ router.route("/Operators").get(function(req, res) {
 });
 // @route   GET api/staff/pfxOperators
 // @desc    Get All PFX operators Staff name and email returned in asc order by name
-// @access  Public
+// @access  Private
 router.route("/pfxOperators").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Staff PFx Operators");
@@ -74,7 +74,7 @@ router.route("/pfxOperators").get(function(req, res) {
 });
 // @route   GET api/staff/ffxOperators
 // @desc    Get All FFX operators Staff name and email returned in asc order by name
-// @access  Public
+// @access  Private
 router.route("/FfxOperators").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Staff FFx Operators");
@@ -91,7 +91,7 @@ router.route("/FfxOperators").get(function(req, res) {
 
 // @route   GET api/staff/support
 // @desc    Get All support Staff name and email returned in asc order by name
-// @access  Public
+// @access  Private
 router.route("/support").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Staff Support");
@@ -107,7 +107,7 @@ router.route("/support").get(function(req, res) {
 
 // @route   GET api/staff/staffByID
 // @desc    Get A Single Staff
-// @access  Public
+// @access  Private
 router.route("/staffByID").get(function(req, res) {
   let _id = req.headers.id;
   Staff.findById(_id, function(err, staff) {
@@ -126,7 +126,7 @@ router.route("/staffByID").get(function(req, res) {
 
 // @route   PUT api/staff/update/:id
 // @desc    Update A Staff
-// @access  Public
+// @access  Private
 router.route("/update/:id").put(function(req, res) {
   let _id = req.params.id;
   let uid = uuid();
@@ -168,7 +168,7 @@ router.route("/update/:id").put(function(req, res) {
 
 // @route   POST api/staff/create
 // @desc    Create A New Staff
-// @access  Public
+// @access  Private
 router.route("/create/").post(function(req, res) {
   let uid = uuid();
   const staff = new Staff({
@@ -194,7 +194,7 @@ router.route("/create/").post(function(req, res) {
 
 // @route   Delete api/staff/delete/:id
 // @desc    Delete A Staff
-// @access  Public
+// @access  Private
 router.delete("/delete/", (req, res) => {
   let uid = uuid();
   Staff.findById(req.headers.id)

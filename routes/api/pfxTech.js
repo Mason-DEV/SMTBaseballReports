@@ -10,7 +10,7 @@ const logger = require("../../config/logger");
 
 // @route   GET api/pfxTech/
 // @desc    Get All PFxTech reports
-// @access  Public
+// @access  Private
 router.route("/").get(function(req, res) {
 	let id = uuid();
 	logger.info(id + " === Requesting PFxTech");
@@ -28,7 +28,7 @@ router.route("/").get(function(req, res) {
 
 // @route   GET api/pfxTech/today
 // @desc    Get All of todays PFxTech reports
-// @access  Public
+// @access  Private
 router.route("/today").get(function(req, res) {
 	let id = uuid();
 	//Gets todays date in ISO format
@@ -51,7 +51,7 @@ router.route("/today").get(function(req, res) {
 
 // // @route   Get api/pfxTech/pfxReportByID
 // // @desc    Get A Single PfxTech Report
-// // @access  Public
+// // @access  Private
 router.route("/pfxReportByID").get(function(req, res) {
 	let _id = req.headers.id;
 	PFxTech.findById(_id, function(err, pfxTech) {
@@ -70,7 +70,7 @@ router.route("/pfxReportByID").get(function(req, res) {
 
 // @route   PUT api/pfxTech/update/:id
 // @desc    Update A PFxReport
-// @access  Public
+// @access  Private
 router.route("/update/:id").put(function(req, res) {
 	let _id = req.params.id;
 	let uid = uuid();
@@ -114,7 +114,7 @@ router.route("/update/:id").put(function(req, res) {
 
 // @route   POST api/pfxTech/create
 // @desc    Create A New Staff
-// @access  Public
+// @access  Private
 router.route("/create/").post(function(req, res) {
 	let uid = uuid();
 	let length = Object.keys(req.body.corrections).length;
@@ -150,7 +150,7 @@ router.route("/create/").post(function(req, res) {
 
 // @route   Delete api/pfxTech/delete/:id
 // @desc    Delete A PFxTech Report
-// @access  Public
+// @access  Private
 router.delete("/delete/", (req, res) => {
 	let uid = uuid();
 	PFxTech.findById(req.headers.id)

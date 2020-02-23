@@ -24,7 +24,7 @@ const getGSDate = removeDays => {
 // @route   GET api/dashData/TurnOver
 // @desc    Get Calculation of TurnOver Time on Audits
 // 		Calculation for this is Game Report Log Out -> Audit Report Ready For Share
-// @access  Public
+// @access  Private
 router.route("/").get(function(req, res) {
 	let id = uuid();
 	logger.info(id + " === Requesting Audits");
@@ -43,7 +43,7 @@ router.route("/").get(function(req, res) {
 // @route   GET api/dashData/PlaysResolved
 // @desc    Get Calculation of Total Plays Resolved on Audits
 // @Calc    Get summazation of all FFx Plays from Audit Reports
-// @access  Public
+// @access  Private
 router.route("/PlaysResolved").get(function(req, res) {
 	let id = uuid();
 	let Resolved = 0;
@@ -68,7 +68,7 @@ router.route("/PlaysResolved").get(function(req, res) {
 // @route   GET api/dashData/AvgAuditTime
 // @desc    Get Calculation of Average Audit Time on Audits
 // @Calc    Calcuation of Audit (timeAccuracy + timeCompletion) / Number of Games ; ONLY when Ready for Share === Yes
-// @access  Public
+// @access  Private
 router.route("/AvgAuditTime").get(function(req, res) {
 	let id = uuid();
 	let AverageTime = 0;
@@ -96,7 +96,7 @@ router.route("/AvgAuditTime").get(function(req, res) {
 // @route   GET api/dashData/TimeSpentResolving
 // @desc    Get Calculation of Time Spent Resolving on Audits
 // @Calc    Summazation of all timeResolving from Audit Reports
-// @access  Public
+// @access  Private
 router.route("/TimeSpentResolving").get(function(req, res) {
 	let id = uuid();
 	let TotalTime = 0;
@@ -121,7 +121,7 @@ router.route("/TimeSpentResolving").get(function(req, res) {
 // @route   GET api/dashData/MissedPitchesVidGaps
 // @desc    Get Calculation of Total Missed Pitches from VidGaps on Audits
 // @Calc    Summazation of all Missed Pitches due to VideGaps from Audit Reports
-// @access  Public
+// @access  Private
 router.route("/MissedPitchesVidGaps").get(function(req, res) {
 	let id = uuid();
 	let TotalPitchesMissed = 0;
@@ -146,7 +146,7 @@ router.route("/MissedPitchesVidGaps").get(function(req, res) {
 // @route   GET api/dashData/MissedBIPVidGaps
 // @desc    Get Calculation of Total Missed Pitches from VidGaps on Audits
 // @Calc    Summazation of all Missed Pitches due to VideGaps from Audit Reports
-// @access  Public
+// @access  Private
 router.route("/MissedBIPVidGaps").get(function(req, res) {
 	let id = uuid();
 	let TotalBIPMissed = 0;
@@ -173,7 +173,7 @@ router.route("/MissedBIPVidGaps").get(function(req, res) {
 // @Calc    Summazation of each Item(Season/Month/Week) Returned as an Object
 // @Calc    Season is Day1(Oldest Audit Report in DB) -> Today+1; Month is Today+1 -> Minus 30 days; Week is Today+1 -> Minus 7 Days
 // @Calc    We used +1 on days due to JavaScripts comparing the gamestring formats
-// @access  Public
+// @access  Private
 router.route("/TotalPitches").get(function(req, res) {
 	let id = uuid();
 	let SeasonAdded = 0;
@@ -220,7 +220,7 @@ router.route("/TotalPitches").get(function(req, res) {
 // @Calc    Ready for Share -> ommitted; Ready for Audit -> 100%; All P/Cs done -> 90%;
 // @Calc    80% -> 80%; 70% -> 70%; 60% -> 60%; 50% -> 50%; > 40% -> 40%; 30% -> 30%;
 // @Calc    20% -> 20%; 10% -> 10%;  Recorded Only -> Omitted;
-// @access  Public
+// @access  Private
 router.route("/AvgOPResolve").get(function(req, res) {
 	let id = uuid();
 	let total = 0;
@@ -291,7 +291,7 @@ router.route("/AvgOPResolve").get(function(req, res) {
 // @Calc    Summazation of each Item(Season/Month/Week) Returned as an Object
 // @Calc    Season is Day1(Oldest Audit Report in DB) -> Today+1; Month is Today+1 -> Minus 30 days; Week is Today+1 -> Minus 7 Days
 // @Calc    We used +1 on days due to JavaScripts comparing the gamestring formats
-// @access  Public
+// @access  Private
 router.route("/TotalAudits").get(function(req, res) {
 	let id = uuid();
 	let SeasonAudit = 0;
@@ -337,7 +337,7 @@ router.route("/TotalAudits").get(function(req, res) {
 // @route   GET api/dashData/GamesInBacklog
 // @desc    Get Calculation of Games Not Ready For Share
 // @Calc    Summazation of each Game not marked as readyShare
-// @access  Public
+// @access  Private
 router.route("/GamesInBacklog").get(function(req, res) {
 	let id = uuid();
 	let GamesInBacklog = 0;
