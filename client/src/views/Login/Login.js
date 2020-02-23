@@ -19,6 +19,7 @@ import axios from "axios";
 import routes from "../../routes";
 import { getJwt } from "../../components/helpers/jwt";
 import logger from "../../components/helpers/logger";
+import APIHelper from "../../components/helpers/APIHelper";
 
 class Login extends Component {
 	constructor(props) {
@@ -64,7 +65,7 @@ class Login extends Component {
 	submit(e) {
 		e.preventDefault();
 		axios
-			.post("/getToken", {
+			.post(APIHelper.getTokenAPI, {
 				//Ignores case on username, forces all usercase to match DB
 				username: this.state.username.toLowerCase(),
 				password: this.state.password
@@ -72,7 +73,6 @@ class Login extends Component {
 			.then(res => {
 				//check if this path is valid for the user. This is to avoid directing to a 404
 				let path = this.props.location.req === undefined ? '/dashboard' : this.props.location.req;
-				let user = res.data.payload.id;
 				let contains = false;
 				for(let i = 0; i <routes.length; i++){
 					contains = routes[i].path.includes(path);

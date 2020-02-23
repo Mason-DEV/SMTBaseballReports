@@ -4,6 +4,8 @@ import * as router from "react-router-dom";
 import { Container } from "reactstrap";
 import axios from 'axios';
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
+import APIHelper from "../../components/helpers/APIHelper";
 import _ from "lodash";
 import {
 	AppFooter,
@@ -39,8 +41,7 @@ class DefaultLayout extends Component {
 		this.props.history.push("/login");
 	}
 	componentDidMount() {
-		let token = localStorage.getItem('smt-jwt');
-		axios.get("/getUser", { headers: { Authorization: `Bearer ${token}` } })
+		axios.get(APIHelper.getUserAPI, { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(res => {
 				this.setState({ name: res.data.id, 
 					permission:{

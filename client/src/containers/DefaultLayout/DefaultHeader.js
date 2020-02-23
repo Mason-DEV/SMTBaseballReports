@@ -23,7 +23,6 @@ class DefaultHeader extends Component {
   }
   
   render() {
-    console.log(this);
     const disabled = this.props.permission.extrasPermission === false ? true : false;
     const { children, ...attributes } = this.props;
 

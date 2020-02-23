@@ -19,7 +19,9 @@ import {
 import lgLogo from "../../../src/assests/images/SMT_Report_Tag.jpg";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
 import axios from "axios";
+import APIHelper from "../../components/helpers/APIHelper";
 
 class FFxAuditReport extends Component {
 	constructor(props) {
@@ -133,7 +135,7 @@ class FFxAuditReport extends Component {
 		};
 
 		axios
-			.post("/api/FFxAudit/create", report)
+			.post(APIHelper.createFFxAuditReportAPI, report, { headers: { Authorization: `Bearer ${getJwt()}` }})
 			.then(adding => {
 				this.setState({ isLoading: false, fieldData: {}, success: true });
 			})
@@ -149,11 +151,12 @@ class FFxAuditReport extends Component {
 	}
 
 	componentDidMount() {
+		let token = localStorage.getItem('smt-jwt');
 		Promise.all([
-			axios.get("/api/staff/ffxOperators"),
-			axios.get("/api/venue/fieldFx"),
-			axios.get("/api/staff/support"),
-			axios.get("/api/staff/auditors")
+			axios.get(APIHelper.getFFxStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getFFxVenuesAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getSupportStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getAuditStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 		])
 			.then(([opResponse, venueResponse, supportResponse, auditorResponse]) => {
 				const ops = opResponse.data.map(obj => ({ name: obj.name, email: obj.email }));

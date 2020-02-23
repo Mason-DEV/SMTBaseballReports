@@ -8,7 +8,7 @@ const FFxAudit = require("../../models/FFxAudit");
 
 // @route   GET api/FFxAudit/
 // @desc    Get All audits reports
-// @access  Public
+// @access  Private
 router.route("/").get(function(req, res) {
 	let id = uuid();
 	logger.info(id + " === Requesting Audits");
@@ -26,7 +26,7 @@ router.route("/").get(function(req, res) {
 
 // @route   Get api/FFxAudit/ffxReportByID
 // @desc    Get A Single FFxAudit Report
-// @access  Public
+// @access  Private
 router.route("/ffxReportByID").get(function(req, res) {
 	let _id = req.headers.id;
 	FFxAudit.findById(_id, function(err, ffxAudit) {
@@ -45,7 +45,7 @@ router.route("/ffxReportByID").get(function(req, res) {
 
 // @route   PUT api/ffxAudit/update/:id
 // @desc    Update A FFxAudit Report
-// @access  Public
+// @access  Private
 router.route("/update/:id").put(function(req, res) {
 	let _id = req.params.id;
 	let uid = uuid();
@@ -104,7 +104,7 @@ router.route("/update/:id").put(function(req, res) {
 
 // @route   POST api/FFxAudit/create
 // @desc    Create A New FFxAudit
-// @access  Public
+// @access  Private
 router.route("/create/").post(function(req, res) {
 	let uid = uuid();
 	//First we check to make sure this gamestring doesnt exist already
@@ -195,7 +195,7 @@ router.route("/create/").post(function(req, res) {
 
 // @route   Delete api/FFxAudit/delete/:id
 // @desc    Delete A FFxAudit Report
-// @access  Public
+// @access  Private
 router.delete("/delete/", (req, res) => {
 	let uid = uuid();
 	FFxAudit.findById(req.headers.id)

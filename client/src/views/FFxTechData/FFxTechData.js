@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
 import {
 	Badge,
 	Card,
@@ -29,6 +30,7 @@ import {
 	PaginationLink,
 	PaginationItem
 } from "reactstrap";
+import APIHelper from "../../components/helpers/APIHelper";
 
 class FFxTechData extends Component {
 	constructor(props) {
@@ -219,8 +221,8 @@ class FFxTechData extends Component {
 	}
 	showEdit(id) {
 		axios
-			.get("/api/ffxTech/ffxReportByID", {
-				headers: { ID: id }
+			.get(APIHelper.getFFxTechReportByIDAPI, {
+				headers: { ID: id, Authorization: `Bearer ${getJwt()}` }
 			})
 			.then(res => {
 				this.setState({ editData: res.data });
@@ -259,7 +261,7 @@ class FFxTechData extends Component {
 		};
 		this.setState({ isEditing: true });
 		axios
-			.put("/api/ffxTech/update/" + this.state.editData._id, editedReport)
+			.put(APIHelper.updateFFxTechReportAPI + this.state.editData._id, editedReport,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(editing => {
 				this.setState({ isEditing: false, needToReload: true });
 			})
@@ -291,8 +293,8 @@ class FFxTechData extends Component {
 		e.preventDefault();
 		this.setState({ isDeleting: true });
 		axios
-			.delete("/api/FFxTech/delete/", {
-				headers: { ID: this.state.deleteData._id }
+			.delete(APIHelper.deleteFFxTechReportAPI, {
+				headers: { ID: this.state.deleteData._id, Authorization: `Bearer ${getJwt()}` }
 			})
 			.then(deleteing => {
 				this.setState({ isDeleting: false, needToReload: true });
@@ -306,20 +308,19 @@ class FFxTechData extends Component {
 	//#endregion Delete Functions
 
 	componentDidMount() {
-		// Axios api call to get all data
 		Promise.all([
-			axios.get("/api/FFxTech/"),
-			axios.get("/api/FFxTech/today"),
-			axios.get("/api/staff/ffxOperators"),
-			axios.get("/api/staff/support"),
-			axios.get("/api/venue/fieldFx")
+			axios.get(APIHelper.getFFxTechAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getFFxTechTodayAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getFFxStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getSupportStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+			axios.get(APIHelper.getFFxVenuesAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 		])
 			.then(([allResponse, todayResponse, opResponse, supportResponse, venueResponse]) => {
 				const all = allResponse.data;
 				const today = todayResponse.data;
 				const ops = opResponse.data.map(obj => ({ name: obj.name }));
-				const venues = venueResponse.data.map(obj => ({ name: obj.name }));
 				const support = supportResponse.data.map(obj => ({ name: obj.name }));
+				const venues = venueResponse.data.map(obj => ({ name: obj.name }));
 				this.setState({ allGameData: all, todayGameData: today, operators: ops, support, venues });
 			})
 			.then(isLoading =>
@@ -332,13 +333,12 @@ class FFxTechData extends Component {
 	}
 
 	componentDidUpdate() {
-		//Checking if we need to make an Axios api call to get all venueData
 		if (this.state.needToReload === true) {
 			Promise.all([
-				axios.get("/api/FFxTech/"),
-				axios.get("/api/FFxTech/today"),
-				axios.get("/api/staff/operators"),
-				axios.get("/api/venue/fieldFx")
+				axios.get(APIHelper.getFFxTechAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getFFxTechTodayAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getFFxStaffAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getFFxVenuesAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			])
 				.then(([allResponse, todayResponse, opResponse, venueResponse]) => {
 					const all = allResponse.data;

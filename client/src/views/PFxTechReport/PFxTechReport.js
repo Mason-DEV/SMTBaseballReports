@@ -22,6 +22,9 @@ import Table from "../PFxTechReport/Table";
 import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
+import APIHelper from "../../components/helpers/APIHelper";
+
 
 class PFxTechReport extends Component {
 	constructor(props) {
@@ -100,7 +103,7 @@ class PFxTechReport extends Component {
 		};
 
 		axios
-			.post("/api/pfxTech/create", report)
+			.post(APIHelper.createPFxTechReportAPI,  report, { headers: { Authorization: `Bearer ${getJwt()}` }})
 			.then(adding => {
 				this.setState({ isLoading: false, fieldData: {}, success: true });
 			})
@@ -114,7 +117,9 @@ class PFxTechReport extends Component {
 	};
 
 	componentDidMount() {
-		Promise.all([axios.get("/api/staff/pfxOperators"), axios.get("/api/venue/pitchFx")])
+		Promise.all([
+			axios.get(APIHelper.getPFxStaffAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }), 
+			axios.get(APIHelper.getPfxVenuesAPI, { headers: { Authorization: `Bearer ${getJwt()}` } })])
 			.then(([opResponse, venueResponse]) => {
 				const ops = opResponse.data.map(obj => ({ name: obj.name }));
 				const venues = venueResponse.data.map(obj => ({ name: obj.name }));

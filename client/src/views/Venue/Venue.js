@@ -26,6 +26,8 @@ import {
 import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
+import APIHelper from "../../components/helpers/APIHelper";
 
 class Venue extends Component {
 	constructor(props) {
@@ -103,7 +105,7 @@ class Venue extends Component {
 			pitchFx: this.state.addData.pitchFx ? true : false
 		};
 		axios
-			.post("/api/venue/create/", venueToAdd)
+			.post(APIHelper.createVenueAPI, venueToAdd)
 			.then(adding => {
 				this.setState({ isAdding: false, needToReload: true });
 			})
@@ -130,8 +132,8 @@ class Venue extends Component {
 	}
 	showEdit(id) {
 		axios
-			.get("/api/venue/venueByID", {
-				headers: { ID: id }
+			.get(APIHelper.getVenueByIdAPI, {
+				headers: { ID: id , Authorization: `Bearer ${getJwt()}` }
 			})
 			.then(res => {
 				this.setState({ editData: res.data });
@@ -149,7 +151,7 @@ class Venue extends Component {
 		e.preventDefault();
 		this.setState({ isEditing: true });
 		axios
-			.put("/api/venue/update/" + this.state.editData._id, this.state.editData)
+			.put(APIHelper.updateVenueAPI + this.state.editData._id, this.state.editData,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(editing => {
 				this.setState({ isEditing: false, needToReload: true });
 			})
@@ -181,8 +183,8 @@ class Venue extends Component {
 		e.preventDefault();
 		this.setState({ isDeleting: true });
 		axios
-			.delete("/api/venue/delete/", {
-				headers: { ID: this.state.deleteData._id }
+			.delete(APIHelper.deleteVenueAPI, {
+				headers: { ID: this.state.deleteData._id, Authorization: `Bearer ${getJwt()}` }
 			})
 			.then(deleteing => {
 				this.setState({ isDeleting: false, needToReload: true });
@@ -196,9 +198,8 @@ class Venue extends Component {
 	//#endregion Delete Functions
 
 	componentDidMount() {
-		//Axios api call to get all venueData
 		axios
-			.get("/api/venue/")
+			.get(APIHelper.getVenueAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(res => {
 				this.setState({ venueData: res.data });
 			})
@@ -212,10 +213,9 @@ class Venue extends Component {
 	}
 
 	componentDidUpdate() {
-		//Checking if we need to make an Axios api call to get all venueData
 		if (this.state.needToReload === true) {
 			axios
-				.get("/api/venue/")
+				.get(APIHelper.getVenueAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 				.then(res => {
 					this.setState({
 						venueData: res.data,

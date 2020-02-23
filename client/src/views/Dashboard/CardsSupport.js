@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Bar, Line } from "react-chartjs-2";
 import {
-	Button,
 	ButtonDropdown,
 	ButtonGroup,
 	Card,
@@ -20,6 +19,9 @@ import {
 import axios from "axios";
 import spinner from "../../assests/images/smtSpinner.gif";
 import logger from "../../components/helpers/logger";
+import {getJwt} from "../../components/helpers/jwt";
+import APIHelper from "../../components/helpers/APIHelper";
+
 
 const propTypes = {
 	children: PropTypes.node
@@ -107,10 +109,9 @@ class CardsSupport extends Component {
 	}
 	// Fetch audit data on first mount
 	componentDidMount() {
-		// if (this.props.permission === "op") {
-		// 	this.setState({ isLoading: false });
-		// } else {
-			Promise.all([axios.get("/api/FFxAudit/"), axios.get("/api/settings/supportAnnouncement")])
+			Promise.all([
+				axios.get(APIHelper.getFFxAuditAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getSettingsOPAnnounceAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })])
 				.then(([auditResponse, supportResponse]) => {
 					const data = auditResponse.data;
 					const supportAnnounce = supportResponse.data;
