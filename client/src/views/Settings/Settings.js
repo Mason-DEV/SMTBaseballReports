@@ -217,7 +217,7 @@ class Settings extends Component {
 		};
 		const edit = { details };
 		axios
-			.put(APIHelper.updateSettingsAnnouncementAPI + this.state.supportAnnounce._id, edit)
+			.put(APIHelper.updateSettingsAnnouncementAPI + this.state.supportAnnounce._id, edit,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(editing => {
 				this.showSuccess();
 			})

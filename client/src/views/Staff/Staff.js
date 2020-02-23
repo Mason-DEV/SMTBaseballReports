@@ -123,7 +123,7 @@ class Staff extends Component {
 			}
 		};
 		axios
-			.post(APIHelper.createStaffAPI, staffToAdd)
+			.post(APIHelper.createStaffAPI, staffToAdd , { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(adding => {
 				this.setState({ isAdding: false, needToReload: true });
 			})
