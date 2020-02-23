@@ -156,7 +156,7 @@ router.route("/create/").post(function(req, res) {
 
 // @route   POST api/audits
 // @desc    Create An Audit
-// @access  Public
+// @access  Private
 // router.route('/', (req, res) => {
 //     const newAudit = new Audit({
 //        // gameID: req.body.gameID
@@ -167,7 +167,7 @@ router.route("/create/").post(function(req, res) {
 
 // @route   PUT api/audits
 // @desc    Update An Audit Data
-// @access  Public
+// @access  Private
 // router.put('/:id', (req, res) => {
 //     let _id = req.params.id;
 //     Audit.findById(_id, function(err, audit) {

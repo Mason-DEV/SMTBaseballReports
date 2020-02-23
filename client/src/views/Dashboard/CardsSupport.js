@@ -111,7 +111,7 @@ class CardsSupport extends Component {
 	componentDidMount() {
 			Promise.all([
 				axios.get(APIHelper.getFFxAuditAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
-				axios.get(APIHelper.getSettingsOPAnnounceAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })])
+				axios.get(APIHelper.getSettingsSupportAnnounceAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })])
 				.then(([auditResponse, supportResponse]) => {
 					const data = auditResponse.data;
 					const supportAnnounce = supportResponse.data;

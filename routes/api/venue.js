@@ -10,7 +10,7 @@ const logger = require("../../config/logger");
 
 // // @route   GET api/venue/
 // // @desc    Get All Venue returned in asc order by name
-// // @access  Public
+// // @access  Private
 router.route("/").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Venue");
@@ -26,7 +26,7 @@ router.route("/").get(function(req, res) {
 
 // @route   GET api/venue/pitchFx
 // @desc    Get All pitchFx Venue name and email returned in asc order by name
-// @access  Public
+// @access  Private
 router.route("/pitchFx").get(function(req, res) {
     let id = uuid();
     logger.info(id + " === Requesting Venue");
@@ -42,7 +42,7 @@ router.route("/pitchFx").get(function(req, res) {
 
 // @route   GET api/venue/fieldFx
 // @desc    Get All fieldFx Venue name and email returned in asc order by name
-// @access  Public
+// @access  Private
 router.route("/fieldFx").get(function(req, res) {
   let id = uuid();
   logger.info(id + " === Requesting Venue");
@@ -58,7 +58,7 @@ router.route("/fieldFx").get(function(req, res) {
 
 // // @route   GET api/venue/venueByID
 // // @desc    Get A Single Venue
-// // @access  Public
+// // @access  Private
 router.route("/venueByID").get(function(req, res) {
   let _id = req.headers.id;
   Venue.findById(_id, function(err, venue) {
@@ -77,7 +77,7 @@ router.route("/venueByID").get(function(req, res) {
 
 // @route   PUT api/venue/update/:id
 // @desc    Update A Venue
-// @access  Public
+// @access  Private
 router.route("/update/:id").put(function(req, res) {
   let _id = req.params.id;
   let uid = uuid();
@@ -116,7 +116,7 @@ router.route("/update/:id").put(function(req, res) {
 
 // // @route   POST api/venue/create
 // // @desc    Create A New Venue
-// // @access  Public
+// // @access  Private
 router.route("/create/").post(function(req, res) {
   let uid = uuid();
   const venue = new Venue({
@@ -137,7 +137,7 @@ router.route("/create/").post(function(req, res) {
 
 // // @route   Delete api/venue/delete/:id
 // // @desc    Delete A Venue
-// // @access  Public
+// // @access  Private
 router.delete("/delete/", (req, res) => {
   let uid = uuid();
   Venue.findById(req.headers.id)

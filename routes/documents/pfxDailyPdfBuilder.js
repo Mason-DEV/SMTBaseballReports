@@ -47,7 +47,7 @@ const getDate = () => {
 
 // @route   GET documents/testPDF/
 // @desc
-// @access  Public
+// @access  Private
 router.route("/testPDF").post(function(req, res) {
 	let id = uuid();
 	let fieldsToAdd = [];
