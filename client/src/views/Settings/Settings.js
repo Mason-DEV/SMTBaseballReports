@@ -104,9 +104,8 @@ class Settings extends Component {
 		e.preventDefault();
 		const details = this.state.pfxDailyEmail.details;
 		const edit = { details };
-		console.log(edit);
 		axios
-			.put(APIHelper.updateSettingsPFxDailyAPI + this.state.pfxDailyEmail._id, edit)
+			.put(APIHelper.updateSettingsPFxDailyAPI + this.state.pfxDailyEmail._id, edit , { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(editing => {
 				this.showSuccess();
 			})
@@ -131,7 +130,7 @@ class Settings extends Component {
 		const Fields = this.state.pfxDailyEmail.details.Fields;
 		const details = { Fields };
 		axios
-			.post(APIHelper.buildTestPFxDailyPDFAPI, details, { responseType: "blob" })
+			.post(APIHelper.buildTestPFxDailyPDFAPI, details, { responseType: "blob",   headers: { Authorization: `Bearer ${getJwt()}` }  })
 			.then(res => {
 				const pdfBlob = new Blob([res.data], { type: "application/pdf" });
 				saveAs(pdfBlob, "PFx Daily Preview.pdf");
@@ -184,7 +183,7 @@ class Settings extends Component {
 		const edit = { details };
 		console.log(edit);
 		axios
-			.put(APIHelper.updateSettingsAnnouncementAPI + this.state.opAnnounce._id, edit)
+			.put(APIHelper.updateSettingsAnnouncementAPI + this.state.opAnnounce._id, edit,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(editing => {
 				this.showSuccess();
 			})
