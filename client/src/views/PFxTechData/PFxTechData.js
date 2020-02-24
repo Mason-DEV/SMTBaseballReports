@@ -563,7 +563,7 @@ class PFxTechData extends Component {
 													<Label htmlFor="t1Notes">T1 Notes</Label>
 													{this.props.permission.pfxTechDataPermission ? (
 														<Input
-															defaultValue={this.state.editData.t1Notes}
+															value={this.state.editData.t1Notes}
 															onChange={e => this.changeEditData(e)}
 															name="t1Notes"
 															id="t1Notes"

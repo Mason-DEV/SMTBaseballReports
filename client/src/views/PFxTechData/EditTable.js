@@ -230,6 +230,7 @@ class EditTable extends Component {
 									<td className="text-center">
 										<Button
 											type="button"
+											disabled
 											onClick={e => {
 												this.handleRemoveSpecificRow(idx);
 											}}

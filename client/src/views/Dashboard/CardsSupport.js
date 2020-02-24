@@ -293,7 +293,7 @@ class CardsSupport extends Component {
 								</CardHeader>
 								<CardBody className="pb-0">
 									<div id="avgAuditDataDiv" className="text-value" style={{ fontSize: "30px" }}>
-										1234
+										0
 									</div>
 								</CardBody>
 								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
@@ -329,7 +329,7 @@ class CardsSupport extends Component {
 								</CardHeader>
 								<CardBody className="pb-0">
 									<div id="totalAuditDataDiv" className="text-value" style={{ fontSize: "30px" }}>
-										1234
+										0
 									</div>
 								</CardBody>
 								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
@@ -344,7 +344,7 @@ class CardsSupport extends Component {
 								<CardHeader>Average Op Resolve Percentage</CardHeader>
 								<CardBody className="pb-0">
 									<div id="totalAuditDataDiv" className="text-value" style={{ fontSize: "30px" }}>
-										80%
+										0
 									</div>
 								</CardBody>
 								<div className="chart-wrapper mx-3" style={{ height: "70px" }}>
@@ -411,7 +411,7 @@ class CardsSupport extends Component {
 													<div className="callout callout-success">
 														<small className="text-muted">Current Turn Over Time</small>
 														<br />
-														<strong className="h4">25 Hours</strong>
+														<strong className="h4">0</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -419,7 +419,7 @@ class CardsSupport extends Component {
 													<div className="callout callout-primary">
 														<small className="text-muted">Average Audit Time</small>
 														<br />
-														<strong className="h4">3 Hours</strong>
+														<strong className="h4">0</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -443,7 +443,7 @@ class CardsSupport extends Component {
 													<div className="callout callout-info">
 														<small className="text-muted">GD Sync</small>
 														<br />
-														<strong className="h4">{this.state.dashData.gdSync} %</strong>
+														<strong className="h4">0</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -496,7 +496,7 @@ class CardsSupport extends Component {
 															Total FFx Games with Reports
 														</UncontrolledTooltip>
 														<br />
-														<strong className="h4">12,345</strong>
+														<strong className="h4">0</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -510,7 +510,7 @@ class CardsSupport extends Component {
 															Audit Reports not Ready for Share
 														</UncontrolledTooltip>
 														<br />
-														<strong className="h4">12,345</strong>
+														<strong className="h4">0</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
