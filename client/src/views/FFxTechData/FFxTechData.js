@@ -665,7 +665,7 @@ class FFxTechData extends Component {
 													></Input>
 												</FormGroup>
 												<Label>
-													{this.props.permission === "support" ? (
+													{this.props.permission.ffxTechDataPermission ? (
 														<h5 style={{ color: "red" }}>Support Section</h5>
 													) : (
 														<h5 style={{ color: "red" }}>Support Section - Not accessible via OP login</h5>
@@ -673,7 +673,7 @@ class FFxTechData extends Component {
 												</Label>
 												<FormGroup>
 													<Label htmlFor="supportNotes">Support Notes</Label>
-													{this.props.permission === "support" ? (
+													{this.props.permission.ffxTechDataPermission ? (
 														<Input
 															style={{ height: 100 }}
 															value={this.state.editData.supportNotes}
@@ -690,7 +690,7 @@ class FFxTechData extends Component {
 													<Label htmlFor="bisonSet">
 														Bison Set <Badge>R Drive </Badge>
 													</Label>
-													{this.props.permission === "support" ? (
+													{this.props.permission.ffxTechDataPermission ? (
 														<Input
 															defaultValue={this.state.editData.bisonSet}
 															onChange={e => this.changeEditData(e)}
@@ -705,7 +705,7 @@ class FFxTechData extends Component {
 												</FormGroup>
 												<FormGroup>
 													<Label htmlFor="backupTask">Backup Task Initiated</Label>
-													{this.props.permission === "support" ? (
+													{this.props.permission.ffxTechDataPermission ? (
 														<Input
 															value={this.state.editData.backupTask}
 															onChange={e => this.changeEditData(e)}
@@ -730,7 +730,7 @@ class FFxTechData extends Component {
 												</FormGroup>
 												<FormGroup>
 													<Label htmlFor="backupNotes">Backup Notes</Label>
-													{this.props.permission === "support" ? (
+													{this.props.permission.ffxTechDataPermission ? (
 														<Input
 															defaultValue={this.state.editData.backupNote}
 															onChange={e => this.changeEditData(e)}

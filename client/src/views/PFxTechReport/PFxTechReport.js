@@ -219,7 +219,7 @@ class PFxTechReport extends Component {
 											</Label>
 											<Table parentCallback={this.callbackFunction} />
 											<Label>
-												{this.props.permission === "support" ? (
+												{this.props.permission.pfxTechDataPermission ? (
 													<h5 style={{ color: "red" }}>Support Section</h5>
 												) : (
 													<h5 style={{ color: "red" }}>Support Section - Not accessible via OP login</h5>
@@ -227,7 +227,7 @@ class PFxTechReport extends Component {
 											</Label>
 											<FormGroup>
 												<Label htmlFor="t1Notes">T1 Notes</Label>
-												{this.props.permission === "support" ? (
+												{this.props.permission.pfxTechDataPermission ? (
 													<Input type="textarea" onChange={e => this.change(e)} name="t1Notes" id="t1Notes"></Input>
 												) : (
 													<Input disabled type="textarea" name="t1Notes" id="t1Notes"></Input>
