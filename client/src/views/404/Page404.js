@@ -3,6 +3,12 @@ import { Col, Container, Row } from 'reactstrap';
 
 
 class Page404 extends Component {
+
+  //Temp to force logout
+  componentDidMount(){
+      localStorage.removeItem("smt-jwt");
+  }
+
   render() {
     return (
       <div className="app flex-row align-items-center">

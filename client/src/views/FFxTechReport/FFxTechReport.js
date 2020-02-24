@@ -150,6 +150,7 @@ class FFxTechReport extends Component {
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
+			console.log(this.props.permission);
 			return (
 				<React.Fragment>
 					<Alert color="success" isOpen={this.state.success} toggle={this.onDismissSuccess}>
@@ -301,7 +302,7 @@ class FFxTechReport extends Component {
 												<Input onChange={e => this.change(e)} id="logOut" type="time" name="logOut" required></Input>
 											</FormGroup>
 											<Label>
-												{this.props.permission === "support" ? (
+												{this.props.permission.ffxTechDataPermission ? (
 													<h5 style={{ color: "red" }}>Support Section</h5>
 												) : (
 													<h5 style={{ color: "red" }}>Support Section - Not accessible via OP login</h5>
@@ -309,7 +310,7 @@ class FFxTechReport extends Component {
 											</Label>
 											<FormGroup>
 												<Label htmlFor="supportNotes">Support Notes</Label>
-												{this.props.permission === "support" ? (
+												{this.props.permission.ffxTechDataPermission ? (
 													<Input
 														type="textarea"
 														onChange={e => this.change(e)}
@@ -324,7 +325,7 @@ class FFxTechReport extends Component {
 												<Label htmlFor="bisonSet">
 													Bison Set <Badge>R Drive </Badge>
 												</Label>
-												{this.props.permission === "support" ? (
+												{this.props.permission.ffxTechDataPermission ? (
 													<Input
 														onChange={e => this.change(e)}
 														type="text"
@@ -338,7 +339,7 @@ class FFxTechReport extends Component {
 											</FormGroup>
 											<FormGroup>
 												<Label htmlFor="backupTask">Backup Task Initiated</Label>
-												{this.props.permission === "support" ? (
+												{this.props.permission.ffxTechDataPermission ? (
 													<Input onChange={e => this.change(e)} type="select" name="backupTask" id="backupTask">
 														<option key="-1"></option>
 														<option>Default</option>
@@ -357,7 +358,7 @@ class FFxTechReport extends Component {
 											</FormGroup>
 											<FormGroup>
 												<Label htmlFor="backupNotes">Backup Notes </Label>
-												{this.props.permission === "support" ? (
+												{this.props.permission.ffxTechDataPermission ? (
 													<Input
 														onChange={e => this.change(e)}
 														type="text"

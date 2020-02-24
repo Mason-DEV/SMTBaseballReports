@@ -561,13 +561,17 @@ class PFxTechData extends Component {
 												</FormGroup>
 												<FormGroup>
 													<Label htmlFor="t1Notes">T1 Notes</Label>
-													<Input
-														type="textarea"
-														value={this.state.editData.t1Notes}
-														onChange={e => this.changeEditData(e)}
-														name="t1Notes"
-														id="t1Notes"
-													></Input>
+													{this.props.permission.pfxTechDataPermission ? (
+														<Input
+															defaultValue={this.state.editData.t1Notes}
+															onChange={e => this.changeEditData(e)}
+															name="t1Notes"
+															id="t1Notes"
+															type="textarea"
+														/>
+													) : (
+														<Input disabled type="textarea" name="t1Notes" id="t1Notes" />
+													)}
 												</FormGroup>
 											</Col>
 										</Row>

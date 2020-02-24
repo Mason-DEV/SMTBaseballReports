@@ -11,6 +11,7 @@ const PFxTechData = React.lazy(() => import('./views/PFxTechData/PFxTechData'));
 const Settings = React.lazy(() => import('./views/Settings/Settings'));
 const Staff = React.lazy(() => import('./views/Staff/Staff'));
 const Venue = React.lazy(() => import('./views/Venue/Venue'));
+const Logout = React.lazy(() => import('./views/Logout/Logout'));
 
 const routes = [
   { path: '/', exact: true, name: 'Home',  permission: ["ffxAuditPermission", "ffxTechPermission", "pfxTechPermission", "ffxAuditDataPermission", "ffxTechDataPermission", "pfxTechDataPermission", "extrasPermission"],  component: Dashboard },
