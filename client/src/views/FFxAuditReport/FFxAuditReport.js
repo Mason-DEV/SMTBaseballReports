@@ -473,15 +473,15 @@ class FFxAuditReport extends Component {
 												<Label htmlFor="screenShots">Screenshots</Label>
 												<Row>
 													<Col>
-														<Input type="file" name="screenShots1" id="screenShots1"></Input>
+														<Input disabled type="file" name="screenShots1" id="screenShots1"></Input>
 														<br />
-														<Input type="file" name="screenShots2" id="screenShots2"></Input>
+														<Input  disabled type="file" name="screenShots2" id="screenShots2"></Input>
 													</Col>
 
 													<Col>
-														<Input type="file" name="screenShots3" id="screenShots3"></Input>
+														<Input disabled type="file" name="screenShots3" id="screenShots3"></Input>
 														<br />
-														<Input type="file" name="screenShots4" id="screenShots4"></Input>
+														<Input disabled type="file" name="screenShots4" id="screenShots4"></Input>
 													</Col>
 												</Row>
 											</FormGroup>
