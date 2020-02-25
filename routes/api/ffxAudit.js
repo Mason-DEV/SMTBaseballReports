@@ -67,6 +67,7 @@ router.route("/update/:id").put(function(req, res) {
 				ffxAudit.logIn = req.body.logIn;
 				ffxAudit.logOut = req.body.logOut;
 				ffxAudit.missedBIPVidGaps = req.body.missedBIPVidGaps;
+				ffxAudit.vidGaps = req.body.vidGaps;
 				ffxAudit.missedPitchesVidGaps = req.body.missedPitchesVidGaps;
 				ffxAudit.numBIPasPC = req.body.numBIPasPC;
 				ffxAudit.numFBasPC = req.body.numFBasPC;
@@ -118,6 +119,7 @@ router.route("/create/").post(function(req, res) {
 				commentsPlayer: req.body.commentsPlayer,
 				logIn: req.body.logIn,
 				logOut: req.body.logOut,
+				vidGaps: req.body.vidGaps,
 				missedBIPVidGaps: req.body.missedBIPVidGaps,
 				missedPitchesVidGaps: req.body.missedPitchesVidGaps,
 				numBIPasPC: req.body.numBIPasPC,
