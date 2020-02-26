@@ -136,7 +136,20 @@ class Settings extends Component {
 				saveAs(pdfBlob, "PFx Daily Preview.pdf");
 			})
 			.catch(error => {
-				logger("error", "OP Announce Submit === " + error);
+				logger("error", "generateTestPFxPDF Submit === " + error);
+			});
+	}
+	generateTestFFxPDF(e) {
+		const Fields = this.state.ffxDailyEmail.details.Fields;
+		const details = { Fields };
+		axios
+			.post(APIHelper.buildTestFFxDailyPDFAPI, details, { responseType: "blob",   headers: { Authorization: `Bearer ${getJwt()}` }  })
+			.then(res => {
+				const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+				saveAs(pdfBlob, "FFx Daily Preview.pdf");
+			})
+			.catch(error => {
+				logger("error", "generateTestFFxPDF Submit === " + error);
 			});
 	}
 
@@ -696,7 +709,7 @@ class Settings extends Component {
 												<Button disabled type="submit" size="sm" color="success">
 													<i className="fa fa-check"></i> Save
 												</Button>{" "}
-												<Button disabled onClick={e => this.generateTestPFxPDF(e)} size="sm" color="warning">
+												<Button onClick={e => this.generateTestFFxPDF(e)} size="sm" color="warning">
 													<i className="fa fa-file-pdf-o"></i> Preview PDF
 												</Button>
 											</Form>

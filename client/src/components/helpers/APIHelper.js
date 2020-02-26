@@ -54,6 +54,7 @@ export default {
     getVenueByIdAPI: "/api/venue/venueByID",
     //PDF APIs
     buildTestPFxDailyPDFAPI: "/api/pfxDailyPdfBuilder/testPDF",
+    buildTestFFxDailyPDFAPI: "/api/ffxDailyPdfBuilder/testPDF",
     //Logger API
     loggerAPI: "/api/logger"
     
