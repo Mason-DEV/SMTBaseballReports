@@ -206,7 +206,7 @@ class FFxAuditReport extends Component {
 													className="form-control-warning"
 													id="gameID"
 													name="gamestring"
-													placeholder="2019_01_01_smtafa_smtafa_1"
+													placeholder="2020_01_01_smtafa_smtafa_1"
 													required
 												/>
 											</FormGroup>

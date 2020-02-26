@@ -14,6 +14,7 @@
   "author": "Mason Guy",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.19.2",
     "bcrypt": "^3.0.6",
     "bcrypt-nodejs": "0.0.3",
     "blob-stream": "^0.1.3",

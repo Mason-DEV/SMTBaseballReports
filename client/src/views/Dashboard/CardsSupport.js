@@ -73,6 +73,10 @@ function getRandom(length, max, min) {
 	return Array(length)
 		.fill()
 		.map(() => Math.round(Math.random() * (max - min) + min));
+};
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 class CardsSupport extends Component {
@@ -127,10 +131,10 @@ class CardsSupport extends Component {
 						dashData: {
 							...this.state.dashData,
 							playsResolved: this.calcPlaysResolved(),
-							gdSync: this.calcGDSync(),
-							missedPitches: this.calcMissedPitches(),
-							missedBIP: this.calcMissedBIP(),
-							addedPitches: this.calcAddedPitches()
+							// gdSync: this.calcGDSync(),
+							// missedPitches: this.calcMissedPitches(),
+							// missedBIP: this.calcMissedBIP(),
+							// addedPitches: this.calcAddedPitches()
 						}
 					});
 				})
@@ -138,7 +142,6 @@ class CardsSupport extends Component {
 					console.log(error);
 					logger("error", error);
 				});
-		// }
 	}
 
 	toggle() {
@@ -175,7 +178,7 @@ class CardsSupport extends Component {
 			plays.push(+element.ffxPitches);
 		});
 		const sum = plays.reduce((partial_sum, a) => partial_sum + a, 0);
-		return sum;
+		return numberWithCommas(sum);
 	}
 	//gets totalSync for all games
 	calcGDSync() {

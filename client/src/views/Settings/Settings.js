@@ -181,7 +181,6 @@ class Settings extends Component {
 				: this.state.opAnnounce.details.AnnouncementText
 		};
 		const edit = { details };
-		console.log(edit);
 		axios
 			.put(APIHelper.updateSettingsAnnouncementAPI + this.state.opAnnounce._id, edit,  { headers: { Authorization: `Bearer ${getJwt()}` } })
 			.then(editing => {
@@ -264,7 +263,6 @@ class Settings extends Component {
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
-			console.log(this.state);
 			return (
 				<React.Fragment>
 					<Alert color="danger" isOpen={this.state.error} toggle={this.onDismissError}>

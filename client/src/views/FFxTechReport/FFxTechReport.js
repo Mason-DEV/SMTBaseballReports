@@ -150,7 +150,6 @@ class FFxTechReport extends Component {
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
 		} else {
-			console.log(this.props.permission);
 			return (
 				<React.Fragment>
 					<Alert color="success" isOpen={this.state.success} toggle={this.onDismissSuccess}>

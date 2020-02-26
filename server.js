@@ -21,6 +21,8 @@ const DashData = require("./routes/api/dashData");
 
 //Docment PDF Route
 const PfxDailyPdfBuilder = require("./routes/documents/pfxDailyPdfBuilder");
+const FfxDailyPdfBuilder = require("./routes/documents/ffxDailyPdfBuilder");
+const AuditPdfBuilder = require("./routes/documents/auditPdfBuilder");
 //Models
 const UserModel = require("./models/User");
 
@@ -130,6 +132,8 @@ app.use("/api/dashData",  passport.authenticate("jwt", { session: false }), Dash
 
 //PDF Routes
 app.use("/api/pfxDailyPdfBuilder",  passport.authenticate("jwt", { session: false }), PfxDailyPdfBuilder);
+app.use("/api/ffxDailyPdfBuilder",  passport.authenticate("jwt", { session: false }), FfxDailyPdfBuilder);
+app.use("/api/auditPdfBuilder",  passport.authenticate("jwt", { session: false }), AuditPdfBuilder);
 
 
 

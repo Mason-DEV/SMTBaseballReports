@@ -274,7 +274,6 @@ class FFxAuditData extends Component {
 	}
 
 	render() {
-		console.log(this.state.sortedBy);
 		const { currentPage } = this.state;
 		if (this.state.isLoading) {
 			return <img src={spinner} height="150" width="150" alt="spinner" align="center" style={{ height: "100%" }} />;
