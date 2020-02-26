@@ -29,16 +29,6 @@ const pfxFieldHeaders = {
 	corrections: "Corrections"
 };
 
-const styleDEF = {
-	header: {
-		fontSize: 40,
-		bold: true
-	},
-	anotherStyle: {
-		italics: true,
-		alignment: "right"
-	}
-};
 const printer = new PdfPrinter(fonts);
 
 const getDate = () => {
@@ -74,31 +64,32 @@ const todayData = async (token) => {
 	return null
 }
 
-// @route   GET documents/testPDF/
+// @route   Post documents/dailyPfxReportPDF/
 // @desc
 // @access  Private
-router.route("/testPDF").post(async function(req, res) {
+router.route("/dailyPfxReportPDF").get(async function(req, res) {
 	let id = uuid();
-	let fieldsToAdd = [];
-	let formatted = [];
 	//Get A Token
 	// const token = await devToken();
 	// //Get Emails of who we are sending too
 	// const today = await todayData(token);
+});
 
-	for (let [key, value] of Object.entries(req.body.Fields)) {
-		if (value === true) {
-			fieldsToAdd.push(key);
-		}
-	}
-	//Format headers
-	fieldsToAdd.map((field, idx) => {
-		let test = pfxFieldHeaders[field];
-		console.log(test);
-		formatted.push(test);
-	});
+// @route   POST documents/testPDF/
+// @desc
+// @access  Private
+router.route("/testPDF").post(async function(req, res) {
+	let id = uuid();
 
 	//Here is where we would get the data needed for TODAYS Games and create the array
+	var data = [
+		{ venue: 'Data', Operator: 'Data', HWSWIssues: 'Data', t1Notes: 'Data' },
+		{ venue: 'Data', Operator: 'Data', HWSWIssues: 'Data', t1Notes: 'Data' },
+		{ venue: 'Data', Operator: 'Data', HWSWIssues: 'Data', t1Notes: 'Data' },
+		
+	];
+
+
 	logger.info(id + " === Requesting Test PFx Daily Summary pdf");
 	var docDefinition = {
 		pageOrientation: "landscape",
@@ -113,36 +104,24 @@ router.route("/testPDF").post(async function(req, res) {
 						{
 							text: "PITCH F/x PDF REPORT PREVIEW",
 							style: { fontSize: 18, alignment: "center", margin: [0, 190, 0, 80] }
-						}
+						},
+						{ text: "Daily Summary for  " +getDate(), style: { fontSize: 14,  alignment: "center", margin: [0, 190, 0, 80] } }
 					]
 				]
 			},
-			{ text: "PFx Daily Summary for  " + getDate(), style: { fontSize: 16, margin: [0, 10, 0, 5] } },
+			
 			{
-				table: {
-					headerRows: 1,
-					widths: "*",
-					margin: [-50, 2, 10, 20],
-					body: [
-						//Sets Column Headers
-                        formatted.map((field, idx) => {
-                            return { fillColor: "#eeeeee", text: field};
-                        }),
-						//Sets Values
-						formatted.map((inning, idx) => {
-							return { text: "Data" };
-						}),
-						formatted.map((inning, idx) => {
-							return { text: "Data" };
-						}),
-						formatted.map((inning, idx) => {
-							return { text: "Data" };
-						}),
-						formatted.map((inning, idx) => {
-							return { text: "Data" };
-						})
-					]
-				}
+			table: {
+            headerRows: 1,
+            widths:  '*',
+                body: [
+					[ {text: "Venue", style:{ fillColor: "#eeeeee"}}, {text: "Operator", style:{ fillColor: "#eeeeee"}}, {text: "HW/SW Issues", style:{ fillColor: "#eeeeee"}}, {text: "T1 Notes", style:{ fillColor: "#eeeeee"}} ],
+                  [ {text: data[0].venue }, {text: data[0].Operator}, {text: data[0].HWSWIssues}, {text: data[0].t1Notes} ],
+                  [ {text: data[1].venue }, {text: data[1].Operator}, {text: data[1].HWSWIssues}, {text: data[1].t1Notes} ],
+                  [ {text: data[2].venue }, {text: data[2].Operator}, {text: data[2].HWSWIssues}, {text: data[2].t1Notes} ],
+                  
+                ]
+              }
 			}
 		]
 	};
