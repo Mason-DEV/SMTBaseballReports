@@ -7,7 +7,6 @@ class Logout extends Component {
     }
     
 	componentDidMount() {
-		console.log("Log out hit");
 		localStorage.removeItem("smt-jwt");
         this.props.history.push("/login");
 	}

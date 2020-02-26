@@ -63,7 +63,6 @@ class CardsOP extends Component {
 				})
 			)
 			.catch(function(error) {
-				console.log(error);
 				logger("error", error);
 			});
 	}

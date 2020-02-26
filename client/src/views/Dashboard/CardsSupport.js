@@ -127,10 +127,10 @@ class CardsSupport extends Component {
 						dashData: {
 							...this.state.dashData,
 							playsResolved: this.calcPlaysResolved(),
-							gdSync: this.calcGDSync(),
-							missedPitches: this.calcMissedPitches(),
-							missedBIP: this.calcMissedBIP(),
-							addedPitches: this.calcAddedPitches()
+							// gdSync: this.calcGDSync(),
+							// missedPitches: this.calcMissedPitches(),
+							// missedBIP: this.calcMissedBIP(),
+							// addedPitches: this.calcAddedPitches()
 						}
 					});
 				})
@@ -138,7 +138,6 @@ class CardsSupport extends Component {
 					console.log(error);
 					logger("error", error);
 				});
-		// }
 	}
 
 	toggle() {

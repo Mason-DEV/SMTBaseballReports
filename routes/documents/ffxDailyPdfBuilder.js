@@ -17,16 +17,26 @@ const fonts = {
 	}
 };
 
-const pfxFieldHeaders = {
-	operator: "Operator",
+const ffxFieldHeaders = {
 	venue: "Venue",
-	date: "Date",
-	firstPitch: "First Pitch",
+	operator: "Operator",
+	support: "Support",
+	bitMode: "Bit Mode",
+	gameID: "Game ID",
+	gameStatus: "Game Status",
+	ipcrIssues: "IPCR Issues",
+	fgdIssues: "FGD Issues",
+	resolverIssues: "Resolver Issues",
+	hardwareIssues: "Hardware Issues",
+	miscNotes: "Misc Notes",
+	date: "Date ",
 	logIn: "Log In",
 	logOut: "Log Out",
-	hwswIssues: "HW/SW Issues",
-	t1Notes: "T1 Notes",
-	corrections: "Corrections"
+	firstPitch: "First Pitch",
+	supportNotes: "Support Notes",
+	bisonSet: "Bison Set",
+	backupTask: "Backup Task",
+	backupNotes: "Backup Notes"
 };
 
 const styleDEF = {
@@ -93,7 +103,7 @@ router.route("/testPDF").post(async function(req, res) {
 	}
 	//Format headers
 	fieldsToAdd.map((field, idx) => {
-		let test = pfxFieldHeaders[field];
+		let test = ffxFieldHeaders[field];
 		console.log(test);
 		formatted.push(test);
 	});
@@ -111,13 +121,13 @@ router.route("/testPDF").post(async function(req, res) {
 					},
 					[
 						{
-							text: "PITCH F/x PDF REPORT PREVIEW",
+							text: "FIELD F/x PDF REPORT PREVIEW",
 							style: { fontSize: 18, alignment: "center", margin: [0, 190, 0, 80] }
 						}
 					]
 				]
 			},
-			{ text: "PFx Daily Summary for  " + getDate(), style: { fontSize: 16, margin: [0, 10, 0, 5] } },
+			{ text: "FFx Daily Summary for  " + getDate(), style: { fontSize: 16, margin: [0, 10, 0, 5] } },
 			{
 				table: {
 					headerRows: 1,
