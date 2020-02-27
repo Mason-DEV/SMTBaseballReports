@@ -55,6 +55,7 @@ export default {
     //PDF APIs
     buildTestPFxDailyPDFAPI: "/api/pfxDailyPdfBuilder/testPDF",
     buildTestFFxDailyPDFAPI: "/api/ffxDailyPdfBuilder/testPDF",
+    buildTestFFxReportPDFAPI: "/api/ffxReportPdfBuilder/testPDF",
     //Logger API
     loggerAPI: "/api/logger"
     

@@ -99,8 +99,15 @@ const ffxAuditSchema = new Schema(
 		vidGaps: {
 			type: String,
 			required: false
-		}
-		
+		},
+		emailSent: {
+			type: Boolean,
+			required: false
+		},
+		dateEmailSent: {
+			type: Date,
+			required: false
+		},
 	},
 	{
 		collection: "ffxAudit"

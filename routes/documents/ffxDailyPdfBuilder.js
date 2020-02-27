@@ -1,7 +1,9 @@
 const uuid = require("uuid");
 const express = require("express");
 const router = express.Router();
-const axios = require("axios");
+const devToken = require("../../config/keys").SECERT_JWT;
+require('datejs');
+
 
 //Logger
 const logger = require("../../config/logger");
@@ -47,31 +49,22 @@ const getDate = () => {
 	return formated;
 };
 
-const devToken = async () => {
-	let token = null;
-	await axios.post("http://localhost:5000/getToken", {
-		username: "dev",
-		//TODO encrypt
-		password: "dev"
-	}).then(res => {
-		token = res.data.token;
-	}).catch(err => {
-		logger.error("Could not get a Token");
-		
-	});
-	return token
+const getTime = () => {
+	var date = new Date();
+	var time = date.getTime();
+	return time;
 }
 
 const todayData = async (token) => {
-	await axios.get("http://localhost:5000/api/pfxTech/today", {
-		 headers: { Authorization: `Bearer ${token}` } 
-	}).then(res => {
-		console.log(res)
-	}).catch(err => {
-		logger.error("Could not get todayData");
+	// await axios.get("http://localhost:5000/api/pfxTech/today", {
+	// 	 headers: { Authorization: `Bearer ${token}` } 
+	// }).then(res => {
+	// 	console.log(res)
+	// }).catch(err => {
+	// 	logger.error("Could not get todayData");
 		
-	});
-	return null
+	// });
+	// return null
 }
 
 // @route   GET documents/testPDF/
@@ -79,11 +72,13 @@ const todayData = async (token) => {
 // @access  Private
 router.route("/testPDF").post(async function(req, res) {
 	let id = uuid();
+	console.log(devToken);
+	console.log(getTime())
 	//Here is where we would get the data needed for TODAYS Games and create the array
 	var data = [
-		{ gameID: 'Data', gameStatus: 'Data', supportNotes: 'Data' },
-		{ gameID: 'Data', gameStatus: 'Data', supportNotes: 'Data' },
-		{ gameID: 'Data', gameStatus: 'Data', supportNotes: 'Data' },
+		{ gameID: 'Data', operator: "Data", gameStatus: 'Data', supportNotes: 'Data' },
+		{ gameID: 'Data', operator: "Data", gameStatus: 'Data', supportNotes: 'Data' },
+		{ gameID: 'Data', operator: "Data", gameStatus: 'Data', supportNotes: 'Data' },
 		
 	];
 
@@ -113,10 +108,10 @@ router.route("/testPDF").post(async function(req, res) {
             headerRows: 1,
             widths:  '*',
                 body: [
-					[ {text: "Gamestring", style:{ fillColor: "#eeeeee"}}, {text: "Game Status", style:{ fillColor: "#eeeeee"}}, {text: "Support Notes", style:{ fillColor: "#eeeeee"}} ],
-                  [ {text: data[0].gameID }, {text: data[0].gameStatus}, {text: data[0].supportNotes} ],
-                  [ {text: data[1].gameID }, {text: data[1].gameStatus}, {text: data[1].supportNotes} ],
-                  [ {text: data[2].gameID }, {text: data[2].gameStatus}, {text: data[2].supportNotes} ],
+					[ {text: "Gamestring", style:{ fillColor: "#eeeeee"}}, {text: "Operator", style:{ fillColor: "#eeeeee"}}, {text: "Game Status", style:{ fillColor: "#eeeeee"}}, {text: "Support Notes", style:{ fillColor: "#eeeeee"}} ],
+                  [ {text: data[0].gameID }, {text: data[0].gameStatus}, {text: data[0].operator}, {text: data[0].supportNotes} ],
+                  [ {text: data[1].gameID }, {text: data[1].gameStatus}, {text: data[1].operator}, {text: data[1].supportNotes} ],
+                  [ {text: data[2].gameID }, {text: data[2].gameStatus}, {text: data[2].operator}, {text: data[2].supportNotes} ],
                   
                 ]
               }
