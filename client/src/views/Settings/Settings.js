@@ -46,12 +46,13 @@ class Settings extends Component {
 		this.changePFXTask = this.changePFXTask.bind(this);
 		this.onSubmitPFxDaily = this.onSubmitPFxDaily.bind(this);
 		this.generateTestPFxPDF = this.generateTestPFxPDF.bind(this);
+		//Email Functions
 
 		this.state = {
 			isLoading: true,
 			error: false,
 			success: false,
-			activeTab: 0,
+			activeTab: 4,
 			editSupportText: "",
 			editOP: "",
 			pfxDailyEmail: {
@@ -337,7 +338,7 @@ class Settings extends Component {
 											action
 											active={this.state.activeTab === 4}
 										>
-											Audit Report Emails
+											Audit Report Email Status
 										</ListGroupItem>
 									</ListGroup>
 								</Col>
@@ -412,93 +413,6 @@ class Settings extends Component {
 													/>
 												</FormGroup>
 												<FormGroup>
-													{/*
-													<Label htmlFor="pfxFieldSelection">PFx Report Fields To Include</Label>
-													 <Container
-														style={{
-															border: "1px solid #e4e7ea",
-															borderRadius: "0.25rem"
-														}}
-													>
-														<Row>
-															<Col>
-																<CustomInput
-																	type="checkbox"
-																	id="venueCustomCheckbox"
-																	label="Venue"
-																	name="venue"
-																	defaultChecked={this.state.pfxDailyEmail.details.Fields.venue}
-																	onClick={e => this.changePFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="pfxoperatorCustomCheckbox"
-																	label="Operator"
-																	name="operator"
-																	defaultChecked={this.state.pfxDailyEmail.details.Fields.operator}
-																	onClick={e => this.changePFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="dateCustomCheckbox"
-																	label="Date"
-																	name="date"
-																	defaultChecked={this.state.pfxDailyEmail.details.Fields.date}
-																	onClick={e => this.changePFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="logInCustomCheckbox"
-																	label="Log In"
-																	name="logIn"
-																	defaultChecked={this.state.pfxDailyEmail.details.Fields.logIn}
-																	onClick={e => this.changePFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="logOutCustomCheckbox"
-																	label="Log Out"
-																	name="logOut"
-																	defaultChecked={this.state.pfxDailyEmail.details.Fields.logOut}
-																	onClick={e => this.changePFXFields(e)}
-																/>
-															</Col>
-															<Col>
-																<CustomInput
-																	type="checkbox"
-																	id="firstPitchCustomCheckbox"
-																	label="First Pitch"
-																	name="firstPitch"
-																	defaultChecked={this.state.pfxDailyEmail.details.Fields.firstPitch}
-																	onClick={e => this.changePFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="hwswIssuesCustomCheckbox"
-																	label="Hardware/Software Issues"
-																	name="hwswIssues"
-																	defaultChecked={this.state.pfxDailyEmail.details.Fields.hwswIssues}
-																	onClick={e => this.changePFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="t1NotesCustomCheckbox"
-																	label="T1 Notes"
-																	name="t1Notes"
-																	defaultChecked={this.state.pfxDailyEmail.details.Fields.t1Notes}
-																	onClick={e => this.changePFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="correctionsCustomCheckbox"
-																	label="Corrections"
-																	name="corrections"
-																	defaultChecked={this.state.pfxDailyEmail.details.Fields.corrections}
-																	onClick={e => this.changePFXFields(e)}
-																/>
-															</Col>
-														</Row>
-													</Container> */}
 													<CustomInput
 														type="checkbox"
 														id="pfxTaskVisible"
@@ -531,172 +445,6 @@ class Settings extends Component {
 													/>
 												</FormGroup>
 												<FormGroup>
-													{/* <Label htmlFor="ffxFieldSelection">FFx Report Fields To Include</Label>
-													<Container
-														style={{
-															border: "1px solid #e4e7ea",
-															borderRadius: "0.25rem"
-														}}
-													>
-														<Row>
-															<Col>
-																<CustomInput
-																	type="checkbox"
-																	id="venueCustomCheckbox"
-																	label="Venue"
-																	name="venue"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.venue}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxoperatorCustomCheckbox"
-																	label="Operator"
-																	name="operator"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.operator}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxsupprtCustomCheckbox"
-																	label="Support"
-																	name="support"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.support}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxgameIDCustomCheckbox"
-																	label="Game ID"
-																	name="gameID"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.gameID}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxbitModeCustomCheckbox"
-																	label="Bit Mode"
-																	name="bitMode"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.bitMode}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxgameStatusCustomCheckbox"
-																	label="Game Status"
-																	name="gameStatus"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.gameStatus}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxipcrIssuesCustomCheckbox"
-																	label="IPCamRelay Issues"
-																	name="ipcrIssues"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.ipcrIssues}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxfgdIssuesCustomCheckbox"
-																	label="Foreground Detector Issues"
-																	name="fgdIssues"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.fgdIssues}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxresolverIssuesCustomCheckbox"
-																	label="Resolver Issues"
-																	name="resolverIssues"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.resolverIssues}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxhardwareIssuesCustomCheckbox"
-																	label="Hardware Issues"
-																	name="hardwareIssues"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.hardwareIssues}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="ffxmiscNotesCustomCheckbox"
-																	label="Misc Notes"
-																	name="miscNotes"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.miscNotes}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-															</Col>
-															<Col>
-																<CustomInput
-																	type="checkbox"
-																	id="dateCustomCheckbox"
-																	label="Date"
-																	name="date"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.date}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="logInCustomCheckbox"
-																	label="Log In"
-																	name="logIn"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.logIn}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="logOutCustomCheckbox"
-																	label="Log Out"
-																	name="logOut"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.logOut}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="firstPitchCustomCheckbox"
-																	label="First Pitch"
-																	name="firstPitch"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.firstPitch}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="supportNotesCustomCheckbox"
-																	label="Support Notes"
-																	name="supportNotes"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.supportNotes}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="bisonCustomCheckbox"
-																	label="Bison Set"
-																	name="bisonSet"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.bisonSet}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="backupTaskCustomCheckbox"
-																	label="Backup Task Initiated"
-																	name="backupTask"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.backupTask}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-																<CustomInput
-																	type="checkbox"
-																	id="backupNotesCustomCheckbox"
-																	label="Backup Notes"
-																	name="backupNotes"
-																	defaultChecked={this.state.ffxDailyEmail.details.Fields.backupNotes}
-																	onClick={e => this.changeFFXFields(e)}
-																/>
-															</Col>
-														</Row>
-													</Container> */}
 													<CustomInput
 														type="checkbox"
 														id="ffxTaskVisible"
@@ -714,7 +462,18 @@ class Settings extends Component {
 												</Button>
 											</Form>
 										</TabPane>
-										<TabPane tabId={4}></TabPane>
+										<TabPane tabId={4}>
+											<h4 htmlFor="">Audit Email Sent Status</h4>
+											<div style={{maxHeight: '200px', overflowY: "auto"}}>
+											 {/* <ListGroup>
+												<ListGroupItem>Cras justo odio</ListGroupItem>
+												<ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
+												<ListGroupItem>Morbi leo risus</ListGroupItem>
+												<ListGroupItem>Porta ac consectetur ac</ListGroupItem>
+												<ListGroupItem>Vestibulum at eros</ListGroupItem>
+											</ListGroup> */}
+											</div>
+										</TabPane>
 									</TabContent>
 								</Col>
 							</Row>

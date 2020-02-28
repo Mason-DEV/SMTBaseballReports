@@ -3,6 +3,12 @@ const axios = require("axios");
 const logger = require("../config/logger");
 const devToken = require("../config/keys").SECERT_JWT;
 
+function currentDate() {
+    var curr = new Date();
+    curr.setDate(curr.getDate());
+    return curr.toISOString().substr(0, 10);
+};
+
 async function ExecuteAuditEmail(ffxAudit) {
     let id = uuid();
     logger.info(id + " === ExecuteAuditEmail Started");
@@ -29,35 +35,43 @@ async function ExecuteAuditEmail(ffxAudit) {
             var supportEmail = null;
             var error = false;
             await Promise.all([
-                // axios.post("http://localhost:5000/api/auditPdfBuilder/buildOpAuditPDF" , ffxAudit, { headers: { Authorization: devToken } }),
-                axios.post("http://localhost:5000/api/AuditEmailSender/auditOpEmailSend/" , {opPDF, ffxAudit}, { headers: { Authorization: devToken } })
+                axios.post("http://localhost:5000/api/AuditEmailSender/auditOpEmailSend/" , {opPDF, ffxAudit}, { headers: { Authorization: devToken } }),
+                axios.post("http://localhost:5000/api/AuditEmailSender/auditSupportEmailSend/" , {supportPDF, ffxAudit}, { headers: { Authorization: devToken } })
                 ])
-            .then(([opEmailResponse]) => {
+            .then(([opEmailResponse, supportEmailResponse]) => {
                 opEmail = opEmailResponse.data;
-                // supportPDF = supportPdfResponse.data;
+                supportEmail = supportEmailResponse.data;
             })
             .catch(function(error) {
-                console.log(error.response.data);
+                console.log(error);
                 error = true;
             });
 
             if(!error){
+                var updateData = {
+                    emailSent :  true,
+				    dateEmailSent : currentDate(),
+				    emailNotSentReason : ""
+                }
                 //We didnt get an error, so update audits
-                console.log("Updating Audit Record success");
+                logger.info(id + " === updateEmailStatus Started");
+                await Promise.all([
+                    axios.put("http://localhost:5000/api/ffxAudit/updateEmailStatus" , {ffxAudit, updateData }, { headers: { Authorization: devToken } })
+                ])
+                .then(([auditUpdateResponse]) => {
+                     logger.info(id + " === updateEmailStatus Completed");
+                })
+                .catch(function(error) {
+                    //Error with updating audit record
+                    logger.error(id + " === updateEmailStatus Error");
+                    console.log(error);
+                });
             }else{
+                //Update reason
                 logger.error(id + " === ExecuteAuditEmail Error Email");
                 return;
             }
-
-
             
-            //We sent email update audit record
-            // if(opEmail){
-            //     console.log(Email);
-
-            // }else{
-            //     console.log("No Email");
-            // }
             logger.info(id + " === ExecuteAuditEmail Completed");
         }else{
             logger.error(id + " === ExecuteAuditEmail Error Length");
@@ -65,10 +79,7 @@ async function ExecuteAuditEmail(ffxAudit) {
         }
  }
  
- function foo() {
-    //foo
- }
- 
+
  module.exports = {
     ExecuteAuditEmail 
  };

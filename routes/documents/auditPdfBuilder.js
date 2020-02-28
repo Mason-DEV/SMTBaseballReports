@@ -81,7 +81,7 @@ formatTime =(timeString) =>{
 buildOpAuditPdf = (auditData, callback) => {
 	//Format headers
 	var titleStyle = {
-		fillColor: "#eeeeee",
+		fillColor: "#a6deb9",
 		fontSize: 11
 	}
 		var data = [];
@@ -98,10 +98,10 @@ buildOpAuditPdf = (auditData, callback) => {
 						},
 						[
 							{
-								text: "FIELD F/x Audit Report",
+								text: "FIELD F/x Audit Report for",
 								style: { fontSize: 14, alignment: "center",}
 							},
-							{ text: "for  " +data[0].gamestring, style: { fontSize: 10,  alignment: "center",  } }
+								{ text: data[0].gamestring, style: {fontSize: 11,  alignment: "center",  } }
 						]
 					]
 				},
@@ -161,7 +161,7 @@ buildOpAuditPdf = (auditData, callback) => {
 buildSupportAuditPdf = (auditData, callback) => {
 	//Format headers
 	var titleStyle = {
-		fillColor: "#eeeeee",
+		fillColor: "#a6deb9",
 		fontSize: 11
 	}
 		var data = [];
@@ -178,10 +178,10 @@ buildSupportAuditPdf = (auditData, callback) => {
 						},
 						[
 							{
-								text: "FIELD F/x Audit Report",
+								text: "FIELD F/x Audit Report for",
 								style: { fontSize: 14, alignment: "center",}
 							},
-							{ text: "for  " +data[0].gamestring, style: { fontSize: 10,  alignment: "center",  } }
+								{ text: data[0].gamestring, style: {fontSize: 11,  alignment: "center",  } }
 						]
 					]
 				},

@@ -108,6 +108,10 @@ const ffxAuditSchema = new Schema(
 			type: Date,
 			required: false
 		},
+		emailNotSentReason:{
+			type: String,
+			required: false
+		}
 	},
 	{
 		collection: "ffxAudit"
