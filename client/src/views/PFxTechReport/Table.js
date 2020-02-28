@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Button, Input } from "reactstrap";
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom";
 
 const propTypes = {
 	children: PropTypes.node
@@ -53,12 +53,12 @@ class Table extends Component {
 	};
 
 	handleRemoveSpecificRow = idx => {
-		// Clears fields in table
-		ReactDOM.findDOMNode(this.refs[`atBat${idx}`]).value = "";
-		ReactDOM.findDOMNode(this.refs[`inning${idx}`]).value = "";
-		ReactDOM.findDOMNode(this.refs[`changeMade${idx}`]).value = "";
-		//Clears fields from state
-		delete this.state.data[idx];
+		// // Clears fields in table
+		// ReactDOM.findDOMNode(this.refs[`atBat${idx}`]).value = "";
+		// ReactDOM.findDOMNode(this.refs[`inning${idx}`]).value = "";
+		// ReactDOM.findDOMNode(this.refs[`changeMade${idx}`]).value = "";
+		// //Clears fields from state
+		// delete this.state.data[idx];
 	};
 
 	changeAB(e, key) {
@@ -165,7 +165,7 @@ class Table extends Component {
 									></Input>
 								</td>
 								<td className="text-center">
-									<Button
+									{/* <Button
 										type="button"
 										disabled
 										onClick={e => {
@@ -174,7 +174,7 @@ class Table extends Component {
 										className="btn btn-danger"
 									>
 										<i className="fa fa-trash"></i>
-									</Button>
+									</Button> */}
 								</td>
 							</tr>
 						))}

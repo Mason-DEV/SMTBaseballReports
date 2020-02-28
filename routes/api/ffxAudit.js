@@ -49,6 +49,69 @@ router.route("/").get(function(req, res) {
 		});
 });
 
+// @route   GET api/FFxAudit/missedBIP
+// @desc    Get All audits reports
+// @access  Private
+router.route("/missedBIP").get(function(req, res) {
+	let id = uuid();
+	logger.info(id + " === Requesting missedBIP");
+	FFxAudit.find({}, 'missedBIPVidGaps')
+		.exec(function(err, audit) {
+			if (err) {
+				logger.error("Error on missedBIP " + err.stack);
+			} else {
+				var data = 0;
+				audit.forEach(element => {
+					data += +element.missedBIPVidGaps
+				});
+				res.json(data);
+				logger.info(id + " === Audits missedBIP");
+			}
+		});
+});
+
+// @route   GET api/FFxAudit/missedPitches
+// @desc    Get All audits reports
+// @access  Private
+router.route("/missedPitches").get(function(req, res) {
+	let id = uuid();
+	logger.info(id + " === Requesting missedPitches");
+	FFxAudit.find({}, 'missedPitchesVidGaps')
+		.exec(function(err, audit) {
+			if (err) {
+				logger.error("Error on missedBIP " + err.stack);
+			} else {
+				var data = 0;
+				audit.forEach(element => {
+					data += +element.missedPitchesVidGaps
+				});
+				res.json(data);
+				logger.info(id + " === Audits missedPitches");
+			}
+		});
+});
+
+// @route   GET api/FFxAudit/missedPitches
+// @desc    Get All audits reports
+// @access  Private
+router.route("/totalPlays").get(function(req, res) {
+	let id = uuid();
+	logger.info(id + " === Requesting totalPlays");
+	FFxAudit.find({}, 'ffxPitches')
+		.exec(function(err, audit) {
+			if (err) {
+				logger.error("Error on totalPlays " + err.stack);
+			} else {
+				var data = 0;
+				audit.forEach(element => {
+					data += +element.ffxPitches
+				});
+				res.json(data);
+				logger.info(id + " === Audits totalPlays");
+			}
+		});
+});
+
 // @route   Get api/FFxAudit/ffxReportByID
 // @desc    Get A Single FFxAudit Report
 // @access  Private

@@ -26,6 +26,23 @@ router.route("/").get(function(req, res) {
 		});
 });
 
+// @route   GET api/ffxtech/TotalGames
+// @desc    Get count of total games
+// @access  Private
+router.route("/totalGames").get(function(req, res) {
+	let id = uuid();
+	logger.info(id + " === Requesting TotalGames");
+	FFxTech.countDocuments({})
+		.exec(function(err, FFxTechCount) {
+			if (err) {
+				logger.error("Error on TotalGames/ " + err.stack);
+			} else {
+				res.json(FFxTechCount);
+				logger.info(id + " === TotalGames Returned");
+			}
+		});
+});
+
 // @route   GET api/ffxtech/today
 // @desc    Get All of todays ffxtech reports
 // @access  Private

@@ -6,6 +6,12 @@ export default {
     //User APIs
     getUserAPI : "/getUser",
     getTokenAPI: "/getToken",
+    //SupportDash APIs
+    getFFxTotalGames: "/api/FFxTech/totalGames",
+    getFFxTotalMissedBIP: "/api/FFxAudit/missedBIP",
+    getFFxTotalMissedPitches: "/api/FFxAudit/missedPitches",
+    getFFxTotalPlaysResolved: "/api/FFxAudit/totalPlays",
+
     //Audit APIs
     getFFxAuditAPI: "/api/FFxAudit/",
     getFFxAuditReportByIdAPI :"/api/FFxAudit/ffxReportByID",

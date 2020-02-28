@@ -114,30 +114,38 @@ class CardsSupport extends Component {
 	// Fetch audit data on first mount
 	componentDidMount() {
 			Promise.all([
-				axios.get(APIHelper.getFFxAuditAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
-				axios.get(APIHelper.getSettingsSupportAnnounceAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } })])
-				.then(([auditResponse, supportResponse]) => {
-					const data = auditResponse.data;
+				// axios.get(APIHelper.getFFxAuditAPI, { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getSettingsSupportAnnounceAPI,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getFFxTotalGames,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getFFxTotalMissedPitches,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getFFxTotalMissedBIP,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				axios.get(APIHelper.getFFxTotalPlaysResolved,  { headers: { Authorization: `Bearer ${getJwt()}` } }),
+				])
+				
+				.then(([supportResponse, ffxTotalPlaysResponse, FFxTotalMissedPitchesResponse, FFxTotalMissedBIPResponse, TotalFFxPlaysResolvedResponse]) => {
+	
 					const supportAnnounce = supportResponse.data;
-					this.setState({ data, supportAnnounce });
+					const totalFFxGames = ffxTotalPlaysResponse.data;
+					const totalMissedPitches = FFxTotalMissedPitchesResponse.data;
+					const totalMissedBIP = FFxTotalMissedBIPResponse.data;
+					const totalPlaysResolved = numberWithCommas(TotalFFxPlaysResolvedResponse.data);
+
+					this.setState({
+						supportAnnounce,
+						dashData:{
+							...this.state.dashData,
+							totalFFxGames,
+							totalMissedPitches,
+							totalMissedBIP,
+							totalPlaysResolved
+						}
+					})
 				})
 				.then(isLoading =>
 					this.setState({
 						isLoading: false
 					})
 				)
-				.then(resDash => {
-					this.setState({
-						dashData: {
-							...this.state.dashData,
-							playsResolved: this.calcPlaysResolved(),
-							// gdSync: this.calcGDSync(),
-							// missedPitches: this.calcMissedPitches(),
-							// missedBIP: this.calcMissedBIP(),
-							// addedPitches: this.calcAddedPitches()
-						}
-					});
-				})
 				.catch(function(error) {
 					console.log(error);
 					logger("error", error);
@@ -438,7 +446,7 @@ class CardsSupport extends Component {
 															Total FFx Plays Resolved
 														</UncontrolledTooltip>
 														<br />
-														<strong className="h4">{this.state.dashData.playsResolved}</strong>
+														<strong className="h4">{this.state.dashData.totalPlaysResolved}</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -468,7 +476,7 @@ class CardsSupport extends Component {
 															Total Missed Pitches Reported
 														</UncontrolledTooltip>
 														<br />
-														<strong className="h4">{this.state.dashData.missedPitches}</strong>
+														<strong className="h4">{this.state.dashData.totalMissedPitches}</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -481,7 +489,7 @@ class CardsSupport extends Component {
 															Total Missed BIP Reported
 														</UncontrolledTooltip>
 														<br />
-														<strong className="h4">{this.state.dashData.missedBIP}</strong>
+														<strong className="h4">{this.state.dashData.totalMissedBIP}</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>
@@ -499,7 +507,9 @@ class CardsSupport extends Component {
 															Total FFx Games with Reports
 														</UncontrolledTooltip>
 														<br />
-														<strong className="h4">0</strong>
+														<strong className="h4">
+															{this.state.dashData.totalFFxGames}
+														</strong>
 														<div className="chart-wrapper"></div>
 													</div>
 												</Col>

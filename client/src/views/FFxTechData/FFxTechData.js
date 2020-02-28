@@ -99,7 +99,7 @@ class FFxTechData extends Component {
 		return (
 			<>
 				<TabPane tabId="1">
-					<Table bordered striped responsive size="sm" style={{ tableLayout: "fixed" }}>
+					<Table bordered striped responsive size="sm">
 						<thead>
 							<tr>
 								<th width="">Actions</th>

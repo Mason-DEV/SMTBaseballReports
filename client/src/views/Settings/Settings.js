@@ -52,7 +52,7 @@ class Settings extends Component {
 			isLoading: true,
 			error: false,
 			success: false,
-			activeTab: 4,
+			activeTab: 0,
 			editSupportText: "",
 			editOP: "",
 			pfxDailyEmail: {
