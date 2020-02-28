@@ -67,15 +67,15 @@ async function ExecuteAuditEmail(ffxAudit) {
                     console.log(error);
                 });
             }else{
-                var updateData = {
-                emailSent :  false,
-                dateEmailSent : null,
-                emailNotSentReason : error
-            }
+                    var updateData = {
+                    emailSent :  false,
+                    dateEmailSent : null,
+                    emailNotSentReason : error
+                    }
+                //Update reason
                 await Promise.all([
                     axios.put("http://localhost:5000/api/ffxAudit/updateEmailStatus" , {ffxAudit, updateData }, { headers: { Authorization: devToken } })
                 ])
-                //Update reason
                 logger.error(id + " === ExecuteAuditEmail Error Email");
                 return;
             }
