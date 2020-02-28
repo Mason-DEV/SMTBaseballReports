@@ -49,30 +49,15 @@ getOperatorEmail = async (operator) => {
 	return data
 }
 
-const sendAuditEmail = async (mailOptions) =>{
-    var data = null;
-    transporter.sendMail(mailOptions, async function(error, info){
-        if (error) {
-          console.log(error);
-          data = error
-        } else {
-          console.log('Email sent: ' + info.response);
-          data = info.response;
-        }
-      });
-      return data
-} 
-
 // @route   POST documents/auditEmailSend/
 // @desc
 // @access  Private
-router.route("/auditEmailSend").post(async function(req, res) {
+router.route("/auditOpEmailSend").post(async function(req, res) {
     let id = uuid();
     var data = null;
     const blobPDF = req.body.blobPDF;
 	logger.info(id + " === auditEmailSend Started");
     const opEmailAddress = await getOperatorEmail(req.body.ffxAudit.operator);
-    console.log("EMAIL SENDING")
     // console.log(req.body.ffxAudit)
     // console.log(opEmailAddress.email)
     
@@ -87,9 +72,14 @@ router.route("/auditEmailSend").post(async function(req, res) {
             },
         ]
       };
-      
-      data = await sendAuditEmail(mailOptions);
-      res.status(200).send(data);
-});
+
+    transporter.sendMail(mailOptions).then(info => {
+            logger.info(id + " === auditEmailSend Completed");
+            res.status(200).send(info.response);
+        }).catch((e) => {
+            logger.error(id + " === auditEmailSend Error");
+            res.status(400).send(e.message)
+        })
+    });
 
 module.exports = router;
