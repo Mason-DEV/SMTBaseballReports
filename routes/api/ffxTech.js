@@ -49,6 +49,36 @@ router.route("/today").get(function(req, res) {
 		});
 });
 
+// @route   GET api/ffxtech/todayDaily
+// @desc    Get All of todays ffxtech reports
+// @access  Private
+router.route("/todayDaily").get(function(req, res) {
+	let id = uuid();
+	//Gets todays date in ISO format
+	var curr = new Date();
+	curr.setHours(curr.getHours() - 11);
+	curr.setDate(curr.getDate());
+	const searchDate = curr.toISOString().substr(0, 10);
+	logger.info(id + " === Requesting Today's FFxTech Daily " + searchDate);
+	FFxTech.find({ date: searchDate })
+		.sort({ venue: "asc" })
+		.exec(function(err, FFxTech) {
+			if (err) {
+				logger.error("Error on FFxTech Today Daily" + err.stack);
+			} else {
+				const data = FFxTech.map(game =>({
+					operator: game.operator,
+					gameStatus: game.gameStatus,
+					gameID: game.gameID,
+					supportNotes: game.supportNotes
+				}))
+			
+				res.json(data);
+				logger.info(id + " === Today's FFxTech Daily Returned");
+			}
+		});
+});
+
 // @route   Get api/ffxtech/ffxReportByID
 // @desc    Get A Single ffxtech Report
 // @access  Private

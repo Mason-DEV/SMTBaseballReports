@@ -23,6 +23,11 @@ const DashData = require("./routes/api/dashData");
 const PfxDailyPdfBuilder = require("./routes/documents/pfxDailyPdfBuilder");
 const FfxDailyPdfBuilder = require("./routes/documents/ffxDailyPdfBuilder");
 const AuditPdfBuilder = require("./routes/documents/auditPdfBuilder");
+
+//Emailers
+const PfxDailyEmailSender = require("./routes/messages/pfxDailyEmailSender");
+const AuditEmailSender = require("./routes/messages/auditEmailSender");
+
 //Models
 const UserModel = require("./models/User");
 
@@ -134,6 +139,10 @@ app.use("/api/dashData",  passport.authenticate("jwt", { session: false }), Dash
 app.use("/api/pfxDailyPdfBuilder",  passport.authenticate("jwt", { session: false }), PfxDailyPdfBuilder);
 app.use("/api/ffxDailyPdfBuilder",  passport.authenticate("jwt", { session: false }), FfxDailyPdfBuilder);
 app.use("/api/auditPdfBuilder",  passport.authenticate("jwt", { session: false }), AuditPdfBuilder);
+
+//Email Routes
+app.use("/api/PfxDailyEmailSender",  passport.authenticate("jwt", { session: false }), PfxDailyEmailSender);
+app.use("/api/AuditEmailSender",  passport.authenticate("jwt", { session: false }), AuditEmailSender);
 
 
 

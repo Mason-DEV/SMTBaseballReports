@@ -124,6 +124,26 @@ router.route("/staffByID").get(function(req, res) {
   });
 });
 
+
+// @route   GET api/staff/staffByID
+// @desc    Get A Single Staff
+// @access  Private
+router.route("/staffByName").get(async function(req, res) {
+  let staffName = req.headers.name;
+  Staff.findOne({name: staffName}, function(err, staff) {
+    if (!staff) {
+      logger.info("Could not find a Staff " + staffName);
+      res.status(404).send("Can not find this Staff");
+    } else if (err) {
+      logger.error("staffByID error " + err.stack);
+      res.status(404).send("Can not find this Staff");
+    } else {
+      logger.info("Sending staff " + staff._id);
+      res.status(200).send(staff);
+    }
+  });
+});
+
 // @route   PUT api/staff/update/:id
 // @desc    Update A Staff
 // @access  Private
