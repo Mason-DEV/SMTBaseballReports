@@ -2,9 +2,34 @@ const express = require("express");
 const router = express.Router();
 const logger = require("../../config/logger");
 const uuid = require("uuid");
+const axios = require("axios");
+const devToken = require("../../config/keys").SECERT_JWT;
+const auditEmailService = require('../../services/auditEmailService');
 
 //Audit Model
 const FFxAudit = require("../../models/FFxAudit");
+
+sendAuditEmail = async (blobPDF, ffxAudit, ) =>{
+	let id = uuid();
+	logger.info(id + " === sendAuditEmail Started");
+	var data = null;
+	await axios.post("http://localhost:5000/api/AuditEmailSender/auditEmailSend/", {blobPDF, ffxAudit}, {
+		 headers: { Authorization: devToken  } 
+	}).then(res => {
+		logger.info(id + " === sendAuditEmail returning");
+		data = res.data
+	}).catch(err => {
+		logger.error(id + " === sendAuditEmail Error");
+		data = err
+})
+	return data
+}
+
+const currentDate =() => {
+	var curr = new Date();
+	curr.setDate(curr.getDate());
+	return curr.toISOString();
+}
 
 // @route   GET api/FFxAudit/
 // @desc    Get All audits reports
@@ -49,6 +74,11 @@ router.route("/ffxReportByID").get(function(req, res) {
 router.route("/update/:id").put(function(req, res) {
 	let _id = req.params.id;
 	let uid = uuid();
+	let isReadyForShare = req.body.readyShare;
+	let emailSent = false;
+	if(isReadyForShare === "Yes"){
+		emailSent = true;
+	}
 	//Find Report for this ID
 	FFxAudit.findById(_id, function(err, ffxAudit) {
 		if (!ffxAudit) {
@@ -58,6 +88,9 @@ router.route("/update/:id").put(function(req, res) {
 			logger.warn("Could not find an ffxAudit" + err.stack);
 			res.status(404).send("Can not find this ffxAudit in the DB");
 		} else {
+			if(ffxAudit.emailSent == true){
+				emailSent = false;
+			}
 			try {
 				logger.warn(uid + " Modifying ffxAudit from === " + ffxAudit);
 				ffxAudit.gamestring = req.body.gamestring;
@@ -94,6 +127,10 @@ router.route("/update/:id").put(function(req, res) {
 				.then(ffxAudit => {
 					logger.warn(uid + " Modifying Complete");
 					res.status(200).send(ffxAudit);
+					//Audit was saved, call email send if needed
+					if(emailSent){
+						auditEmailService.ExecuteAuditEmail(ffxAudit);
+					}
 				})
 				.catch(err => {
 					logger.error(uid + " Error on update " + err);
@@ -103,11 +140,109 @@ router.route("/update/:id").put(function(req, res) {
 	});
 });
 
+
+// @route   PUT api/ffxAudit/update/:id
+// @desc    Update A FFxAudit Report
+// @access  Private
+router.route("/updateEmailStatus").put(function(req, res) {
+	let _id = req.body.ffxAudit._id;
+	let uid = uuid();
+	//Find Report for this ID
+	FFxAudit.findById(_id, function(err, ffxAudit) {
+		if (!ffxAudit) {
+			logger.info("Could not find ffxAudit with id " + _id);
+			res.status(404).send("Can not find this ffxAudit in the DB");
+		} else if (err) {
+			logger.warn("Could not find an ffxAudit" + err.stack);
+			res.status(404).send("Can not find this ffxAudit in the DB");
+		} else {
+			try {
+				logger.warn(uid + " Modifying ffxAudit from === " + ffxAudit);
+				ffxAudit.gamestring = req.body.ffxAudit.gamestring;
+				ffxAudit.commentsBall = req.body.ffxAudit.commentsBall;
+				ffxAudit.commentsMisc = req.body.ffxAudit.commentsMisc;
+				ffxAudit.commentsPlayer = req.body.ffxAudit.commentsPlayer;
+				ffxAudit.logIn = req.body.ffxAudit.logIn;
+				ffxAudit.logOut = req.body.ffxAudit.logOut;
+				ffxAudit.missedBIPVidGaps = req.body.ffxAudit.missedBIPVidGaps;
+				ffxAudit.vidGaps = req.body.ffxAudit.vidGaps;
+				ffxAudit.missedPitchesVidGaps = req.body.ffxAudit.missedPitchesVidGaps;
+				ffxAudit.numBIPasPC = req.body.ffxAudit.numBIPasPC;
+				ffxAudit.numFBasPC = req.body.ffxAudit.numFBasPC;
+				ffxAudit.numPicksAdded = req.body.ffxAudit.numPicksAdded;
+				ffxAudit.numPitchesAdded = req.body.ffxAudit.numPitchesAdded;
+				ffxAudit.operator = req.body.ffxAudit.operator;
+				ffxAudit.auditor = req.body.ffxAudit.auditor;
+				ffxAudit.readyShare = req.body.ffxAudit.readyShare;
+				ffxAudit.stepAccuracy = req.body.ffxAudit.stepAccuracy;
+				ffxAudit.stepCompletion = req.body.ffxAudit.stepCompletion;
+				ffxAudit.stepResolving = req.body.ffxAudit.stepResolving;
+				ffxAudit.timeAccuracy = req.body.ffxAudit.timeAccuracy;
+				ffxAudit.timeCompletion = req.body.ffxAudit.timeCompletion;
+				ffxAudit.timeResolving = req.body.ffxAudit.timeResolving;
+				ffxAudit.ffxPitches = req.body.ffxAudit.ffxPitches;
+				ffxAudit.gdPitches = req.body.ffxAudit.gdPitches;
+				ffxAudit.emailSent =  req.body.updateData.emailSent,
+				ffxAudit.dateEmailSent = req.body.updateData.dateEmailSent,
+				ffxAudit.emailNotSentReason = req.body.updateData.emailNotSentReason
+				logger.warn(uid + " Modifying ffxAudit to === " + ffxAudit);
+			} catch (error) {
+				logger.error(uid + " Error on update " + error);
+				res.status(404).send(error);
+			}
+			ffxAudit
+				.save()
+				.then(ffxAudit => {
+					logger.warn(uid + " Modifying Complete");
+					res.sendStatus(200);
+				})
+				.catch(err => {
+					logger.error(uid + " Error on update " + err);
+					res.sendStatus(404);
+				});
+		}
+	});
+});
+
+
+
+
+// @route   Get api/FFxAudit/ffxAuditNoEmail
+// @desc    Get A Single FFxAudit Report
+// @access  Private
+router.route("/ffxAuditNoEmail").get(function(req, res) {
+	FFxAudit.find({emailSent: false, readyShare: "Yes"}, function(err, ffxAudit) {
+		if (!ffxAudit) {
+			logger.info("Could not find a ffxAuditNoEmail");
+			res.status(404).send("Can not find this ffxAuditNoEmail with emailSent : false");
+		} else if (err) {
+			logger.error("ffxAuditNoEmail error " + err.stack);
+			res.status(404).send("Can not find this ffxAuditNoEmail with emailSent : false");
+		} else {
+			const data = ffxAudit.map(report =>({
+					_id: report._id,
+					emailSent: report.emailSent,
+					dateEmailSent: report.dateEmailSent,
+					emailNotSentReason: report.emailNotSentReason
+				}))
+				logger.info("Sending ffxAuditNoEmail");
+				res.status(200).send(data);
+			// res.status(200).send(ffxAudit);
+		}
+	});
+});
+
+
 // @route   POST api/FFxAudit/create
 // @desc    Create A New FFxAudit
 // @access  Private
 router.route("/create/").post(function(req, res) {
 	let uid = uuid();
+	let isReadyForShare = req.body.readyShare;
+	let emailSent = false;
+	if(isReadyForShare === "Yes"){
+		emailSent = true;
+	}
 	//First we check to make sure this gamestring doesnt exist already
 	FFxAudit.findOne({ gamestring: req.body.gamestring }).then(function(report) {
 		if (!report) {
@@ -136,12 +271,21 @@ router.route("/create/").post(function(req, res) {
 				timeCompletion: req.body.timeCompletion,
 				timeResolving: req.body.timeResolving,
 				ffxPitches: req.body.ffxPitches,
-				gdPitches: req.body.gdPitches
+				gdPitches: req.body.gdPitches,
+				emailSent: false,
+				dateEmailSent: null,
+				emailNotSentReason: "Not Attempted"
 			});
 			logger.info(uid + " Creating ffxAudit === " + ffxAudit);
 			ffxAudit
 				.save()
-				.then(done => res.sendStatus(200))
+				.then(done =>{
+					res.sendStatus(200);
+					//Audit was saved, call email send if needed
+					if(emailSent){
+						auditEmailService.ExecuteAuditEmail(ffxAudit);
+					}
+				})
 				.catch(err => {
 					logger.error(uid + " Error on create " + err);
 					res.sendStatus(400);
@@ -155,45 +299,6 @@ router.route("/create/").post(function(req, res) {
 		}
 	});
 });
-
-// @route   POST api/audits
-// @desc    Create An Audit
-// @access  Private
-// router.route('/', (req, res) => {
-//     const newAudit = new Audit({
-//        // gameID: req.body.gameID
-//     });
-
-//     newAudit.save().then(audit => res.json(audit));
-// });
-
-// @route   PUT api/audits
-// @desc    Update An Audit Data
-// @access  Private
-// router.put('/:id', (req, res) => {
-//     let _id = req.params.id;
-//     Audit.findById(_id, function(err, audit) {
-//         if (!audit)
-//             res.status(404).send("Can not find this Audit in the DB");
-//         else
-//             audit.gamestring = req.body.gamestring;
-//             audit.auditor = req.body.auditor;
-//             audit.operator = req.body.operator;
-//             audit.ffxPitches = req.body.ffxPitches;
-//             audit.gdPitches = req.body.gdPitches;
-//             audit.missedPitches = req.body.missedPitches;
-//             audit.missedBIP = req.body.missedBIP;
-//             audit.pitchesAdd = req.body.pitchesAdd;
-//             audit.pickAdd = req.body.pickAdd;
-//             audit.save().then(audit => {
-//                 res.json('Audit updated!');
-//             })
-//             .catch(err => {
-//                 res.status(400).send("Update not possible");
-//             });
-//     });
-
-// });
 
 // @route   Delete api/FFxAudit/delete/:id
 // @desc    Delete A FFxAudit Report
