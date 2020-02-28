@@ -31,6 +31,7 @@ import {
 	PaginationItem
 } from "reactstrap";
 import APIHelper from "../../components/helpers/APIHelper";
+import _ from "lodash";
 
 class FFxTechData extends Component {
 	constructor(props) {
@@ -59,6 +60,7 @@ class FFxTechData extends Component {
 			venues: {},
 			operators: {},
 			support: {},
+			sortedBy: "",
 			allGameData: {},
 			todayGameData: {},
 			editModal: false,
@@ -94,6 +96,45 @@ class FFxTechData extends Component {
 		if (el) el.blur();
 	}
 
+	sortTableAll(e, who) {
+	const sortData = this.state.allGameData;
+	//Check if we are already sorted by this metric, if so, just flip the sort
+		if (who === this.state.sortedBy) {
+			this.setState({
+				allGameData: _.reverse(sortData),
+				sortedBy: who
+			});
+		} else {
+			this.setState({
+				allGameData: _.sortBy(sortData, [
+					function(o) {
+						return o[who];
+					}
+				]),
+				sortedBy: who
+			});
+		}
+	}	
+	sortTableToday(e, who) {
+	const sortData = this.state.todayGameData;
+	//Check if we are already sorted by this metric, if so, just flip the sort
+		if (who === this.state.sortedBy) {
+			this.setState({
+				todayGameData: _.reverse(sortData),
+				sortedBy: who
+			});
+		} else {
+			this.setState({
+				todayGameData: _.sortBy(sortData, [
+					function(o) {
+						return o[who];
+					}
+				]),
+				sortedBy: who
+			});
+		}
+	}	
+
 	tabPane() {
 		const { currentPage } = this.state;
 		return (
@@ -103,13 +144,27 @@ class FFxTechData extends Component {
 						<thead>
 							<tr>
 								<th width="">Actions</th>
-								<th width="">Date</th>
-								<th width="">Gamestring</th>
-								<th width="">Game Status</th>
-								<th width="">Venue</th>
-								<th width="">Operator</th>
-								<th width="">Support Notes</th>
-								<th width="">Backup Task</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "date")} width="">
+									Date
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "gameID")} width="">
+									Gamestring
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "gameStatus")} width="">
+									Game Status
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "venue")} width="">
+									Venue
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "operator")} width="">
+									Operator
+								</th>
+								<th width="">
+									Support Notes
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "backupTask")} width="">
+									Backup Task
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -147,13 +202,27 @@ class FFxTechData extends Component {
 							<thead>
 								<tr>
 									<th width="">Actions</th>
-									<th width="">Date</th>
-									<th width="">Gamestring</th>
-									<th width="">Game Status</th>
-									<th width="">Venue</th>
-									<th width="">Operator</th>
-									<th width="">Support Notes</th>
-									<th width="">Backup Task</th>
+									<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "date")} width="">
+										Date
+									</th>
+									<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "gameID")} width="">
+										Gamestring
+									</th>
+									<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "gameStatus")} width="">
+										Game Status
+									</th>
+									<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "venue")} width="">
+										Venue
+									</th>
+									<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "operator")} width="">
+										Operator
+									</th>
+									<th width="">
+										Support Notes
+									</th>
+									<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "backupTask")} width="">
+										Backup Task
+									</th>
 								</tr>
 							</thead>
 							<tbody>

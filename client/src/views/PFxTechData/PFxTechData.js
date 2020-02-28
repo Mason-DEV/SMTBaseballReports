@@ -32,6 +32,7 @@ import logger from "../../components/helpers/logger";
 import {getJwt} from "../../components/helpers/jwt";
 import EditTable from "./EditTable";
 import APIHelper from "../../components/helpers/APIHelper";
+import _ from "lodash";
 
 
 class PFxTechData extends Component {
@@ -57,6 +58,7 @@ class PFxTechData extends Component {
 			pagesCountToday: 0,
 			pagesCountAll: 0,
 			isLoading: true,
+			sortedBy: "",
 			allGameData: {},
 			todayGameData: {},
 			activeTab: new Array(3).fill("1"),
@@ -205,6 +207,45 @@ class PFxTechData extends Component {
 		return date;
 	}
 
+	sortTableAll(e, who) {
+	const sortData = this.state.allGameData;
+	//Check if we are already sorted by this metric, if so, just flip the sort
+		if (who === this.state.sortedBy) {
+			this.setState({
+				allGameData: _.reverse(sortData),
+				sortedBy: who
+			});
+		} else {
+			this.setState({
+				allGameData: _.sortBy(sortData, [
+					function(o) {
+						return o[who];
+					}
+				]),
+				sortedBy: who
+			});
+		}
+	}	
+	sortTableToday(e, who) {
+	const sortData = this.state.todayGameData;
+	//Check if we are already sorted by this metric, if so, just flip the sort
+		if (who === this.state.sortedBy) {
+			this.setState({
+				todayGameData: _.reverse(sortData),
+				sortedBy: who
+			});
+		} else {
+			this.setState({
+				todayGameData: _.sortBy(sortData, [
+					function(o) {
+						return o[who];
+					}
+				]),
+				sortedBy: who
+			});
+		}
+	}	
+
 	tabPane() {
 		const { currentPage } = this.state;
 		return (
@@ -213,12 +254,24 @@ class PFxTechData extends Component {
 					<Table bordered striped responsive size="sm">
 						<thead>
 							<tr>
-								<th width="">Actions</th>
-								<th width="">Date</th>
-								<th width="">Venue</th>
-								<th width="">Operator</th>
-								<th width="">HW/SW Issues</th>
-								<th width="">T1 Notes</th>
+								<th width="">
+									Actions
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "date")} width="">
+									Date
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "venue")} width="">
+									Venue
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "operator")} width="">
+									Operator
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "hwswIssues")} width="">
+									HW/SW Issues
+								</th>
+								<th width="">
+									T1 Notes
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -251,13 +304,25 @@ class PFxTechData extends Component {
 						<Table bordered striped responsive size="sm">
 							<thead>
 								<tr>
-									<th width="">Actions</th>
-									<th width="">Date</th>
-									<th width="">Venue</th>
-									<th width="">Operator</th>
-									<th width="">HW/SW Issues</th>
-									<th width="">T1 Notes</th>
-								</tr>
+								<th width="">
+									Actions
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "date")} width="">
+									Date
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "venue")} width="">
+									Venue
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "operator")} width="">
+									Operator
+								</th>
+								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "hwswIssues")} width="">
+									HW/SW Issues
+								</th>
+								<th width="">
+									T1 Notes
+								</th>
+							</tr>
 							</thead>
 							<tbody>
 								{this.state.allGameData
