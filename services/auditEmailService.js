@@ -2,7 +2,6 @@ const uuid = require("uuid");
 const axios = require("axios");
 const logger = require("../config/logger");
 const devToken = require("../config/keys").SECERT_JWT;
-const devPort = require("../config/keys").PORT;
 
 function currentDate() {
     var curr = new Date();
@@ -18,8 +17,8 @@ async function ExecuteAuditEmail(ffxAudit) {
     var opPDF = null;
     var supportPDF = null;
     await Promise.all([
-        axios.post("/api/auditPdfBuilder/buildOpAuditPDF" , ffxAudit, { headers: { Authorization: devToken }, proxy: { host: '127.0.0.1', port: devPort } }),
-        axios.post("/api/auditPdfBuilder/buildSupportAuditPDF" , ffxAudit, { headers: { Authorization: devToken }, proxy: { host: '127.0.0.1', port: devPort} })
+        axios.post(`${proccess.env.HOST}:${PORT}/api/auditPdfBuilder/buildOpAuditPDF` , ffxAudit, { headers: { Authorization: devToken }}),
+        axios.post(`${proccess.env.HOST}:${PORT}/api/auditPdfBuilder/buildSupportAuditPDF` , ffxAudit, { headers: { Authorization: devToken }})
         ])
         .then(([opPdfResponse, supportPdfResponse]) => {
             opPDF = opPdfResponse.data;

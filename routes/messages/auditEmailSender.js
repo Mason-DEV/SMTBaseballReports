@@ -63,7 +63,7 @@ router.route("/auditOpEmailSend").post(async function(req, res) {
     
     const mailOptions = {
         from: 'm.guy@smt.com',
-        to:'m.guy@smt.com, s.king@smt.com',
+        to:'m.guy@smt.com',
         subject: 'OP Audit Report for ' +req.body.ffxAudit.gamestring.toString(),
         attachments: [
             {   
@@ -96,7 +96,7 @@ router.route("/auditSupportEmailSend").post(async function(req, res) {
     
     const mailOptions = {
         from: 'm.guy@smt.com',
-        to:'m.guy@smt.com, s.king@smt.com',
+        to:'m.guy@smt.com',
         subject: 'Full Audit Report for ' +req.body.ffxAudit.gamestring.toString(),
         attachments: [
             {   

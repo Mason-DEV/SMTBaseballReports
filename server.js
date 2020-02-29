@@ -155,9 +155,6 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
-
 //Port Decleration
 const port = process.env.PORT || 5000;
-var setPort = require("./config/keys");
-setPort.PORT = port;
 app.listen(port, () => logger.info(`Server started on port ${port}`));
