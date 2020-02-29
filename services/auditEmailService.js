@@ -35,8 +35,8 @@ async function ExecuteAuditEmail(ffxAudit) {
             var supportEmail = null;
             var error = false;
             await Promise.all([
-                axios.post("http://localhost:5000/api/AuditEmailSender/auditOpEmailSend/" , {opPDF, ffxAudit}, { headers: { Authorization: devToken } }),
-                axios.post("http://localhost:5000/api/AuditEmailSender/auditSupportEmailSend/" , {supportPDF, ffxAudit}, { headers: { Authorization: devToken } })
+                axios.post(`http://localhost:${process.env.PORT}/api/AuditEmailSender/auditOpEmailSend/` , {opPDF, ffxAudit}, { headers: { Authorization: devToken } }),
+                axios.post(`http://localhost:${process.env.PORT}/api/AuditEmailSender/auditSupportEmailSend/` , {supportPDF, ffxAudit}, { headers: { Authorization: devToken } })
                 ])
             .then(([opEmailResponse, supportEmailResponse]) => {
                 opEmail = opEmailResponse.data;
@@ -56,7 +56,7 @@ async function ExecuteAuditEmail(ffxAudit) {
                 //We didnt get an error, so update audits
                 logger.info(id + " === updateEmailStatus Started");
                 await Promise.all([
-                    axios.put("http://localhost:5000/api/ffxAudit/updateEmailStatus" , {ffxAudit, updateData }, { headers: { Authorization: devToken } })
+                    axios.put(`http://localhost:${process.env.PORT}/api/ffxAudit/updateEmailStatus` , {ffxAudit, updateData }, { headers: { Authorization: devToken } })
                 ])
                 .then(([auditUpdateResponse]) => {
                      logger.info(id + " === updateEmailStatus Completed");
@@ -74,7 +74,7 @@ async function ExecuteAuditEmail(ffxAudit) {
                     }
                 //Update reason
                 await Promise.all([
-                    axios.put("http://localhost:5000/api/ffxAudit/updateEmailStatus" , {ffxAudit, updateData }, { headers: { Authorization: devToken } })
+                    axios.put(`http://localhost:${process.env.PORT}/api/ffxAudit/updateEmailStatus` , {ffxAudit, updateData }, { headers: { Authorization: devToken } })
                 ])
                 logger.error(id + " === ExecuteAuditEmail Error Email");
                 return;

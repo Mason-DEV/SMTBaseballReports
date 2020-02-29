@@ -41,7 +41,7 @@ const getDate = () => {
 
 const todayData = async () => {
 	var data = null;
-	await axios.get("http://localhost:5000/api/pfxTech/todayDaily", {
+	await axios.get(`http://localhost:${process.env.PORT}/api/pfxTech/todayDaily`, {
 		 headers: { Authorization: devToken } 
 	}).then(res => {
 		data = res.data
