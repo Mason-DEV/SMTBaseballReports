@@ -17,8 +17,8 @@ async function ExecuteAuditEmail(ffxAudit) {
     var opPDF = null;
     var supportPDF = null;
     await Promise.all([
-        axios.post(`${proccess.env.HOST}:${PORT}/api/auditPdfBuilder/buildOpAuditPDF` , ffxAudit, { headers: { Authorization: devToken }}),
-        axios.post(`${proccess.env.HOST}:${PORT}/api/auditPdfBuilder/buildSupportAuditPDF` , ffxAudit, { headers: { Authorization: devToken }})
+        axios.post(`${process.env.HOST}:${PORT}/api/auditPdfBuilder/buildOpAuditPDF` , ffxAudit, { headers: { Authorization: devToken }}),
+        axios.post(`${process.env.HOST}:${PORT}/api/auditPdfBuilder/buildSupportAuditPDF` , ffxAudit, { headers: { Authorization: devToken }})
         ])
         .then(([opPdfResponse, supportPdfResponse]) => {
             opPDF = opPdfResponse.data;
