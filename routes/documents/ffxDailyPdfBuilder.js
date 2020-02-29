@@ -57,7 +57,7 @@ const getTime = () => {
 
 const todayData = async () => {
 	var data = null;
-	await axios.get("http://localhost:5000/api/ffxTech/todayDaily", {
+	await axios.get("/api/ffxTech/todayDaily", {
 		 headers: { Authorization: devToken } 
 	}).then(res => {
 		data = res.data
