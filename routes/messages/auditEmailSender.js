@@ -58,12 +58,10 @@ router.route("/auditOpEmailSend").post(async function(req, res) {
     const blobPDF = req.body.opPDF;
 	logger.info(id + " === auditOpEmailSend Started");
     const opEmailAddress = await getOperatorEmail(req.body.ffxAudit.operator);
-    // console.log(req.body.ffxAudit)
-    // console.log(opEmailAddress.email)
     
     const mailOptions = {
         from: 'm.guy@smt.com',
-        to:'m.guy@smt.com',
+        to:'m.guy@smt.com, s.king@smt.com',
         subject: 'OP Audit Report for ' +req.body.ffxAudit.gamestring.toString(),
         attachments: [
             {   
@@ -93,10 +91,9 @@ router.route("/auditSupportEmailSend").post(async function(req, res) {
 	logger.info(id + " === auditSupportEmailSend Started");
     const opEmailAddress = await getOperatorEmail(req.body.ffxAudit.operator);
 
-    
     const mailOptions = {
         from: 'm.guy@smt.com',
-        to:'m.guy@smt.com',
+        to:'m.guy@smt.com, s.king@smt.com',
         subject: 'Full Audit Report for ' +req.body.ffxAudit.gamestring.toString(),
         attachments: [
             {   
