@@ -37,7 +37,7 @@ getOperatorEmail = async (operator) => {
     let id = uuid();
 	logger.info(id + " === getOperatorEmail Started");
 	var data = null;
-	await axios.get("/api/staff/staffByName", {
+	await axios.get("http://localhost:5000/api/staff/staffByName", {
 		 headers: { Authorization: devToken, name: operator } 
 	}).then(res => {
 		logger.info(id + " === getOperatorEmail returning");
