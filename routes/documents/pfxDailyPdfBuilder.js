@@ -41,14 +41,25 @@ const getDate = () => {
 
 const todayData = async () => {
 	var data = null;
-	await axios.get(`http://localhost:${process.env.PORT}/api/pfxTech/todayDaily`, {
-		 headers: { Authorization: devToken } 
-	}).then(res => {
-		data = res.data
-	}).catch(err => {
-		logger.error("Could not get todayData");
-		logger.error(err);
-})
+	if(process.env.NODE_ENV === "production"){
+		await axios.get(`http://localhost:${process.env.PORT}/api/pfxTech/todayDaily`, {
+			headers: { Authorization: devToken } 
+		}).then(res => {
+			data = res.data
+		}).catch(err => {
+			logger.error("Could not get todayData");
+			logger.error(err);
+		})
+	} else{
+		await axios.get(`http://localhost:5000/api/pfxTech/todayDaily`, {
+			headers: { Authorization: devToken } 
+		}).then(res => {
+			data = res.data
+		}).catch(err => {
+			logger.error("Could not get todayData");
+			logger.error(err);
+		})
+	}
 	return data
 
 };

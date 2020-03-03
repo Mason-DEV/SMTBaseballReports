@@ -13,15 +13,27 @@ sendAuditEmail = async (blobPDF, ffxAudit, ) =>{
 	let id = uuid();
 	logger.info(id + " === sendAuditEmail Started");
 	var data = null;
-	await axios.post(`http://localhost:${process.env.PORT}/api/AuditEmailSender/auditEmailSend/`, {blobPDF, ffxAudit}, {
-		 headers: { Authorization: devToken  } 
-	}).then(res => {
-		logger.info(id + " === sendAuditEmail returning");
-		data = res.data
-	}).catch(err => {
-		logger.error(id + " === sendAuditEmail Error");
-		data = err
-})
+	if(process.env.NODE_ENV === "production"){
+			await axios.post(`http://localhost:${process.env.PORT}/api/AuditEmailSender/auditEmailSend/`, {blobPDF, ffxAudit}, {
+				headers: { Authorization: devToken  } 
+			}).then(res => {
+				logger.info(id + " === sendAuditEmail returning");
+				data = res.data
+			}).catch(err => {
+				logger.error(id + " === sendAuditEmail Error");
+				data = err
+		})
+	}else{
+		await axios.post(`http://localhost:5000/api/AuditEmailSender/auditEmailSend/`, {blobPDF, ffxAudit}, {
+			headers: { Authorization: devToken  } 
+		}).then(res => {
+			logger.info(id + " === sendAuditEmail returning");
+			data = res.data
+		}).catch(err => {
+			logger.error(id + " === sendAuditEmail Error");
+			data = err
+	})}
+
 	return data
 }
 

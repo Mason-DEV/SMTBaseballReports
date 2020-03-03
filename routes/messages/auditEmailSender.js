@@ -36,16 +36,28 @@ const transporter = nodemailer.createTransport({
 getOperatorEmail = async (operator) => {
     let id = uuid();
 	logger.info(id + " === getOperatorEmail Started");
-	var data = null;
-	await axios.get(`http://localhost:${process.env.PORT}/api/staff/staffByName`, {
-		 headers: { Authorization: devToken, name: operator } 
-	}).then(res => {
-		logger.info(id + " === getOperatorEmail returning");
-		data = res.data
-	}).catch(err => {
-		logger.error(id + " === getOperatorEmail Error");
-		logger.error(err);
-})
+    var data = null;
+    if(process.env.NODE_ENV === "production"){
+        await axios.get(`http://localhost:${process.env.PORT}/api/staff/staffByName`, {
+            headers: { Authorization: devToken, name: operator } 
+        }).then(res => {
+            logger.info(id + " === getOperatorEmail returning");
+            data = res.data
+        }).catch(err => {
+            logger.error(id + " === getOperatorEmail Error");
+            logger.error(err);
+        })
+    }else{
+        await axios.get(`http://localhost:5000/api/staff/staffByName`, {
+            headers: { Authorization: devToken, name: operator } 
+        }).then(res => {
+            logger.info(id + " === getOperatorEmail returning");
+            data = res.data
+        }).catch(err => {
+            logger.error(id + " === getOperatorEmail Error");
+            logger.error(err);
+        })
+    }
 	return data
 }
 
@@ -57,11 +69,13 @@ router.route("/auditOpEmailSend").post(async function(req, res) {
     var data = null;
     const blobPDF = req.body.opPDF;
 	logger.info(id + " === auditOpEmailSend Started");
-    const opEmailAddress = await getOperatorEmail(req.body.ffxAudit.operator);
-    
-    const mailOptions = {
+    const opInfo = await getOperatorEmail(req.body.ffxAudit.operator);
+    var mailOptions = null;
+
+    if (process.env.NODE_ENV === "production") {
+    mailOptions = {
         from: 'm.guy@smt.com',
-        to:'m.guy@smt.com, s.king@smt.com',
+        to: opInfo.email.toString(),
         subject: 'OP Audit Report for ' +req.body.ffxAudit.gamestring.toString(),
         attachments: [
             {   
@@ -70,6 +84,20 @@ router.route("/auditOpEmailSend").post(async function(req, res) {
             },
         ]
       };
+    }
+    else {
+        mailOptions = {
+            from: 'm.guy@smt.com',
+            to: opInfo.email.toString(),
+            subject: 'OP Audit Report for ' +req.body.ffxAudit.gamestring.toString(),
+            attachments: [
+                {   
+                    filename: "OP Audit Report.pdf",
+                    path: blobPDF
+                },
+            ]
+          };
+        }
 
     transporter.sendMail(mailOptions).then(info => {
             logger.info(id + " === auditOpEmailSend Completed");
@@ -89,11 +117,13 @@ router.route("/auditSupportEmailSend").post(async function(req, res) {
     var data = null;
     const blobPDF = req.body.supportPDF;
 	logger.info(id + " === auditSupportEmailSend Started");
-    const opEmailAddress = await getOperatorEmail(req.body.ffxAudit.operator);
+    const opInfo = await getOperatorEmail(req.body.ffxAudit.operator);
+    var mailOptions = null;
 
-    const mailOptions = {
+    if (process.env.NODE_ENV === "production") {
+        mailOptions = {
         from: 'm.guy@smt.com',
-        to:'m.guy@smt.com, s.king@smt.com',
+        to:'p.mclaughlin@smt.com, s.king@smt.com',
         subject: 'Full Audit Report for ' +req.body.ffxAudit.gamestring.toString(),
         attachments: [
             {   
@@ -101,7 +131,21 @@ router.route("/auditSupportEmailSend").post(async function(req, res) {
                 path: blobPDF
             },
         ]
-      };
+      }
+    } else {
+        logger.warn("DEV ENV");
+        mailOptions = {
+            from: 'm.guy@smt.com',
+            to:'masondguy@gmail.com',
+            subject: 'Full Audit Report for ' +req.body.ffxAudit.gamestring.toString(),
+            attachments: [
+                {   
+                    filename: "Full Audit Report.pdf",
+                    path: blobPDF
+                },
+            ]
+          }
+      }
 
     transporter.sendMail(mailOptions).then(info => {
             logger.info(id + " === auditSupportEmailSend Completed");

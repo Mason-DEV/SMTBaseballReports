@@ -57,14 +57,25 @@ const getTime = () => {
 
 const todayData = async () => {
 	var data = null;
-	await axios.get(`http://localhost:${process.env.PORT}/api/ffxTech/todayDaily`, {
-		 headers: { Authorization: devToken } 
-	}).then(res => {
-		data = res.data
-	}).catch(err => {
-		logger.error("Could not get todayData");
-		logger.error(err);
-})
+	if(process.env.NODE_ENV === "production"){
+		await axios.get(`http://localhost:${process.env.PORT}/api/ffxTech/todayDaily`, {
+			headers: { Authorization: devToken } 
+		}).then(res => {
+			data = res.data
+		}).catch(err => {
+			logger.error("Could not get todayData");
+			logger.error(err);
+		})
+	}else{
+		await axios.get(`http://localhost:5000/api/ffxTech/todayDaily`, {
+			headers: { Authorization: devToken } 
+		}).then(res => {
+			data = res.data
+		}).catch(err => {
+			logger.error("Could not get todayData");
+			logger.error(err);
+		})
+	}
 	return data
 
 };
@@ -74,8 +85,6 @@ const todayData = async () => {
 // @access  Private
 router.route("/testPDF").post(async function(req, res) {
 	let id = uuid();
-	console.log(devToken);
-	console.log(getTime())
 	//Here is where we would get the data needed for TODAYS Games and create the array
 	var data = [
 		{ gameID: 'Data', operator: "Data", gameStatus: 'Data', supportNotes: 'Data' },
