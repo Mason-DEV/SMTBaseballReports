@@ -1,21 +1,35 @@
 const Agenda = require("agenda");
 const mongoConnectionString = require("../config/keys").mongoURI_LOCAL;
+const pfxDailyRunner = require('../jobs/pfxDailyRunner');
 
-const agenda3Second = new Agenda({db: {address: mongoConnectionString, collection: 'jobRunner'}});
+const agenda = new Agenda({db: {address: mongoConnectionString, collection: 'jobRunner'}});
 
-agenda3Second.define('running job', async job => {
-  console.log("Running, running, running!")
-});
+
+agenda.define('pfxJOB', {concurrency: 1},(job, done) => {
+    pfxDailyRunner.ExecutePfxDaily();
+    job.repeatEvery('24 hours', {
+    skipImmediate: true,
+
+  });
+    job.save();
+    done()
+  });  
 
 (async function() { // IIFE to give access to async/await
-  await agenda3Second.start();
+  await agenda.start();
+    //check to see if we have our job already scheduled
+    const pfxJOB = await agenda.jobs({name: 'pfxJOB'}, {data:-1}, 3, 1);
+    //if more than 1 cancel and schdule
+    if(pfxJOB.length > 1){
+        await agenda.cancel({name: 'pfxJOB'});
+        await agenda.schedule('tomorrow at 3am','pfxJOB')
+    }
+    //else if zero schedule
+    else if(pfxJOB.length == 0){
+        await agenda.schedule('tomorrow at 3am','pfxJOB')  
+    }
 
-  await agenda3Second.every('3 seconds', 'running job');
-
-
-  // Alternatively, you could also do:
-//   await agenda.every('*/3 * * * *', 'delete old users');
 })();
 
 
-module.exports =  agenda3Second;
+module.exports =  agenda;
