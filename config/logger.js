@@ -24,29 +24,34 @@ const logFormat = winston.format.combine(
 winston.loggers.add("serverLogger", {
 	format: logFormat,
 	transports: [
-		new DailyRotateFile({
-			filename: "./logs/express-%DATE%.log",
-			datePattern: "YYYY-MM-DD",
-			level: "info"
-		}),
-		new DailyRotateFile({
-			filename: "./logs/express-%DATE%.log",
-			datePattern: "YYYY-MM-DD",
-			level: "warn"
-		}),
-		new DailyRotateFile({
-			filename: "./logs/express-%DATE%.log",
-			datePattern: "YYYY-MM-DD",
-			level: "error"
-		}),
-		new DailyRotateFile({
-			filename: "./logs/express-exceptions-%DATE%.log",
-			datePattern: "YYYY-MM-DD",
-			level: "error",
+		// new DailyRotateFile({
+		// 	filename: "./logs/express-%DATE%.log",
+		// 	datePattern: "YYYY-MM-DD",
+		// 	level: "info"
+		// }),
+		// new DailyRotateFile({
+		// 	filename: "./logs/express-%DATE%.log",
+		// 	datePattern: "YYYY-MM-DD",
+		// 	level: "warn"
+		// }),
+		// new DailyRotateFile({
+		// 	filename: "./logs/express-%DATE%.log",
+		// 	datePattern: "YYYY-MM-DD",
+		// 	level: "error"
+		// }),
+		// new DailyRotateFile({
+		// 	filename: "./logs/express-exceptions-%DATE%.log",
+		// 	datePattern: "YYYY-MM-DD",
+		// 	level: "error",
+		// 	handleExceptions: true
+		// }),
+		new winston.transports.Console({
+			level: "info",
 			handleExceptions: true
 		}),
 		new winston.transports.Console({
-			level: "info"
+			level: "warn",
+			handleExceptions: true
 		}),
 		new winston.transports.Console({
 			level: "error",
