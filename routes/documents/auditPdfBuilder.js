@@ -132,7 +132,7 @@ buildOpAuditPdf = (auditData, callback) => {
 							[ {text: "Number of Foul Balls marked as P/C", style: titleStyle}, {text: data[0].numFBasPC} ],
 							[ {text: "Number of Balls in Play marked as P/C", style: titleStyle}, {text: data[0].numBIPasPC} ],
 							[ {text: "Comments on Player Pathing", style: titleStyle}, {text: data[0].commentsPlayer} ],
-							[ {text: "Comments on Ball Trajectories", style: titleStyle}, {text: data[0].commentsPlayer} ],
+							[ {text: "Comments on Ball Trajectories", style: titleStyle}, {text: data[0].commentsBall} ],
 							[ {text: "Miscellaneous Comments", style: titleStyle}, {text: data[0].commentsMisc} ]
 						]
 					}
@@ -212,7 +212,7 @@ buildSupportAuditPdf = (auditData, callback) => {
 							[ {text: "Number of Foul Balls marked as P/C", style: titleStyle}, {text: data[0].numFBasPC} ],
 							[ {text: "Number of Balls in Play marked as P/C", style: titleStyle}, {text: data[0].numBIPasPC} ],
 							[ {text: "Comments on Player Pathing", style: titleStyle}, {text: data[0].commentsPlayer} ],
-							[ {text: "Comments on Ball Trajectories", style: titleStyle}, {text: data[0].commentsPlayer} ],
+							[ {text: "Comments on Ball Trajectories", style: titleStyle}, {text: data[0].commentsBall} ],
 							[ {text: "Miscellaneous Comments", style: titleStyle}, {text: data[0].commentsMisc} ]
 						]
 					}
