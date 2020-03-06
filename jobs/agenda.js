@@ -1,8 +1,18 @@
 const Agenda = require("agenda");
-const mongoConnectionString = require("../config/keys").mongoURI_LOCAL;
+const mongoConnectionStringLOCAL = require("../config/keys").mongoURI_LOCAL;
+const mongoConnectionStringPROD = require("../config/keys").mongoURI;
 const pfxDailyRunner = require('../jobs/pfxDailyRunner');
+const logger = require('../config/logger');
 
-const agenda = new Agenda({db: {address: mongoConnectionString, collection: 'jobRunner'}});
+var agenda;
+if (process.env.NODE_ENV === "production") {
+    logger.warn("MongoDBPROD Agena....")
+    agenda = new Agenda({db: {address: mongoConnectionStringPROD, collection: 'jobRunner'}});
+}else{
+    logger.info("MongoDB_LOCAL Agena....")
+    agenda = new Agenda({db: {address: mongoConnectionStringLOCAL, collection: 'jobRunner'}});
+}
+            
 
 
 agenda.define('pfxJOB', {concurrency: 1},(job, done) => {
