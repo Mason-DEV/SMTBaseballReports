@@ -31,6 +31,10 @@ const AuditEmailSender = require("./routes/messages/auditEmailSender");
 //Models
 const UserModel = require("./models/User");
 
+//Agenda
+const Agenda = require("./jobs/agenda")
+const Agendash = require('agendash');
+
 //Authentication
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
@@ -108,7 +112,6 @@ app.get('/getUser', passport.authenticate('jwt', { session: false }), (req, res)
 	res.send(req.user._conditions);
   });
 
-
 //Connection to MongoDB
 mongoose.Promise = global.Promise;
 if (process.env.NODE_ENV === "production") {
@@ -116,12 +119,16 @@ mongoose
 	.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, autoReconnect: true})
 	.then(() => logger.info("MongoDB Connected...."))
 	.catch(err => logger.error("Error connecting to MongoDB " +err));
+
 }else{
 	mongoose
 	.connect(db_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true, autoReconnect: true})
 	.then(() => logger.info("MongoDB_LOCAL Connected...."))
 	.catch(err => logger.error("Error connecting to MongoDB_LOCAL " +err));
 }
+
+
+
 
 //Use Routes
 // app.use("/api/audits", passport.authenticate("jwt", { session: false }), audits);
@@ -134,6 +141,7 @@ app.use("/api/pfxTech",   passport.authenticate("jwt", { session: false }), PFxT
 app.use("/api/ffxTech",  passport.authenticate("jwt", { session: false }), FFxTech);
 app.use("/api/ffxAudit", passport.authenticate("jwt", { session: false }), FFxAudit);
 app.use("/api/dashData",  passport.authenticate("jwt", { session: false }), DashData);
+app.use("/milbAgenda", Agendash(Agenda));
 
 //PDF Routes
 app.use("/api/pfxDailyPdfBuilder",  passport.authenticate("jwt", { session: false }), PfxDailyPdfBuilder);
