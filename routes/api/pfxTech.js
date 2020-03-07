@@ -122,6 +122,7 @@ router.route("/update/:id").put(function(req, res) {
 					(pfxTech.firstPitch = req.body.firstPitch),
 					(pfxTech.hwswIssues = req.body.hwswIssues.trim() === "" ? "None" : req.body.hwswIssues),
 					(pfxTech.t1Notes = req.body.t1Notes),
+					(pfxTech.t1Corrections = req.body.t1Corrections),
 					(pfxTech.corrections = req.body.corrections);
 				logger.warn(uid + " Modifying pfxTech to === " + pfxTech);
 			} catch (error) {
