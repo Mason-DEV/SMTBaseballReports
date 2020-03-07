@@ -289,7 +289,7 @@ class FFxAuditData extends Component {
 							<Table id="AuditTable" bordered striped responsive size="sm">
 								<thead>
 									<tr>
-										<th> style={{minWidth:"110px"}}>Actions</th>
+										<th style={{minWidth:"110px"}}>Actions</th>
 										<th style={{ cursor: "pointer" }} onClick={e => this.sortTable(e, "gamestring")} width="">
 											Gamestring
 										</th>
