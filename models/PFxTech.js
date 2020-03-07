@@ -35,8 +35,18 @@ const pfxTechSchema = new Schema(
 		t1Notes: {
 			type: String
 		},
+		t1Corrections: {
+			type: String
+		},
+		emailSent: {
+			type: Boolean,
+			default: false
+		},
+		dateEmailSent: {
+			type: Date,
+			required: false
+		},
 		corrections: [Schema.Types.Mixed]
-		
 	},
 	{
         strict: false,

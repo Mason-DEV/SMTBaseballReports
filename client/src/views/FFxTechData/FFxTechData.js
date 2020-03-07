@@ -143,7 +143,7 @@ class FFxTechData extends Component {
 					<Table bordered striped responsive size="sm">
 						<thead>
 							<tr>
-								<th width="">Actions</th>
+								<th style={{minWidth:"110px"}}>Actions</th>
 								<th style={{ cursor: "pointer" }} onClick={e => this.sortTableToday(e, "date")} width="">
 									Date
 								</th>
@@ -201,7 +201,7 @@ class FFxTechData extends Component {
 						<Table bordered striped responsive size="sm">
 							<thead>
 								<tr>
-									<th width="">Actions</th>
+									<th style={{minWidth:"110px"}}>Actions</th>
 									<th style={{ cursor: "pointer" }} onClick={e => this.sortTableAll(e, "date")} width="">
 										Date
 									</th>

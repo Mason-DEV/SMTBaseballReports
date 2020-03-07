@@ -7,10 +7,10 @@ const logger = require('../config/logger');
 var agenda;
 if (process.env.NODE_ENV === "production") {
     logger.warn("MongoDBPROD Agena....")
-    agenda = new Agenda({db: {address: mongoConnectionStringPROD, collection: 'jobRunner'}});
+    agenda = new Agenda({db: {address: mongoConnectionStringPROD, collection: 'jobRunner', options:{useUnifiedTopology: true}}});
 }else{
     logger.info("MongoDB_LOCAL Agena....")
-    agenda = new Agenda({db: {address: mongoConnectionStringLOCAL, collection: 'jobRunner'}});
+    agenda = new Agenda({db: {address: mongoConnectionStringLOCAL, collection: 'jobRunner', options: {useUnifiedTopology: true}}});
 }
             
 
