@@ -74,7 +74,9 @@ router.route("/missedBIP").get(function(req, res) {
 			} else {
 				var data = 0;
 				audit.forEach(element => {
-					data += +element.missedBIPVidGaps
+					if(element.missedBIPVidGaps != undefined){
+						data += +element.missedBIPVidGaps
+					}
 				});
 				res.json(data);
 				logger.info(id + " === Audits missedBIP");
@@ -95,7 +97,9 @@ router.route("/missedPitches").get(function(req, res) {
 			} else {
 				var data = 0;
 				audit.forEach(element => {
-					data += +element.missedPitchesVidGaps
+					if(element.missedBIPVidGaps != undefined){
+					data += +element.missedBIPVidGaps
+				}
 				});
 				res.json(data);
 				logger.info(id + " === Audits missedPitches");
@@ -116,7 +120,10 @@ router.route("/totalPlays").get(function(req, res) {
 			} else {
 				var data = 0;
 				audit.forEach(element => {
-					data += +element.ffxPitches
+					if(element.ffxPitches != undefined && element.ffxPitches != ''){
+						data += +element.ffxPitches
+						console.log(element.ffxPitches)
+					}
 				});
 				res.json(data);
 				logger.info(id + " === Audits totalPlays");
