@@ -1,3 +1,20 @@
-node_modules
+# dependencies
+/node_modules
+package-lock.json
+
+client/node_modules
+client/package-lock.json
+
+
+# misc
+.eslintcache
+.DS_Store
+.idea
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 *.log
+
 client/public/TEST.SCSS

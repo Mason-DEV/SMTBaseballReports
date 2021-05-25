@@ -31,10 +31,6 @@ const AuditEmailSender = require("./routes/messages/auditEmailSender");
 //Models
 const UserModel = require("./models/User");
 
-//Agenda
-const Agenda = require("./jobs/agenda")
-const Agendash = require('agendash');
-
 //Authentication
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
